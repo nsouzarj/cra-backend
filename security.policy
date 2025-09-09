@@ -1,0 +1,40 @@
+// Security policy file for CRA Backend application
+// Grant all permissions to the application code
+
+grant {
+    permission java.lang.RuntimePermission "getClassLoader";
+    permission java.lang.RuntimePermission "setContextClassLoader";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "reflectionFactoryAccess";
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+    permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.reflect";
+    permission java.util.PropertyPermission "*", "read,write";
+    permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
+    permission java.net.SocketPermission "*", "connect,resolve,accept,listen";
+};
+
+// Grant specific permissions to the Spring Boot application
+grant codeBase "file:${user.dir}/target/classes/-" {
+    permission java.lang.RuntimePermission "getClassLoader";
+    permission java.lang.RuntimePermission "setContextClassLoader";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "reflectionFactoryAccess";
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission java.util.PropertyPermission "*", "read,write";
+    permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
+    permission java.net.SocketPermission "*", "connect,resolve,accept,listen";
+};
+
+// Grant permissions to dependencies
+grant codeBase "file:${user.dir}/target/cra-backend-0.0.1-SNAPSHOT.jar" {
+    permission java.lang.RuntimePermission "getClassLoader";
+    permission java.lang.RuntimePermission "setContextClassLoader";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "reflectionFactoryAccess";
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission java.util.PropertyPermission "*", "read,write";
+    permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
+    permission java.net.SocketPermission "*", "connect,resolve,accept,listen";
+};

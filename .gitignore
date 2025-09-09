@@ -1,0 +1,22 @@
+/.vscode# Ignorar node_modules
+node_modules/
+
+# Ignorar arquivos de build do frontend
+cra-frontend/build/
+cra-frontend/dist/
+cra-frontend/node_modules
+cra-frontend/.angular
+cra-backend/.vscode
+cra-frontend/.vscode
+cra-backend/logs
+
+# Ignorar arquivos de configuração sensíveis
+.env
+
+
+# Ignorar arquivos de log
+*.log
+
+#target
+cra-frontend/build/backend
+cra-backend/target

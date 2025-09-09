@@ -1,0 +1,506 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-08-28T16:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/login",
+      "name": "Login",
+      "description": "Authenticate user and get JWT token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"login\": \"admin\",\n  \"senha\": \"admin123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login_isomina",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/login",
+      "name": "Login - Isomina",
+      "description": "Login with isomina user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"login\": \"isomina\",\n  \"senha\": \"isomina123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_refresh",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/refresh",
+      "name": "Refresh Token",
+      "description": "Refresh JWT token using refresh token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refreshToken\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228600000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_me",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/me",
+      "name": "Get Current User",
+      "description": "Get current authenticated user info",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228500000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_database_info",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/database-info",
+      "name": "Database Info",
+      "description": "Get database connection information",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228400000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_debug_jwt",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/debug-jwt",
+      "name": "Debug JWT",
+      "description": "Test JWT token generation and parsing",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228350000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_test_password",
+      "parentId": "fld_auth",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/auth/test-password",
+      "name": "Test Password Hash",
+      "description": "Test if password matches the stored hash",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1693228300000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_usuarios_list",
+      "parentId": "fld_usuarios",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/usuarios",
+      "name": "List Users",
+      "description": "Get all users",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228800000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_usuarios_create",
+      "parentId": "fld_usuarios",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/usuarios",
+      "name": "Create User",
+      "description": "Create a new user (Admin only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"login\": \"newuser\",\n  \"senha\": \"password123\",\n  \"nomeCompleto\": \"New User\",\n  \"emailPrincipal\": \"newuser@example.com\",\n  \"tipo\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228700000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_correspondentes_list",
+      "parentId": "fld_correspondentes",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/correspondentes",
+      "name": "List Correspondentes",
+      "description": "Get all correspondentes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228800000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_correspondentes_create",
+      "parentId": "fld_correspondentes",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/correspondentes",
+      "name": "Create Correspondente",
+      "description": "Create a new correspondente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"João Silva\",\n  \"responsavel\": \"João Silva\",\n  \"cpfCnpj\": \"12345678901\",\n  \"oab\": \"OAB123456\",\n  \"tipoCorrespondente\": \"Advogado\",\n  \"telefonePrimario\": \"11999999999\",\n  \"emailPrimario\": \"joao@exemplo.com\",\n  \"ativo\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228700000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_processos_list",
+      "parentId": "fld_processos",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/processos",
+      "name": "List Processos",
+      "description": "Get all processos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228800000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_processos_create",
+      "parentId": "fld_processos",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "url": "{{ _.base_url }}/api/processos",
+      "name": "Create Processo",
+      "description": "Create a new processo",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"numeroProcesso\": \"1234567-89.2023.8.26.0001\",\n  \"parte\": \"João da Silva\",\n  \"adverso\": \"Maria Santos\",\n  \"assunto\": \"Ação de Cobrança\",\n  \"status\": \"Em Andamento\",\n  \"observacao\": \"Processo de cobrança de valores\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "id": "pair_content_type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "id": "pair_accept",
+          "name": "Accept",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.jwt_token }}"
+      },
+      "metaSortKey": -1693228700000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_cra_backend",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "Authentication",
+      "description": "Authentication endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1693228800000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_usuarios",
+      "parentId": "wrk_cra_backend",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "Usuários",
+      "description": "User management endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1693228700000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_correspondentes",
+      "parentId": "wrk_cra_backend",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "Correspondentes",
+      "description": "Correspondente management endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1693228600000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_processos",
+      "parentId": "wrk_cra_backend",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "Processos",
+      "description": "Process management endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1693228500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_cra_backend",
+      "parentId": null,
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "CRA Backend API - Fixed",
+      "description": "Spring Boot CRA Backend API with JWT Authentication (Content-Type Fixed)",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_cra_backend",
+      "modified": 1693228800000,
+      "created": 1693228800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080/cra-api",
+        "jwt_token": "",
+        "refresh_token": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "jwt_token",
+          "refresh_token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1693228800000,
+      "_type": "environment"
+    }
+  ]
+}
