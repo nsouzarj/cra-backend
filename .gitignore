@@ -16,7 +16,5 @@ cra-backend/logs
 
 # Ignorar arquivos de log
 *.log
-
-#target
-cra-frontend/build/backend
-cra-backend/target
+/logs
+/target
