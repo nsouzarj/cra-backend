@@ -1,5 +1,6 @@
 package br.adv.cra.controller;
 
+import br.adv.cra.dto.PasswordChangeRequest;
 import br.adv.cra.entity.Usuario;
 import br.adv.cra.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -7,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -175,6 +179,25 @@ public class UsuarioController {
     }
     
     /**
+     * Changes user password.
+     * 
+     * Allows any authenticated user to change their own password by providing
+     * their user ID and the new password.
+     * 
+     * @param request The password change request containing user ID and new password
+     * @return ResponseEntity with success or error status
+     */
+    @PutMapping("/alterar-senha")
+    public ResponseEntity<?> alterarSenha(@Valid @RequestBody PasswordChangeRequest request) {
+        try {
+            Usuario usuarioAtualizado = usuarioService.alterarSenha(request.getId(), request.getNovaSenha());
+            return ResponseEntity.ok().body(usuarioAtualizado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao alterar senha: " + e.getMessage());
+        }
+    }
+    
+    /**
      * Deletes a user (Admin only).
      * 
      * @param id The ID of the user to delete
@@ -230,4 +253,6 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    
 }
