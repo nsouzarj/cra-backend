@@ -49,6 +49,22 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
     
+    /**
+     * Changes the password for a user
+     * 
+     * @param userId The ID of the user whose password should be changed
+     * @param newPassword The new password (will be encrypted)
+     * @return The updated user
+     */
+    public Usuario alterarSenha(Long userId, String newPassword) {
+        Usuario usuario = usuarioRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        // Encrypt the new password
+        usuario.setSenha(passwordEncoder.encode(newPassword));
+        return usuarioRepository.save(usuario);
+    }
+    
     public void deletar(Long id) {
         if (!usuarioRepository.existsById(id)) {
             throw new RuntimeException("Usuário não encontrado");
