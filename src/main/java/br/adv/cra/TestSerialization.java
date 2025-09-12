@@ -25,7 +25,7 @@ public class TestSerialization {
             Solicitacao solicitacao = new Solicitacao();
             solicitacao.setId(1L);
             solicitacao.setReferenciasolicitacao(1001);
-            solicitacao.setDatasolictacao(LocalDateTime.now());
+            solicitacao.setDatasolicitacao(LocalDateTime.now());
             solicitacao.setCorrespondente(correspondente);
             
             // Add solicitacao to correspondente

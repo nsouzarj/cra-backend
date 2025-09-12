@@ -25,8 +25,8 @@ public class SolicitacaoService {
     private final StatusSolicitacaoRepository statusSolicitacaoRepository;
     
     public Solicitacao salvar(Solicitacao solicitacao) {
-        if (solicitacao.getDatasolictacao() == null) {
-            solicitacao.setDatasolictacao(LocalDateTime.now());
+        if (solicitacao.getDatasolicitacao() == null) {
+            solicitacao.setDatasolicitacao(LocalDateTime.now());
         }
         return solicitacaoRepository.save(solicitacao);
     }
@@ -35,9 +35,9 @@ public class SolicitacaoService {
         if (!solicitacaoRepository.existsById(solicitacao.getId())) {
             throw new RuntimeException("Solicitação não encontrada");
         }
-        // Ensure the datasolictacao is not null
-        if (solicitacao.getDatasolictacao() == null) {
-            solicitacao.setDatasolictacao(LocalDateTime.now());
+        // Ensure the datasolicitacao is not null
+        if (solicitacao.getDatasolicitacao() == null) {
+            solicitacao.setDatasolicitacao(LocalDateTime.now());
         }
         return solicitacaoRepository.save(solicitacao);
     }
@@ -165,7 +165,7 @@ public class SolicitacaoService {
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
-        return solicitacaoRepository.findByDatasolictacaoBetween(inicio, fim);
+        return solicitacaoRepository.findByDatasolicitacaoBetween(inicio, fim);
     }
     
     @Transactional(readOnly = true)

@@ -11,6 +11,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import br.adv.cra.config.CustomLocalDateTimeDeserializer;
+import br.adv.cra.config.CustomLocalDateTimeSerializer;
 
 @Entity
 @Table(name = "solicitacao")
@@ -26,13 +30,24 @@ public class Solicitacao implements Serializable {
     private Long idsolicitacao;
     
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime datasolictacao;
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+    private LocalDateTime datasolicitacao;
     
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     private LocalDateTime dataconclusao;
     
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     private LocalDateTime dataagendamento;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+    private LocalDateTime dataprazo;
     
     @Column(length = 30)
     private String numero;

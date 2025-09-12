@@ -73,7 +73,7 @@ public class SolicitacaoController {
             // Set the ID to ensure we're updating the correct entity
             solicitacao.setId(id);
             
-            // Ensure the datasolictacao is not null to prevent issues
+            // Ensure the datasolicitacao is not null to prevent issues
             Solicitacao solicitacaoAtualizada = solicitacaoService.atualizar(solicitacao);
             return ResponseEntity.ok(solicitacaoAtualizada);
         } catch (Exception e) {
