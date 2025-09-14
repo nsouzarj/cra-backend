@@ -183,7 +183,7 @@ public class Solicitacao implements Serializable {
     private List<Historico> historicos;
     
     // Adding the inverse relationship with SoliArquivo
-    @OneToMany(mappedBy = "solicitacaoPossuiArquivo.solicitacao", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "solicitacao", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<SoliArquivo> soliArquivos;
     

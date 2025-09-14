@@ -6,8 +6,6 @@ import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Usuario;
 import br.adv.cra.repository.CorrespondenteRepository;
 import br.adv.cra.repository.UsuarioRepository;
-import br.adv.cra.repository.SolicitacaoRepository;
-import br.adv.cra.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,14 +14,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test") // Use test profile for testing
+@Transactional // Add transactional to rollback changes after each test
 public class AuthControllerIntegrationTest {
 
     @Autowired
@@ -39,16 +41,11 @@ public class AuthControllerIntegrationTest {
     private CorrespondenteRepository correspondenteRepository;
 
     @Autowired
-    private SolicitacaoRepository solicitacaoRepository;
-    
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         // Clean up test data before each test
-        // Delete solicitacoes first to avoid foreign key constraint violations
-        solicitacaoRepository.deleteAll();
         usuarioRepository.deleteAll();
         
         // Create admin user for testing
@@ -82,6 +79,7 @@ public class AuthControllerIntegrationTest {
         registerRequest.setLogin("testuser");
         registerRequest.setSenha("password123");
         registerRequest.setNomeCompleto("Test User");
+        registerRequest.setEmailPrincipal("testuser@example.com"); // Add email
         registerRequest.setTipo(2); // Advogado
 
         // When & Then
@@ -118,6 +116,7 @@ public class AuthControllerIntegrationTest {
         registerRequest.setLogin("testcorrespondente");
         registerRequest.setSenha("password123");
         registerRequest.setNomeCompleto("Test Correspondente User");
+        registerRequest.setEmailPrincipal("testcorrespondente@example.com"); // Add email
         registerRequest.setTipo(3); // Correspondente
         registerRequest.setCorrespondenteId(savedCorrespondente.getId());
 

@@ -16,5 +16,15 @@ public class SoliArquivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@EmbeddedId
-	private SolicitacaoPossuiArquivo solicitacaoPossuiArquivo;
+	private SolicitacaoPossuiArquivoId solicitacaoPossuiArquivoId;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("solicitacao")
+    @JoinColumn(name = "idsolicitacao")
+    private Solicitacao solicitacao;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("solicitacaoAnexo")
+    @JoinColumn(name = "idarquivoanexo")
+    private SolicitacaoAnexo solicitacaoAnexo;
 }
