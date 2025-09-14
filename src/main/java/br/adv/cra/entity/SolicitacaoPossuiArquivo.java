@@ -7,18 +7,22 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Embeddable
+@Entity
+@Table(name = "solicitacao_possui_arquivo")
+@IdClass(SolicitacaoPossuiArquivoId.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolicitacaoPossuiArquivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idsolicitacao")
-	private Solicitacao solicitacao;
+	@Id
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idsolicitacao")
+    private Solicitacao solicitacao;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idarquivoanexo")
-	private SolicitacaoAnexo solicitacaoAnexo;
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idarquivoanexo")
+    private SolicitacaoAnexo solicitacaoAnexo;
 }

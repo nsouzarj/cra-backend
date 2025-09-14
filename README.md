@@ -195,10 +195,10 @@ src/
 │   │   │   ├── OrgaoController.java
 │   │   │   └── TipoSolicitacaoController.java
 │   │   ├── dto/
-│   │       ├── JwtResponse.java
-│   │       ├── LoginRequest.java
-│   │       ├── RefreshTokenRequest.java
-│   │       └── RegisterRequest.java
+│       ├── JwtResponse.java
+│       ├── LoginRequest.java
+│       ├── RefreshTokenRequest.java
+│       └── RegisterRequest.java
 │   │   ├── security/
 │   │       ├── SecurityConfig.java
 │   │       ├── JwtUtils.java
@@ -251,6 +251,7 @@ A documentação foi implementada de forma separada dos controllers para manter 
 7. **ComarcaController** (`/api/comarcas`) - Gerenciamento de comarcas
 8. **OrgaoController** (`/api/orgaos`) - Gerenciamento de órgãos
 9. **TipoSolicitacaoController** (`/api/tipos-solicitacao`) - Gerenciamento de tipos de solicitação
+10. **SolicitacaoAnexoController** (`/api/solicitacoes-anexos`) - Gerenciamento de anexos de solicitações
 
 Para mais detalhes, consulte o arquivo [docs/CONTROLLER_DOCUMENTATION_SUMMARY.md](docs/CONTROLLER_DOCUMENTATION_SUMMARY.md).
 
@@ -323,3 +324,25 @@ Retorna informações do usuário autenticado.
 Realiza logout (remove token no cliente).
 
 #### `GET /api/auth/validate`
+
+## 📎 Gerenciamento de Anexos de Solicitações
+
+O sistema agora suporta o gerenciamento de anexos de arquivos para solicitações através de uma API REST dedicada.
+
+### Configuração
+
+Para usar a funcionalidade de anexos, configure o diretório de armazenamento de arquivos no `application.properties`:
+
+```properties
+file.upload-dir=./uploads
+```
+
+### Endpoints Disponíveis
+
+1. **Upload de Anexo**: `POST /api/solicitacoes-anexos/upload`
+2. **Listar Anexos por Solicitação**: `GET /api/solicitacoes-anexos/solicitacao/{solicitacaoId}`
+3. **Obter Anexo por ID**: `GET /api/solicitacoes-anexos/{id}`
+4. **Atualizar Anexo**: `PUT /api/solicitacoes-anexos/{id}`
+5. **Deletar Anexo**: `DELETE /api/solicitacoes-anexos/{id}`
+
+Para documentação completa da API de anexos, consulte [FILE_ATTACHMENT_API.md](FILE_ATTACHMENT_API.md).
