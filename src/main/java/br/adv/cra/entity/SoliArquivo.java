@@ -6,25 +6,38 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "arquivoanexado")
+@Table(name = "arquivosanexados")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SoliArquivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private SolicitacaoPossuiArquivoId solicitacaoPossuiArquivoId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("solicitacao")
-    @JoinColumn(name = "idsolicitacao")
-    private Solicitacao solicitacao;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("solicitacaoAnexo")
-    @JoinColumn(name = "idarquivoanexo")
-    private SolicitacaoAnexo solicitacaoAnexo;
+	@JoinColumn(name = "idsolicitacao")
+	private Solicitacao solicitacao;
+	
+	@Column(length = 255)
+	private String nomearquivo;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime datainclusao;
+	
+	@Column(length = 500)
+	private String caminhofisico;
+	
+	@Column(length = 100)
+	private String origem;
+	
+	private boolean ativo;
+	
+	@Column(length = 500)
+	private String caminhorelativo;
 }

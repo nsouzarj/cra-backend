@@ -1,66 +1,47 @@
-# Test Fix Summary
+# Test Fix README
 
-## AuthControllerIntegrationTest Fixes
+## Overview
+This document describes the test fixes and additions made to the CRA Backend system.
 
-We identified and fixed issues with the AuthControllerIntegrationTest that was causing 2 tests to fail:
+## Tests Added/Modified
 
-1. `testRegisterUserWithoutCorrespondente`
-2. `testRegisterCorrespondenteWithCorrespondenteId`
+### Controller Tests
+- Added unit tests for AuthController
+- Added unit tests for ComarcaController
+- Added unit tests for CorrespondenteController
+- Added unit tests for UfController
+- Added unit tests for SoliArquivoController
 
-### Issues Identified
+### Service Tests
+- Added unit tests for AuthService
+- Added unit tests for SolicitacaoService
+- Added unit tests for UsuarioService
+- Added unit tests for SoliArquivoService
 
-1. **Database Configuration**: Tests were attempting to use production PostgreSQL configuration instead of development H2 database
-2. **Unnecessary Dependencies**: The test was depending on SolicitacaoRepository which created circular dependencies
-3. **Missing Profile Activation**: Tests were not explicitly using the "dev" profile
-4. **Missing Required Fields**: RegisterRequest objects were missing required email fields
+## Test Framework
+The tests use JUnit 5 and Mockito for mocking dependencies. Spring's test framework is used for integration tests.
 
-### Fixes Applied
-
-1. **Added @ActiveProfiles("dev")** annotation to use H2 database for testing
-2. **Added @Transactional** annotation for automatic test data rollback
-3. **Removed unused SolicitacaoRepository** dependency
-4. **Added email fields** to RegisterRequest objects in tests
-5. **Improved test isolation** with proper cleanup
-
-### Files Modified
-
-- `src/test/java/br/adv/cra/controller/AuthControllerIntegrationTest.java`
-
-### How to Run Tests
-
+## Running Tests
+To run all tests:
 ```bash
-mvn test -Dtest=AuthControllerIntegrationTest
+mvn test
 ```
 
-### Expected Results
+To run specific test classes:
+```bash
+mvn test -Dtest=AuthControllerUnitTest
+mvn test -Dtest=SoliArquivoServiceTest
+```
 
-Both tests should now pass:
-- ✅ `testRegisterUserWithoutCorrespondente`
-- ✅ `testRegisterCorrespondenteWithCorrespondenteId`
+## Test Coverage
+The tests cover:
+- Successful operations
+- Error conditions
+- Edge cases
+- Security checks
+- Data validation
 
-## Additional Improvements
-
-### Documentation
-- Created `AUTH_CONTROLLER_TEST_FIX_SUMMARY.md` with detailed fix information
-- Updated main `README.md` with file attachment functionality information
-- Created comprehensive `IMPLEMENTATION_SUMMARY.md` for the entire file attachment feature
-
-### Test Coverage
-- Added unit tests for SolicitacaoAnexoService
-- Added unit tests for SolicitacaoAnexoController
-- Fixed integration tests for AuthController
-
-## Verification
-
-The fixes ensure:
-1. Proper database configuration for testing (H2 instead of PostgreSQL)
-2. Isolated test execution with automatic cleanup
-3. Complete functionality testing for user registration scenarios
-4. Consistent test behavior across different environments
-
-## Next Steps
-
-1. Run all tests to verify no regressions
-2. Consider creating a dedicated test configuration file
-3. Review other integration tests for similar issues
-4. Document test running procedures in main README
+## Recent Additions
+- Added comprehensive test suite for the new SoliArquivo functionality
+- Added unit tests for file upload, retrieval, update, and deletion operations
+- Added tests for access control functionality

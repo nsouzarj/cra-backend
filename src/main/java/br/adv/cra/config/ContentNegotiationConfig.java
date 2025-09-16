@@ -16,6 +16,7 @@ public class ContentNegotiationConfig implements WebMvcConfigurer {
             .ignoreAcceptHeader(false)
             .defaultContentType(MediaType.APPLICATION_JSON)
             .mediaType("json", MediaType.APPLICATION_JSON)
-            .mediaType("xml", MediaType.APPLICATION_XML);
+            .mediaType("xml", MediaType.APPLICATION_XML)
+            .mediaType("octet-stream", MediaType.APPLICATION_OCTET_STREAM);
     }
 }

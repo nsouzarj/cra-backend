@@ -9,13 +9,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.adv.cra.dto.JwtResponse;
 import br.adv.cra.dto.LoginRequest;
 import br.adv.cra.dto.RefreshTokenRequest;
 import br.adv.cra.dto.RegisterRequest;
+import br.adv.cra.dto.SoliArquivoDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -263,4 +266,89 @@ public interface ApiDocumentation {
     })
     @SecurityRequirement(name = "bearerAuth")
     ResponseEntity<List<Map<String, Object>>> getAllSolicitacoes();
+
+    // SoliArquivo Controller Documentation
+    @Tag(name = "soli-arquivo", description = "Operações relacionadas a arquivos de solicitações")
+    @Operation(
+        summary = "Upload de arquivo para uma solicitação",
+        description = "Faz o upload de um arquivo anexado a uma solicitação. O arquivo é armazenado no sistema de arquivos " +
+                     "e uma entrada é criada no banco de dados com os metadados do arquivo."
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Dados do arquivo para upload",
+        content = @Content(
+            mediaType = "multipart/form-data",
+            schema = @Schema(type = "object")
+        )
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Arquivo carregado com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SoliArquivoDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "404", description = "Solicitação não encontrada"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<SoliArquivoDTO> uploadAnexo(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam("solicitacaoId") Long solicitacaoId,
+        @RequestParam(value = "origem", defaultValue = "usuario") String origem);
+
+    @Operation(
+        summary = "Lista arquivos de uma solicitação",
+        description = "Recupera todos os arquivos anexados a uma solicitação específica."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de arquivos recuperada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SoliArquivoDTO.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<List<SoliArquivoDTO>> listarAnexosPorSolicitacao(@PathVariable Long solicitacaoId);
+
+    @Operation(
+        summary = "Obtém um arquivo por ID",
+        description = "Recupera os metadados de um arquivo específico pelo seu ID."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Arquivo recuperado com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SoliArquivoDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Arquivo não encontrado"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<SoliArquivoDTO> buscarPorId(@PathVariable Long id);
+
+    @Operation(
+        summary = "Download de arquivo",
+        description = "Faz o download de um arquivo anexado por seu ID."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Arquivo baixado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Arquivo não encontrado"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<org.springframework.core.io.Resource> downloadAnexo(@PathVariable Long id);
+
+    @Operation(
+        summary = "Atualiza informações de um arquivo",
+        description = "Atualiza os metadados de um arquivo anexado existente."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Arquivo atualizado com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SoliArquivoDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Arquivo não encontrado"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<SoliArquivoDTO> atualizar(@PathVariable Long id, @RequestBody SoliArquivoDTO dto);
+
+    @Operation(
+        summary = "Deleta um arquivo",
+        description = "Remove um arquivo anexado do sistema. O arquivo físico é deletado do sistema de arquivos " +
+                     "e o registro é removido do banco de dados."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Arquivo deletado com sucesso"),
+        @ApiResponse(responseCode = "403", description = "Permissão negada para deletar o arquivo"),
+        @ApiResponse(responseCode = "404", description = "Arquivo não encontrado"),
+        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    ResponseEntity<Void> deletar(@PathVariable Long id, @RequestParam(value = "origem", defaultValue = "usuario") String origem);
 }

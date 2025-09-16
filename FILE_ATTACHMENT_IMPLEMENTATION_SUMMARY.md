@@ -1,94 +1,64 @@
 # File Attachment Implementation Summary
 
-This document summarizes the implementation of file attachment functionality for solicitations in the CRA Backend system.
-
 ## Overview
+This document provides a summary of the file attachment implementation in the CRA Backend system. The implementation allows users to attach files to solicitations with proper access control.
 
-The file attachment functionality allows users to upload, manage, and retrieve file attachments associated with solicitations. This feature is particularly useful when correspondents need to attach documents to solicitations via the frontend.
+## New Implementation (SoliArquivo)
+The new implementation uses a simplified approach with the following components:
 
-## Components Implemented
+### Entities
+1. **SoliArquivo**: Represents file attachments with the following fields:
+   - id: Primary key
+   - solicitacao: Reference to the associated solicitation
+   - nomearquivo: Name of the uploaded file
+   - datainclusao: Timestamp when the file was uploaded
+   - caminhofisico: Physical path where the file is stored
+   - origem: Source of the file (e.g., "correspondente" or "usuario")
+   - ativo: Boolean flag indicating if the file is active
+   - caminhorelativo: Relative HTTP path to access the file
 
-### 1. Entities
+2. **Solicitacao**: Updated to include a one-to-many relationship with SoliArquivo
 
-- **SolicitacaoAnexo**: Represents a file attachment with metadata such as filename, MIME type, and storage path
-- **SolicitacaoPossuiArquivo**: Represents the many-to-many relationship between solicitations and file attachments
-- **SolicitacaoPossuiArquivoId**: Composite key class for the relationship entity
+### Repositories
+1. **SoliArquivoRepository**: JPA repository for managing file attachments
 
-### 2. Repositories
+### Services
+1. **SoliArquivoService**: Business logic for handling file operations including:
+   - File upload with unique naming
+   - File storage in configurable directory
+   - Access control (correspondents can only delete their own files)
+   - File retrieval and deletion
 
-- **SolicitacaoAnexoRepository**: JPA repository for managing file attachments
-- **SolicitacaoPossuiArquivoRepository**: JPA repository for managing relationships between solicitations and file attachments
+### Controllers
+1. **SoliArquivoController**: REST endpoints for file attachment operations:
+   - POST /api/soli-arquivos/upload: Upload a new file attachment
+   - GET /api/soli-arquivos/solicitacao/{solicitacaoId}: Get all files for a solicitation
+   - GET /api/soli-arquivos/{id}: Get a specific file by ID
+   - PUT /api/soli-arquivos/{id}: Update file information
+   - DELETE /api/soli-arquivos/{id}: Delete a file (with access control)
 
-### 3. Services
+### Tests
+1. **SoliArquivoServiceTest**: Unit tests for the file attachment service
+2. **SoliArquivoControllerTest**: Unit tests for the file attachment controller
 
-- **SolicitacaoAnexoService**: Business logic for handling file operations including:
-  - Saving file attachments to the filesystem
-  - Associating files with solicitations
-  - Retrieving file attachments
-  - Updating file attachment metadata
-  - Deleting file attachments and their physical files
+## Removed Components
+The following components from the old implementation have been removed as they are no longer needed:
 
-### 4. Controllers
+1. **SolicitacaoPossuiArquivo**: The many-to-many relationship entity
+2. **SolicitacaoPossuiArquivoId**: The composite key class for the relationship entity
+3. **SolicitacaoPossuiArquivoRepository**: The repository for managing relationships
 
-- **SolicitacaoAnexoController**: REST endpoints for file attachment operations:
-  - `POST /api/solicitacoes-anexos/upload` - Upload a file attachment
-  - `GET /api/solicitacoes-anexos/solicitacao/{solicitacaoId}` - List file attachments for a solicitation
-  - `GET /api/solicitacoes-anexos/{id}` - Get a specific file attachment
-  - `PUT /api/solicitacoes-anexos/{id}` - Update a file attachment
-  - `DELETE /api/solicitacoes-anexos/{id}` - Delete a file attachment
+These components were part of a more complex implementation that used a many-to-many relationship between solicitations and file attachments. The new implementation uses a simpler one-to-many relationship where each file attachment belongs to exactly one solicitation.
 
-### 5. Configuration
-
-- Added `file.upload-dir` property to `application.properties` for configuring the file storage directory
-
-### 6. Tests
-
-- **SolicitacaoAnexoServiceTest**: Unit tests for the file attachment service
-- **SolicitacaoAnexoControllerTest**: Unit tests for the file attachment controller
-
-### 7. Documentation
-
-- **FILE_ATTACHMENT_API.md**: Detailed API documentation for file attachment endpoints
-- Updated **README.md**: Added information about the new file attachment functionality
-
-## Technical Details
-
-### File Storage
-
-Files are stored in the directory specified by the `file.upload-dir` property. Each file is given a unique name using UUID to prevent filename conflicts.
-
-### Database Schema
-
-The implementation uses two main tables:
-1. `arquivosanexo` - Stores file attachment metadata
-2. `solicitacao_possui_arquivo` - Junction table for the many-to-many relationship
-
-### Security
-
-File upload operations require authentication and automatically associate the uploaded file with the authenticated user.
-
-## Usage Example
-
-To upload a file attachment for a solicitation:
-
-```bash
-curl -X POST "http://localhost:8081/cra-api/api/solicitacoes-anexos/upload" \
-  -H "Authorization: Bearer <token>" \
-  -F "file=@/path/to/document.pdf" \
-  -F "solicitacaoId=123"
+## Configuration
+The file storage directory is configured in `application.properties`:
+```
+file.upload-dir=D:\Projetos\craweb\arquivos
 ```
 
-To retrieve all file attachments for a solicitation:
+## Access Control
+The implementation includes access control logic where:
+- Correspondents can only delete files they uploaded
+- Administrators and other users can delete any file
 
-```bash
-curl -X GET "http://localhost:8081/cra-api/api/solicitacoes-anexos/solicitacao/123" \
-  -H "Authorization: Bearer <token>"
-```
-
-## Future Improvements
-
-1. Add file download endpoint
-2. Implement file size limits
-3. Add support for file type validation
-4. Implement file preview/thumbnail generation
-5. Add batch upload functionality
+This is implemented in the `podeDeletar` method in `SoliArquivoService`.

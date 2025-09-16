@@ -1,348 +1,305 @@
 # CRA Backend - Spring Boot API
 
-Este projeto é um backend desenvolvido em Spring Boot para o sistema CRA (Correspondente Responsável por Atos), baseado nas entidades do projeto original localizado em `D:\Projetos\cra\src\br\adv\cra\entity`.
+## 1. Project Overview
 
-## 🚀 Tecnologias Utilizadas
+### Project Background and Value
+The CRA Backend is a Spring Boot-based backend system for the Correspondente Responsável por Atos (CRA) application. It provides a RESTful API for managing legal processes, users, and related data, with support for authentication via JWT tokens.
 
-- **Java 17**
+### Core User Problems Solved
+- Centralized management of legal processes and solicitations.
+- Secure user authentication and role-based access control.
+- Support for file attachments in solicitation management.
+- Integration with multiple databases (PostgreSQL, MySQL, H2).
+
+### System Features
+- RESTful API endpoints for managing users, processes, solicitations, and legal entities.
+- JWT-based authentication and authorization with refresh tokens.
+- File attachment management for solicitations.
+- Support for multiple database backends.
+- Comprehensive API documentation via Swagger/OpenAPI.
+- Configurable for development, testing, and production environments.
+
+## 2. System Architecture Pattern
+
+### Overall Architecture
+The system follows a **layered architecture** pattern:
+- **Controller Layer**: Handles HTTP requests and responses.
+- **Service Layer**: Contains business logic.
+- **Repository Layer**: Manages data persistence.
+- **Entity Layer**: Represents database entities.
+- **Security Layer**: Manages authentication and authorization using JWT.
+
+### Key Technical Decisions
+- **Spring Boot 3.2.5** for rapid development and embedded server capabilities.
+- **JWT Authentication** for secure user access.
+- **Multi-database support** (PostgreSQL for production, MySQL as alternative, H2 for development).
+- **Swagger/OpenAPI 3.0** for interactive API documentation.
+- **Docker-based deployment** for containerization and portability.
+
+### Architectural and Design Patterns Used
+- **MVC (Model-View-Controller)**: For handling HTTP requests and responses.
+- **Repository Pattern**: For data access abstraction.
+- **DTO (Data Transfer Object)**: For transferring data between layers.
+- **Singleton Pattern**: Used in Spring-managed beans.
+- **Strategy Pattern**: For dynamic configuration of database and authentication strategies.
+
+### Component Interaction
+- Controllers receive HTTP requests and delegate to services.
+- Services interact with repositories to fetch or persist data.
+- Entities represent database records.
+- Security components intercept requests for authentication and authorization.
+- DTOs are used to transfer data between components without exposing entities.
+
+## 3. System Technical Information
+
+### Technology Stack and Frameworks
+- **Java 17+**
 - **Spring Boot 3.2.5**
-- **Spring Data JPA**
-- **Spring Web**
-- **Spring Security** (JWT Authentication)
-- **Spring Validation**
-- **JWT (JSON Web Tokens)**
-- **PostgreSQL** (produção)
-- **MySQL** (alternativo)
-- **H2 Database** (desenvolvimento/testes)
-- **Lombok**
-- **Maven**
-- **Swagger/OpenAPI 3.0** (Documentação da API)
-- **Docker** (Containerização)
+  - Spring Web
+  - Spring Data JPA
+  - Spring Security
+  - Spring Validation
+- **JWT Authentication**
+- **Databases**:
+  - PostgreSQL (production)
+  - MySQL (alternative)
+  - H2 (development/testing)
+- **Lombok** for reducing boilerplate code
+- **Swagger/OpenAPI 3.0** for API documentation
+- **Docker** for containerization
 
-## 📋 Pré-requisitos
+### Version and Compatibility Requirements
+- **Spring Boot**: 3.2.5
+- **Java**: 17 or higher (Dockerfile uses Java 23)
+- **PostgreSQL**: 12+
+- **MySQL**: 8.0
+- **H2**: In-memory for development
+- **Lombok**: 1.18.30
+- **JJWT**: 0.11.5
+- **Springdoc OpenAPI**: 2.5.0
 
-- Java 17 ou superior
-- Maven 3.6 ou superior
-- **PostgreSQL 12+** (produção) - Configurado em 192.168.1.105:5432
-- MySQL 8.0 (alternativo)
-- Docker (opcional, para containerização)
+### Development Environment and Deployment
 
-## 🛠️ Configuração do Projeto
+#### Required Tools
+- **Java 17+**
+- **Maven 3.6+**
+- **Docker** (optional but recommended)
+- **PostgreSQL/MySQL** (for production/alternative environments)
 
-### 1. Clone e Configuração Inicial
+#### Setup Instructions
+1. Clone the project (already configured).
+2. Set up the database:
+   - Use H2 for development (default).
+   - PostgreSQL setup: `CREATE DATABASE dbcra WITH ENCODING 'UTF8';`
+   - MySQL setup: `CREATE DATABASE cra_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 
-O projeto já está configurado na pasta atual. Para executar:
+#### Build and Run Commands
+- **Build with Maven**:
+  ```bash
+  mvn clean package
+  ```
+- **Run in Development Mode (H2)**:
+  ```bash
+  mvn spring-boot:run -Dspring-boot.run.profiles=dev
+  ```
+- **Run in Production Mode (PostgreSQL)**:
+  ```bash
+  mvn spring-boot:run -Dspring-boot.run.profiles=prod
+  ```
 
-### 2. Configuração do Banco de Dados
+#### Docker Deployment
+- **Build Docker Image**:
+  ```bash
+  docker build -t cra-backend .
+  ```
+- **Run with Docker Compose (Production)**:
+  ```bash
+  docker-compose up -d
+  ```
+- **Run with Docker Compose (Development)**:
+  ```bash
+  docker-compose -f docker-compose.dev.yml up -d
+  ```
 
-#### Para Desenvolvimento (H2):
-```bash
-# Usar o perfil de desenvolvimento (padrão)
-# O banco H2 será criado automaticamente em memória
-```
+### Technical Constraints and Non-Functional Requirements
 
-#### Para Produção (PostgreSQL):
-```sql
--- Conectar ao PostgreSQL como superusuário
-psql -h 192.168.1.105 -U postgres
+#### Constraints
+- Requires Java 17+ (Dockerfile uses Java 23).
+- PostgreSQL must be accessible at `192.168.1.105:5432` in production.
+- File upload directory must be configured (`file.upload-dir=./uploads`).
 
--- Criar banco de dados (se não existir)
-CREATE DATABASE dbcra WITH ENCODING 'UTF8';
+#### Performance Requirements
+- Optimized for concurrent access in production environments.
+- Caching and database indexing are assumed for performance.
 
--- Verificar conexão
-\c dbcra
-\dt
-```
+#### Security Requirements
+- All user access is JWT-secured.
+- Passwords are hashed using Spring Security's `PasswordEncoder`.
+- Role-based access control (ADMIN, ADVOGADO, CORRESPONDENTE).
 
-#### Para MySQL (Alternativo):
-```sql
--- Criar banco de dados
-CREATE DATABASE cra_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+#### Known Issues and Risks
+- **File upload path must be manually configured**.
+- **Database connection must be stable in production**.
+- **No automated tests are explicitly described**, though test files exist in the structure.
 
--- Criar usuário
-CREATE USER 'cra_user'@'localhost' IDENTIFIED BY 'cra_password';
-GRANT ALL PRIVILEGES ON cra_db.* TO 'cra_user'@'localhost';
-FLUSH PRIVILEGES;
-```
+## 4. Project Directory Structure
 
-### 3. Execução do Projeto
+### Core Modules
 
-#### Modo Produção (PostgreSQL):
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=prod
-```
+#### `src/main/java/br/adv/cra`
+- **config**: Configuration classes (e.g., Swagger, Security, Jackson).
+- **controller**: REST controllers for all entities.
+- **dto**: Data Transfer Objects for API requests/responses.
+- **entity**: JPA entities mapped to database tables.
+- **repository**: Spring Data JPA repositories.
+- **security**: JWT utilities, filters, and entry points.
+- **service**: Business logic implementations.
+- **util**: Utility classes (e.g., password generator).
 
-#### Modo Desenvolvimento (H2):
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
+#### `src/main/resources`
+- **application.properties**: Main configuration file.
+- **application-dev.properties**: Development profile.
+- **application-prod.properties**: Production profile.
+- **application-test.properties**: Test profile.
+- **data.sql**: Initial data for H2 database.
 
-#### Modo Padrão (PostgreSQL):
-```bash
-mvn spring-boot:run
-```
+#### `src/test/java/br/adv/cra`
+- **controller**: Integration and unit tests for controllers.
+- **service**: Unit tests for service classes.
+- **util**: Utility test classes.
 
-### 4. Execução com Docker
+### Documentation and Configuration Files
+- **README.md**: Project overview and setup instructions.
+- **DOCKER.md**: Docker setup guide.
+- **SWAGGER_GUIDE.md**: API documentation guide.
+- **FILE_ATTACHMENT_API.md**: File attachment API details.
+- **Dockerfile**: Multi-stage Docker build configuration.
+- **docker-compose.yml / docker-compose.dev.yml**: Docker Compose files for deployment.
 
-O projeto inclui suporte completo para Docker. Para mais detalhes, consulte [DOCKER.md](DOCKER.md).
+## 5. API Endpoints Overview
 
-#### Execução com Docker Compose (Produção):
-```bash
-docker-compose up -d
-```
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/refresh` - Refresh JWT token
 
-#### Execução com Docker Compose (Desenvolvimento):
-```bash
-docker-compose -f docker-compose.dev.yml up -d
-```
+### Users
+- `GET /api/usuarios` - List all users
+- `GET /api/usuarios/{id}` - Get user by ID
+- `POST /api/usuarios` - Create new user
+- `PUT /api/usuarios/{id}` - Update user
+- `DELETE /api/usuarios/{id}` - Delete user
 
-### 5. Acesso às Aplicações
+### Legal Processes (Processos)
+- `GET /api/processos` - List all processes
+- `GET /api/processos/{id}` - Get process by ID
+- `POST /api/processos` - Create new process
+- `PUT /api/processos/{id}` - Update process
+- `DELETE /api/processos/{id}` - Delete process
 
-- **API REST**: http://localhost:8080/cra-api
-- **H2 Console** (dev): http://localhost:8080/cra-api/h2-console
-- **Actuator Health**: http://localhost:8080/cra-api/actuator/health
-- **Swagger UI**: http://localhost:8080/cra-api/swagger-ui.html
-- **API Docs**: http://localhost:8080/cra-api/api-docs
+### Solicitations (Solicitacoes)
+- `GET /api/solicitacoes` - List all solicitations
+- `GET /api/solicitacoes/{id}` - Get solicitation by ID
+- `POST /api/solicitacoes` - Create new solicitation
+- `PUT /api/solicitacoes/{id}` - Update solicitation
+- `DELETE /api/solicitacoes/{id}` - Delete solicitation
 
-## 📚 Estrutura do Projeto
+### File Attachments (SoliArquivos)
+- `POST /api/soli-arquivos/upload` - Upload file attachment
+- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - List files for solicitation
+- `GET /api/soli-arquivos/{id}` - Get file by ID
+- `PUT /api/soli-arquivos/{id}` - Update file metadata
+- `DELETE /api/soli-arquivos/{id}` - Delete file (with access control)
 
-```
-src/
-├── main/
-│   ├── java/br/adv/cra/
-│   │   ├── CraBackendApplication.java
-│   │   ├── config/
-│   │   │   ├── WebConfig.java
-│   │   │   ├── DatabaseLoader.java
-│   │   │   ├── ContentNegotiationConfig.java
-│   │   │   └── GlobalExceptionHandler.java
-│   │   ├── entity/
-│   │   │   ├── Usuario.java
-│   │   │   ├── Correspondente.java
-│   │   │   ├── Endereco.java
-│   │   │   ├── Uf.java
-│   │   │   ├── Comarca.java
-│   │   │   ├── Orgao.java
-│   │   │   ├── Processo.java
-│   │   │   ├── Solicitacao.java
-│   │   │   ├── TipoSolicitacao.java
-│   │   │   ├── ComarcaCorrespondente.java
-│   │   │   ├── EmailCorrespondente.java
-│   │   │   ├── AndamentoCPJ.java
-│   │   │   ├── ArquivoAnexoCPRO.java
-│   │   │   ├── ArquivoAnexoCPROSalvo.java
-│   │   │   ├── ArquivoColaborador.java
-│   │   │   ├── AuditoriaInterna.java
-│   │   │   ├── BancaProcesso.java
-│   │   │   ├── Banco.java
-│   │   │   ├── ClienteJSON.java
-│   │   │   ├── ComarcaPossui.java
-│   │   │   ├── Envio.java
-│   │   │   ├── Enviosolicitacao.java
-│   │   │   ├── FormularioAudiencia.java
-│   │   │   ├── FormularioAudienciaNovo.java
-│   │   │   ├── GedFinanceiro.java
-│   │   │   ├── HistArqCpro.java
-│   │   │   ├── HistArqCproRejeitado.java
-│   │   │   ├── Historico.java
-│   │   │   ├── LogSistema.java
-│   │   │   ├── OutraParteJSON.java
-│   │   │   ├── PerfilUsuario.java
-│   │   │   ├── Preposto.java
-│   │   │   ├── ProcessoCPJ.java
-│   │   │   ├── ProcessoCPPRO.java
-│   │   │   ├── ProcessoCpproConsulta.java
-│   │   │   ├── ProcessoJSON.java
-│   │   │   ├── ReciboPagamento.java
-│   │   │   ├── Rejeitado.java
-│   │   │   ├── Renumeracao.java
-│   │   │   ├── SmsSalvo.java
-│   │   │   ├── SoliArquivo.java
-│   │   │   ├── SolicitacaoAnexo.java
-│   │   │   ├── SolicitacaoPossuiArquivo.java
-│   │   │   ├── StatusSolicitacao.java
-│   │   │   └── TipoSolicitacaoCorrespondente.java
-│   │   ├── repository/
-│   │   │   ├── UsuarioRepository.java
-│   │   │   ├── CorrespondenteRepository.java
-│   │   │   ├── EnderecoRepository.java
-│   │   │   ├── UfRepository.java
-│   │   │   ├── ComarcaRepository.java
-│   │   │   ├── OrgaoRepository.java
-│   │   │   ├── ProcessoRepository.java
-│   │   │   ├── SolicitacaoRepository.java
-│   │   │   ├── TipoSolicitacaoRepository.java
-│   │   │   └── TipoSolicitacaoCorrespondenteRepository.java
-│   │   ├── service/
-│   │   │   ├── UsuarioService.java
-│   │   │   ├── CorrespondenteService.java
-│   │   │   ├── ProcessoService.java
-│   │   │   ├── SolicitacaoService.java
-│   │   │   ├── UfService.java
-│   │   │   ├── ComarcaService.java
-│   │   │   ├── OrgaoService.java
-│   │   │   ├── EnderecoService.java
-│   │   │   ├── TipoSolicitacaoService.java
-│   │   │   └── DatabaseConnectionService.java
-│   │   ├── controller/
-│   │   │   ├── AuthController.java
-│   │   │   ├── UsuarioController.java
-│   │   │   ├── CorrespondenteController.java
-│   │   │   ├── ProcessoController.java
-│   │   │   ├── SolicitacaoController.java
-│   │   │   ├── UfController.java
-│   │   │   ├── ComarcaController.java
-│   │   │   ├── OrgaoController.java
-│   │   │   └── TipoSolicitacaoController.java
-│   │   ├── dto/
-│       ├── JwtResponse.java
-│       ├── LoginRequest.java
-│       ├── RefreshTokenRequest.java
-│       └── RegisterRequest.java
-│   │   ├── security/
-│   │       ├── SecurityConfig.java
-│   │       ├── JwtUtils.java
-│   │       ├── AuthTokenFilter.java
-│   │       ├── AuthEntryPointJwt.java
-│   │       ├── UserDetailsImpl.java
-│   │       └── UserDetailsServiceImpl.java
-│   │   └── util/
-│   │       └── PasswordGenerator.java
-│   └── resources/
-│       ├── application.properties
-│       ├── application-dev.properties
-│       ├── application-prod.properties
-│       ├── application-test.properties
-│       └── data.sql
-└── docs/
-    ├── controllers.md
-    └── CONTROLLER_DOCUMENTATION_SUMMARY.md
-```
+### Courts (Comarcas)
+- `GET /api/comarcas` - List all courts
+- `GET /api/comarcas/{id}` - Get court by ID
+- `POST /api/comarcas` - Create new court
+- `PUT /api/comarcas/{id}` - Update court
+- `DELETE /api/comarcas/{id}` - Delete court
 
-## 📖 Documentação da API
+### Correspondents
+- `GET /api/correspondentes` - List all correspondents
+- `GET /api/correspondentes/{id}` - Get correspondent by ID
+- `POST /api/correspondentes` - Create new correspondent
+- `PUT /api/correspondentes/{id}` - Update correspondent
+- `DELETE /api/correspondentes/{id}` - Delete correspondent
 
-A documentação completa da API está disponível em [docs/controllers.md](docs/controllers.md). Esta documentação inclui:
+### Status Types
+- `GET /api/status-solicitacao` - List all solicitation statuses
+- `GET /api/status-solicitacao/{id}` - Get status by ID
+- `POST /api/status-solicitacao` - Create new status
+- `PUT /api/status-solicitacao/{id}` - Update status
+- `DELETE /api/status-solicitacao/{id}` - Delete status
 
-- Descrição detalhada de todos os controllers
-- Endpoints disponíveis com métodos HTTP
-- Requisitos de autenticação para cada endpoint
-- Exemplos de requisições e respostas
-- Tipos de usuários e permissões
+### Request Types
+- `GET /api/tipo-solicitacao` - List all solicitation types
+- `GET /api/tipo-solicitacao/{id}` - Get type by ID
+- `POST /api/tipo-solicitacao` - Create new type
+- `PUT /api/tipo-solicitacao/{id}` - Update type
+- `DELETE /api/tipo-solicitacao/{id}` - Delete type
 
-Além disso, cada controller possui documentação JavaDoc detalhada no próprio código fonte.
+### States (UFs)
+- `GET /api/ufs` - List all states
+- `GET /api/ufs/{id}` - Get state by ID
+- `POST /api/ufs` - Create new state
+- `PUT /api/ufs/{id}` - Update state
+- `DELETE /api/ufs/{id}` - Delete state
 
-### Documentação Swagger/OpenAPI
+## 6. File Attachment Implementation
 
-O projeto agora inclui documentação interativa da API usando Swagger/OpenAPI 3.0:
+The system implements a modern file attachment system using the SoliArquivo entity:
 
-- **Swagger UI**: `http://localhost:8080/cra-api/swagger-ui.html`
-- **API Docs JSON**: `http://localhost:8080/cra-api/api-docs`
+### Features
+- Each solicitation can have multiple file attachments
+- Files stored in configurable directory (`D:\Projetos\craweb\arquivos`)
+- Access control (correspondents can only delete their own files)
+- RESTful API for upload, retrieval, update, and deletion
+- Unique file naming to prevent conflicts
 
-A documentação foi implementada de forma separada dos controllers para manter o código limpo e organizado. Para mais detalhes sobre como a documentação foi implementada, consulte o guia [SWAGGER_GUIDE.md](SWAGGER_GUIDE.md).
+### API Endpoints
+- `POST /api/soli-arquivos/upload` - Upload a new file attachment
+- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
+- `GET /api/soli-arquivos/{id}` - Get a specific file by ID
+- `PUT /api/soli-arquivos/{id}` - Update file information
+- `DELETE /api/soli-arquivos/{id}` - Delete a file (with access control)
 
-### Controllers Documentados
+### Access Control
+- Correspondents can only delete files they uploaded
+- Administrators and other users can delete any file
 
-1. **AuthController** (`/api/auth`) - Autenticação e autorização
-2. **UsuarioController** (`/api/usuarios`) - Gerenciamento de usuários
-3. **CorrespondenteController** (`/api/correspondentes`) - Gerenciamento de correspondentes
-4. **ProcessoController** (`/api/processos`) - Gerenciamento de processos legais
-5. **SolicitacaoController** (`/api/solicitacoes`) - Gerenciamento de solicitações
-6. **UfController** (`/api/ufs`) - Listagem de estados brasileiros
-7. **ComarcaController** (`/api/comarcas`) - Gerenciamento de comarcas
-8. **OrgaoController** (`/api/orgaos`) - Gerenciamento de órgãos
-9. **TipoSolicitacaoController** (`/api/tipos-solicitacao`) - Gerenciamento de tipos de solicitação
-10. **SolicitacaoAnexoController** (`/api/solicitacoes-anexos`) - Gerenciamento de anexos de solicitações
+## 7. Security Implementation
 
-Para mais detalhes, consulte o arquivo [docs/CONTROLLER_DOCUMENTATION_SUMMARY.md](docs/CONTROLLER_DOCUMENTATION_SUMMARY.md).
+### Authentication
+JWT-based authentication with refresh tokens for enhanced security.
 
-## 🔐 Segurança JWT
+### Authorization
+Role-based access control with three roles:
+- **ADMIN**: Full system access
+- **ADVOGADO**: Lawyer access to relevant processes
+- **CORRESPONDENTE**: Correspondent access to assigned processes
 
-O projeto utiliza **JWT (JSON Web Tokens)** para autenticação e autorização.
+### Password Security
+Passwords are securely hashed using Spring Security's `PasswordEncoder`.
 
-### Tipos de Usuário e Permissões:
-- **Tipo 1 - ADMIN**: Acesso completo ao sistema
-- **Tipo 2 - ADVOGADO**: Acesso a funcionalidades de advogados
-- **Tipo 3 - CORRESPONDENTE**: Acesso limitado para correspondentes
+## 8. Database Schema
 
-### Endpoints de Autenticação:
+The system uses a comprehensive database schema with entities for:
+- Users and authentication
+- Legal processes and solicitations
+- Courts and jurisdictions
+- Correspondents and their assignments
+- File attachments with metadata
+- Status and type classifications
+- States and geographic information
 
-#### `POST /api/auth/login`
-Autentica um usuário e retorna JWT token.
+## 9. Testing
 
-**Request:**
-```json
-{
-  "login": "admin",
-  "senha": "admin123"
-}
-```
+The project includes unit tests for controllers and services to ensure functionality and prevent regressions.
 
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "type": "Bearer",
-  "id": 1,
-  "login": "admin",
-  "nomeCompleto": "Administrador do Sistema",
-  "emailPrincipal": "admin@cra.com.br",
-  "tipo": 1,
-  "roles": ["ROLE_ADMIN"],
-  "expiresAt": "2024-08-29T14:30:00"
-}
-```
+## 10. Documentation
 
-#### `POST /api/auth/refresh`
-Renova o JWT token usando refresh token.
-
-**Request:**
-```json
-{
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-#### `POST /api/auth/register` 🔒 **ADMIN only**
-Registra um novo usuário (apenas administradores).
-
-**Request:**
-```json
-{
-  "login": "novousuario",
-  "senha": "senha123",
-  "nomeCompleto": "Nome Completo",
-  "emailPrincipal": "email@exemplo.com",
-  "tipo": 2
-}
-```
-
-#### `GET /api/auth/me`
-Retorna informações do usuário autenticado.
-
-#### `POST /api/auth/logout`
-Realiza logout (remove token no cliente).
-
-#### `GET /api/auth/validate`
-
-## 📎 Gerenciamento de Anexos de Solicitações
-
-O sistema agora suporta o gerenciamento de anexos de arquivos para solicitações através de uma API REST dedicada.
-
-### Configuração
-
-Para usar a funcionalidade de anexos, configure o diretório de armazenamento de arquivos no `application.properties`:
-
-```properties
-file.upload-dir=./uploads
-```
-
-### Endpoints Disponíveis
-
-1. **Upload de Anexo**: `POST /api/solicitacoes-anexos/upload`
-2. **Listar Anexos por Solicitação**: `GET /api/solicitacoes-anexos/solicitacao/{solicitacaoId}`
-3. **Obter Anexo por ID**: `GET /api/solicitacoes-anexos/{id}`
-4. **Atualizar Anexo**: `PUT /api/solicitacoes-anexos/{id}`
-5. **Deletar Anexo**: `DELETE /api/solicitacoes-anexos/{id}`
-
-Para documentação completa da API de anexos, consulte [FILE_ATTACHMENT_API.md](FILE_ATTACHMENT_API.md).
+Comprehensive documentation is available through:
+- This README file
+- Swagger/OpenAPI documentation at `/swagger-ui.html`
+- Additional markdown files for specific features

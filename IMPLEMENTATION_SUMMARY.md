@@ -1,222 +1,276 @@
-# CRA Backend - File Attachment Implementation Summary
+# CRA Backend Implementation Summary
 
 ## Overview
+This document provides a comprehensive summary of the CRA Backend implementation, including all entities, repositories, services, controllers, and their relationships.
 
-This document summarizes the complete implementation of the file attachment functionality for the CRA Backend system. This feature allows users to upload, manage, and retrieve file attachments associated with legal solicitations.
+## Project Structure
 
-## Components Implemented
+### Configuration
+```
+src/main/java/br/adv/cra/config/
+├── ApiDocumentation.java
+├── ContentNegotiationConfig.java
+├── CustomLocalDateTimeDeserializer.java
+├── CustomLocalDateTimeSerializer.java
+├── DatabaseLoader.java
+├── GlobalExceptionHandler.java
+├── JacksonConfig.java
+├── SwaggerConfig.java
+├── SwaggerDocumentationConfig.java
+└── WebConfig.java
+```
 
-### 1. Entities
+### Controllers
+```
+src/main/java/br/adv/cra/controller/
+├── AuthController.java
+├── ComarcaController.java
+├── CorrespondenteController.java
+├── OrgaoController.java
+├── ProcessoController.java
+├── SoliArquivoController.java
+├── SolicitacaoController.java
+├── StatusSolicitacaoController.java
+├── TipoSolicitacaoController.java
+├── UfController.java
+└── UsuarioController.java
+```
 
-#### SolicitacaoAnexo
-- Represents a file attachment with metadata
-- Fields: id, filename, MIME type, file path, upload timestamp, operation type, origin, associated user
-- Stored in the `arquivosanexo` database table
+### DTOs
+```
+src/main/java/br/adv/cra/dto/
+├── JwtResponse.java
+├── LoginRequest.java
+├── PasswordChangeRequest.java
+├── ProcessoDTO.java
+├── RefreshTokenRequest.java
+├── RegisterRequest.java
+└── SoliArquivoDTO.java
+```
 
-#### SolicitacaoPossuiArquivo
-- Represents the many-to-many relationship between solicitations and file attachments
-- Composite key using SolicitacaoPossuiArquivoId
-- Stored in the `solicitacao_possui_arquivo` database table
+### Entities
+```
+src/main/java/br/adv/cra/entity/
+├── AndamentoCPJ.java
+├── ArquivoAnexoCPRO.java
+├── ArquivoAnexoCPROSalvo.java
+├── ArquivoColaborador.java
+├── AuditoriaInterna.java
+├── BancaProcesso.java
+├── Banco.java
+├── ClienteJSON.java
+├── Comarca.java
+├── ComarcaCorrespondente.java
+├── ComarcaPossui.java
+├── Correspondente.java
+├── EmailCorrespondente.java
+├── Endereco.java
+├── Envio.java
+├── Enviosolicitacao.java
+├── FormularioAudiencia.java
+├── FormularioAudienciaNovo.java
+├── GedFinanceiro.java
+├── HistArqCproRejeitado.java
+├── Historico.java
+├── LogSistema.java
+├── Orgao.java
+├── OutraParteJSON.java
+├── PerfilUsuario.java
+├── Preposto.java
+├── Processo.java
+├── ProcessoCPJ.java
+├── ProcessoCPPRO.java
+├── ProcessoCpproConsulta.java
+├── ProcessoJSON.java
+├── ReciboPagamento.java
+├── Rejeitado.java
+├── Renumeracao.java
+├── SmsSalvo.java
+├── SoliArquivo.java
+├── Solicitacao.java
+├── StatusSolicitacao.java
+├── TipoSolicitacao.java
+├── TipoSolicitacaoCorrespondente.java
+├── Uf.java
+└── Usuario.java
+```
 
-#### SolicitacaoPossuiArquivoId
-- Composite key class for the relationship entity
-- Contains references to both solicitation and file attachment IDs
-
-### 2. Repositories
-
-#### SolicitacaoAnexoRepository
-- JPA repository for managing file attachments
-- Extends JpaRepository for CRUD operations
-
-#### SolicitacaoPossuiArquivoRepository
-- JPA repository for managing relationships between solicitations and file attachments
-- Custom methods for querying by solicitation or file attachment
-- Method to delete relationships by file attachment
-
-### 3. Services
-
-#### SolicitacaoAnexoService
-- Business logic for handling file operations
-- Methods for saving, retrieving, updating, and deleting file attachments
-- File system operations for storing and removing physical files
-- Automatic filename generation to prevent conflicts
-- Integration with existing solicitation and user entities
-
-### 4. Controllers
-
-#### SolicitacaoAnexoController
-- REST endpoints for file attachment operations
-- Authentication and authorization using JWT
-- Multipart file upload support
-- Error handling and validation
-
-### 5. Configuration
-
-#### Application Properties
-- Added `file.upload-dir` property for configuring storage directory
-- Default value: `./uploads`
-
-### 6. Tests
-
-#### Unit Tests
-- SolicitacaoAnexoServiceTest: Tests for business logic
-- SolicitacaoAnexoControllerTest: Tests for REST endpoints
-
-#### Integration Tests
-- AuthControllerIntegrationTest: Tests for authentication (with fixes applied)
-
-### 7. Documentation
-
-#### API Documentation
-- FILE_ATTACHMENT_API.md: Detailed API documentation
-- FILE_ATTACHMENT_IMPLEMENTATION_SUMMARY.md: Technical implementation details
-- Updated README.md with file attachment information
-
-## Key Features
-
-### File Upload
-- Multipart file upload support
-- Automatic unique filename generation
-- File type and size handling
-- Association with authenticated user
-- Linking to specific solicitations
-
-### File Management
-- CRUD operations for file attachments
-- Metadata management (filename, type, etc.)
-- Physical file deletion when attachment is removed
-- Relationship management with solicitations
+### Repositories
+```
+src/main/java/br/adv/cra/repository/
+├── AndamentoCPJRepository.java
+├── ArquivoAnexoCPRORepository.java
+├── ArquivoAnexoCPROSalvoRepository.java
+├── ComarcaCorrespondenteRepository.java
+├── ComarcaPossuiRepository.java
+├── ComarcaRepository.java
+├── CorrespondenteRepository.java
+├── EmailCorrespondenteRepository.java
+├── EnvioRepository.java
+├── FormularioAudienciaNovoRepository.java
+├── FormularioAudienciaRepository.java
+├── GedFinanceiroRepository.java
+├── HistArqCproRejeitadoRepository.java
+├── HistoricoRepository.java
+├── OrgaoRepository.java
+├── PrepostoRepository.java
+├── ProcessoCPJRepository.java
+├── ProcessoCPPRORepository.java
+├── ProcessoRepository.java
+├── ReciboPagamentoRepository.java
+├── RenumeracaoRepository.java
+├── SoliArquivoRepository.java
+├── SolicitacaoRepository.java
+├── StatusSolicitacaoRepository.java
+├── TipoSolicitacaoCorrespondenteRepository.java
+├── TipoSolicitacaoRepository.java
+├── UfRepository.java
+└── UsuarioRepository.java
+```
 
 ### Security
-- JWT-based authentication required for all operations
-- User association for uploaded files
-- Role-based access control (inherited from existing security framework)
-
-### Error Handling
-- Comprehensive error handling for file operations
-- Proper HTTP status codes for different scenarios
-- Validation of input parameters
-
-## Technical Details
-
-### Database Schema
-- Two new tables: `arquivosanexo` and `solicitacao_possui_arquivo`
-- Foreign key relationships with existing entities
-- Proper indexing for performance
-
-### File Storage
-- Configurable storage directory via application properties
-- Unique filename generation using UUID
-- Support for various file types
-- Proper cleanup of physical files
-
-### Integration
-- Seamless integration with existing solicitation system
-- Reuse of authentication and authorization mechanisms
-- Consistent API design with existing controllers
-
-## API Endpoints
-
-### Upload File Attachment
 ```
-POST /api/solicitacoes-anexos/upload
+src/main/java/br/adv/cra/security/
+├── AuthTokenFilter.java
+├── CorsConfig.java
+├── CustomUserDetailsService.java
+├── JwtAuthEntryPoint.java
+├── JwtUtils.java
+├── SecurityConfig.java
+└── WebSecurityConfig.java
 ```
-- Multipart form data with file and solicitation ID
-- Returns created file attachment entity
 
-### List File Attachments for Solicitation
+### Services
 ```
-GET /api/solicitacoes-anexos/solicitacao/{solicitacaoId}
+src/main/java/br/adv/cra/service/
+├── AuthService.java
+├── ComarcaService.java
+├── CorrespondenteService.java
+├── DatabaseConnectionService.java
+├── EnderecoService.java
+├── OrgaoService.java
+├── ProcessoService.java
+├── SoliArquivoService.java
+├── SolicitacaoService.java
+├── StatusSolicitacaoService.java
+├── TipoSolicitacaoService.java
+├── UfService.java
+└── UsuarioService.java
 ```
-- Returns list of file attachments for a specific solicitation
 
-### Get Specific File Attachment
+### Utilities
 ```
-GET /api/solicitacoes-anexos/{id}
+src/main/java/br/adv/cra/util/
+├── PasswordHashGenerator.java
+├── SoliArquivoMapper.java
+└── TestSerialization.java
 ```
-- Returns information about a specific file attachment
 
-### Update File Attachment
+### Tests
 ```
-PUT /api/solicitacoes-anexos/{id}
+src/test/java/br/adv/cra/
+├── controller/
+│   ├── AuthControllerIntegrationTest.java
+│   ├── AuthControllerUnitTest.java
+│   ├── ComarcaControllerTest.java
+│   ├── CorrespondenteControllerTest.java
+│   ├── SoliArquivoControllerTest.java
+│   └── UfControllerTest.java
+├── service/
+│   ├── AuthServiceTest.java
+│   ├── SoliArquivoServiceTest.java
+│   ├── SolicitacaoServiceTest.java
+│   └── UsuarioServiceTest.java
+└── util/
+    └── PasswordHashGenerator.java
 ```
-- Updates metadata for a file attachment
 
-### Delete File Attachment
-```
-DELETE /api/solicitacoes-anexos/{id}
-```
-- Removes file attachment and physical file
+## Key Entities and Relationships
 
-## Testing
+### Usuario
+Represents system users with authentication and authorization capabilities.
 
-### Unit Tests
-- Service layer testing with Mockito mocks
-- Controller layer testing with MockMvc
-- File operation testing with temporary directories
+### Solicitacao
+Central entity representing legal process requests with relationships to:
+- Processo (legal process)
+- StatusSolicitacao (request status)
+- Usuario (requesting user)
+- Correspondente (assigned correspondent)
+- And multiple other entities for comprehensive process management
 
-### Integration Tests
-- End-to-end testing of file upload workflows
-- Authentication and authorization testing
-- Error condition testing
+### SoliArquivo
+Represents file attachments for solicitations with:
+- Direct one-to-many relationship with Solicitacao
+- File storage with configurable path
+- Access control (correspondents can only delete their own files)
+- Metadata including upload timestamp, origin, and active status
+
+### Processo
+Legal process entity with relationships to multiple solicitations.
+
+## New File Attachment Implementation (SoliArquivo)
+
+### SoliArquivo
+The new file attachment implementation uses a simplified approach:
+- Direct relationship with Solicitacao (one-to-many)
+- Fields for file metadata and access control
+- Simplified storage and retrieval
+
+### SoliArquivoRepository
+JPA repository for managing SoliArquivo entities.
+
+### SoliArquivoService
+Business logic for file operations:
+- File upload with unique naming
+- Configurable storage directory
+- Access control implementation
+- File retrieval and deletion
+
+### SoliArquivoController
+REST endpoints for file attachment operations:
+- Upload, retrieval, update, and deletion
+- Proper HTTP status codes and error handling
+
+### SoliArquivoDTO
+Data Transfer Object for API responses containing only necessary information.
+
+### SoliArquivoMapper
+Utility class for converting between entities and DTOs.
+
+## Removed Components
+The following components from the old file attachment implementation have been removed:
+- SolicitacaoAnexo (file attachment entity)
+- SolicitacaoAnexoRepository (repository for file attachments)
+- SolicitacaoAnexoService (business logic for file operations)
+- SolicitacaoAnexoController (REST endpoints for file operations)
+- SolicitacaoPossuiArquivo (many-to-many relationship entity)
+- SolicitacaoPossuiArquivoId (composite key class)
+- SolicitacaoPossuiArquivoRepository (repository for relationships)
+- HistArqCpro (file history entity)
+
+These components were part of a more complex implementation that used a many-to-many relationship between solicitations and file attachments. The new implementation uses a simpler one-to-many relationship where each file attachment belongs to exactly one solicitation.
 
 ## Configuration
+The application is configured through property files:
+- application.properties (main configuration)
+- application-dev.properties (development profile)
+- application-prod.properties (production profile)
+- application-test.properties (test profile)
 
-### File Storage Directory
-Configure in `application.properties`:
-```properties
-file.upload-dir=./uploads
-```
+Key configuration includes:
+- Database connections
+- File storage directory (file.upload-dir)
+- JWT secret and expiration
+- Server port and context path
 
-### Directory Structure
-```
-src/
-├── main/
-│   ├── java/
-│   │   ├── entity/
-│   │   │   ├── SolicitacaoAnexo.java
-│   │   │   ├── SolicitacaoPossuiArquivo.java
-│   │   │   └── SolicitacaoPossuiArquivoId.java
-│   │   ├── repository/
-│   │   │   ├── SolicitacaoAnexoRepository.java
-│   │   │   └── SolicitacaoPossuiArquivoRepository.java
-│   │   ├── service/
-│   │   │   └── SolicitacaoAnexoService.java
-│   │   └── controller/
-│   │       └── SolicitacaoAnexoController.java
-│   └── resources/
-│       └── application.properties
-└── test/
-    └── java/
-        ├── service/
-        │   └── SolicitacaoAnexoServiceTest.java
-        └── controller/
-            ├── SolicitacaoAnexoControllerTest.java
-            └── AuthControllerIntegrationTest.java (fixed)
-```
+## Security
+JWT-based authentication and authorization with role-based access control:
+- ADMIN: Full system access
+- ADVOGADO: Lawyer access to relevant processes
+- CORRESPONDENTE: Correspondent access to assigned processes
 
-## Usage Examples
+## Testing
+Comprehensive unit tests for controllers and services ensure functionality and prevent regressions.
 
-### Upload a File
-```bash
-curl -X POST "http://localhost:8081/cra-api/api/solicitacoes-anexos/upload" \
-  -H "Authorization: Bearer <token>" \
-  -F "file=@/path/to/document.pdf" \
-  -F "solicitacaoId=123"
-```
-
-### List Files for Solicitation
-```bash
-curl -X GET "http://localhost:8081/cra-api/api/solicitacoes-anexos/solicitacao/123" \
-  -H "Authorization: Bearer <token>"
-```
-
-## Future Improvements
-
-1. File download endpoint
-2. File preview/thumbnail generation
-3. Batch upload functionality
-4. File size limits and validation
-5. File type restriction configuration
-6. Progress tracking for large file uploads
-7. File versioning support
+## API Documentation
+Swagger/OpenAPI documentation available at `/swagger-ui.html` provides interactive API exploration.
