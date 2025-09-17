@@ -29,6 +29,9 @@ WORKDIR /app
 RUN mkdir -p /app/uploads && \
     chmod 755 /app/uploads
 
+# Declare volume for persistent file storage
+VOLUME ["/app/uploads"]
+
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/cra-backend-0.0.1-SNAPSHOT.jar app.jar
 

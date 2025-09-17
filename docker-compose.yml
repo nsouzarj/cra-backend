@@ -30,6 +30,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=nso1810
     depends_on:
       - postgres
+    volumes:
+      - /home/uploads:/app/uploads
     networks:
       - cra-network
 
