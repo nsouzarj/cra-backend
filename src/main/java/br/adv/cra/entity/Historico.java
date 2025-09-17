@@ -24,19 +24,19 @@ public class Historico implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime datahistorico;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "idsolicitacao")
 	private Solicitacao solicitacao;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "idstatus")
 	private StatusSolicitacao statusSolicitacao;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "idusuario")
 	private Usuario usuario;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "idrenumeracao")
 	private Renumeracao renumeracao;
 	
