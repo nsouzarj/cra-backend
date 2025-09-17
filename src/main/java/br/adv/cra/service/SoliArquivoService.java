@@ -50,34 +50,33 @@ public class SoliArquivoService {
      * @throws IOException If there's an error saving the file
      */
     public SoliArquivo salvarAnexo(MultipartFile file, Long solicitacaoId, String origem) throws IOException {
-        logger.info("Starting file upload process for solicitacao ID: {}", solicitacaoId);
-        
-        // Verify that the solicitacao exists
-        logger.info("Checking if solicitacao with ID {} exists", solicitacaoId);
+    
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoId)
                 .orElseThrow(() -> {
                     logger.error("Solicitação with ID {} not found", solicitacaoId);
                     return new RuntimeException("Solicitação não encontrada");
                 });
-        logger.info("Solicitação found: ID={}", solicitacao.getId());
-
-        // Create the directory if it doesn't exist
-        logger.info("Upload directory: {}", uploadDir);
+        
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             logger.info("Upload directory does not exist, creating it...");
             Files.createDirectories(uploadPath);
         }
 
-        // Generate a unique filename
+        // Generate a unique filename with UUID + original filename
         String originalFilename = file.getOriginalFilename();
         logger.info("Original filename: {}", originalFilename);
         
         String fileExtension = "";
+        String fileNameWithoutExtension = originalFilename;
         if (originalFilename != null && originalFilename.contains(".")) {
-            fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            int lastDotIndex = originalFilename.lastIndexOf(".");
+            fileExtension = originalFilename.substring(lastDotIndex);
+            fileNameWithoutExtension = originalFilename.substring(0, lastDotIndex);
         }
-        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+        
+        // Create filename as UUID + original filename (without extension) + extension
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + fileNameWithoutExtension + fileExtension;
         logger.info("Generated unique filename: {}", uniqueFilename);
         
         Path filePath = uploadPath.resolve(uniqueFilename);
