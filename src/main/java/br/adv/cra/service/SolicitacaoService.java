@@ -119,6 +119,12 @@ public class SolicitacaoService {
         if (!solicitacaoRepository.existsById(id)) {
             throw new RuntimeException("Solicitação não encontrada");
         }
+        
+        // First delete all related historico records to avoid foreign key constraint violation
+        // We need to do this because there's no HistoricoRepository
+        solicitacaoRepository.deleteHistoricoBySolicitacaoId(id);
+        
+        // Then delete the solicitacao
         solicitacaoRepository.deleteById(id);
     }
     

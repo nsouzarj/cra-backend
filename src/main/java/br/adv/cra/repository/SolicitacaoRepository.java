@@ -6,9 +6,11 @@ import br.adv.cra.entity.Processo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -58,4 +60,10 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
     
     @Query("SELECT COUNT(s) FROM Solicitacao s WHERE s.dataconclusao IS NULL")
     Long countPendentes();
+    
+    // Method to delete historico records by solicitacao id
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM historico WHERE idsolicitacao = :solicitacaoId", nativeQuery = true)
+    void deleteHistoricoBySolicitacaoId(@Param("solicitacaoId") Long solicitacaoId);
 }
