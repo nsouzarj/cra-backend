@@ -40,4 +40,7 @@ public class SoliArquivo implements Serializable {
 	
 	@Column(length = 500)
 	private String caminhorelativo;
+	
+	@Column(length = 100)
+	private String driveFileId;
 }

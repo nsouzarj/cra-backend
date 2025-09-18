@@ -18,6 +18,7 @@ The CRA Backend is a Spring Boot-based backend system for the Correspondente Res
 - Support for multiple database backends.
 - Comprehensive API documentation via Swagger/OpenAPI.
 - Configurable for development, testing, and production environments.
+- Google Drive OAuth integration for cloud-based file storage.
 
 ## 2. System Architecture Pattern
 
@@ -35,6 +36,7 @@ The system follows a **layered architecture** pattern:
 - **Multi-database support** (PostgreSQL for production, MySQL as alternative, H2 for development).
 - **Swagger/OpenAPI 3.0** for interactive API documentation.
 - **Docker-based deployment** for containerization and portability.
+- **Google Drive OAuth 2.0** for cloud-based file storage.
 
 ### Architectural and Design Patterns Used
 - **MVC (Model-View-Controller)**: For handling HTTP requests and responses.
@@ -67,6 +69,7 @@ The system follows a **layered architecture** pattern:
 - **Lombok** for reducing boilerplate code
 - **Swagger/OpenAPI 3.0** for API documentation
 - **Docker** for containerization
+- **Google Drive API** for cloud storage
 
 ### Version and Compatibility Requirements
 - **Spring Boot**: 3.2.5
@@ -77,6 +80,7 @@ The system follows a **layered architecture** pattern:
 - **Lombok**: 1.18.30
 - **JJWT**: 0.11.5
 - **Springdoc OpenAPI**: 2.5.0
+- **Google Drive API Client**: 2.0.0
 
 ### Development Environment and Deployment
 
@@ -136,6 +140,7 @@ The system follows a **layered architecture** pattern:
 - All user access is JWT-secured.
 - Passwords are hashed using Spring Security's `PasswordEncoder`.
 - Role-based access control (ADMIN, ADVOGADO, CORRESPONDENTE).
+- Google Drive OAuth 2.0 for secure cloud storage integration.
 
 #### Known Issues and Risks
 - **File upload path must be manually configured**.
@@ -173,6 +178,7 @@ The system follows a **layered architecture** pattern:
 - **DOCKER.md**: Docker setup guide.
 - **SWAGGER_GUIDE.md**: API documentation guide.
 - **FILE_ATTACHMENT_API.md**: File attachment API details.
+- **GOOGLE_DRIVE_OAUTH.md**: Google Drive OAuth integration guide.
 - **Dockerfile**: Multi-stage Docker build configuration.
 - **docker-compose.yml / docker-compose.dev.yml**: Docker Compose files for deployment.
 
@@ -256,6 +262,7 @@ The system implements a modern file attachment system using the SoliArquivo enti
 - Access control (correspondents can only delete their own files)
 - RESTful API for upload, retrieval, update, and deletion
 - Unique file naming to prevent conflicts
+- Optional Google Drive OAuth integration for cloud storage
 
 ### API Endpoints
 - `POST /api/soli-arquivos/upload` - Upload a new file attachment
@@ -267,6 +274,15 @@ The system implements a modern file attachment system using the SoliArquivo enti
 ### Access Control
 - Correspondents can only delete files they uploaded
 - Administrators and other users can delete any file
+
+### Google Drive OAuth Integration
+The system supports storing files in Google Drive when enabled:
+- Configure OAuth credentials in application properties
+- Files are automatically stored in Google Drive when uploaded
+- Download and delete operations work seamlessly with Google Drive
+- Fallback to local storage when OAuth is disabled or fails
+
+See [GOOGLE_DRIVE_OAUTH.md](GOOGLE_DRIVE_OAUTH.md) for detailed configuration instructions.
 
 ## 7. Security Implementation
 

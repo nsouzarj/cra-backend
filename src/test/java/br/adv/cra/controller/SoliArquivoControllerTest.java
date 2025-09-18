@@ -3,6 +3,7 @@ package br.adv.cra.controller;
 import br.adv.cra.dto.SoliArquivoDTO;
 import br.adv.cra.entity.SoliArquivo;
 import br.adv.cra.service.SoliArquivoService;
+import br.adv.cra.service.GoogleDriveOAuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +30,9 @@ class SoliArquivoControllerTest {
 
     @Mock
     private SoliArquivoService soliArquivoService;
+    
+    @Mock
+    private GoogleDriveOAuthService googleDriveOAuthService;
 
     @InjectMocks
     private SoliArquivoController soliArquivoController;

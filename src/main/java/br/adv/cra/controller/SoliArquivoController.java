@@ -3,10 +3,13 @@ package br.adv.cra.controller;
 import br.adv.cra.dto.SoliArquivoDTO;
 import br.adv.cra.entity.SoliArquivo;
 import br.adv.cra.service.SoliArquivoService;
+import br.adv.cra.service.GoogleDriveOAuthService;
 import br.adv.cra.util.SoliArquivoMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +44,10 @@ public class SoliArquivoController {
     private static final Logger logger = LoggerFactory.getLogger(SoliArquivoController.class);
 
     private final SoliArquivoService soliArquivoService;
+    private final GoogleDriveOAuthService googleDriveOAuthService;
+
+    @Value("${google.drive.oauth.enabled:false}")
+    private boolean googleDriveOAuthEnabled;
 
     /**
      * Health check endpoint to verify the controller is reachable
@@ -109,17 +117,32 @@ public class SoliArquivoController {
             SoliArquivo soliArquivo = soliArquivoService.buscarPorId(id)
                     .orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 
-            Path filePath = Paths.get(soliArquivo.getCaminhofisico());
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (resource.exists()) {
+            // Check if this file is stored in Google Drive
+            if (googleDriveOAuthEnabled && googleDriveOAuthService.isInitialized() && soliArquivo.getDriveFileId() != null) {
+                // Download file from Google Drive
+                logger.info("Downloading file from Google Drive: {}", soliArquivo.getDriveFileId());
+                InputStream inputStream = googleDriveOAuthService.downloadFile(soliArquivo.getDriveFileId());
+                InputStreamResource resource = new InputStreamResource(inputStream);
+                
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_OCTET_STREAM)
                         .header(HttpHeaders.CONTENT_DISPOSITION,
                                 "attachment; filename=\"" + soliArquivo.getNomearquivo() + "\"")
                         .body(resource);
             } else {
-                return ResponseEntity.notFound().build();
+                // Download file from local storage (original behavior)
+                Path filePath = Paths.get(soliArquivo.getCaminhofisico());
+                Resource resource = new UrlResource(filePath.toUri());
+
+                if (resource.exists()) {
+                    return ResponseEntity.ok()
+                            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                            .header(HttpHeaders.CONTENT_DISPOSITION,
+                                    "attachment; filename=\"" + soliArquivo.getNomearquivo() + "\"")
+                            .body(resource);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
             }
         } catch (MalformedURLException e) {
             logger.error("Malformed URL error during file download for ID {}: {}", id, e.getMessage(), e);
