@@ -26,9 +26,6 @@ class SoliArquivoServiceTest {
 
     @Mock
     private SolicitacaoRepository solicitacaoRepository;
-    
-    @Mock
-    private GoogleDriveOAuthService googleDriveOAuthService;
 
     @InjectMocks
     private SoliArquivoService soliArquivoService;

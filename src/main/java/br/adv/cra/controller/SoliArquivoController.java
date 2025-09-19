@@ -3,7 +3,6 @@ package br.adv.cra.controller;
 import br.adv.cra.dto.SoliArquivoDTO;
 import br.adv.cra.entity.SoliArquivo;
 import br.adv.cra.service.SoliArquivoService;
-import br.adv.cra.service.GoogleDriveOAuthService;
 import br.adv.cra.util.SoliArquivoMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +23,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,10 +45,6 @@ public class SoliArquivoController {
     private static final Logger logger = LoggerFactory.getLogger(SoliArquivoController.class);
 
     private final SoliArquivoService soliArquivoService;
-    private final GoogleDriveOAuthService googleDriveOAuthService;
-
-    @Value("${google.drive.oauth.enabled:false}")
-    private boolean googleDriveOAuthEnabled;
 
     /**
      * Health check endpoint to verify the controller is reachable
@@ -73,8 +70,7 @@ public class SoliArquivoController {
             @RequestParam(value = "origem", defaultValue = "usuario") String origem) {
 
         try {
-            logger.info("Received upload request for file: {} with size: {} bytes",
-                    file.getOriginalFilename(), file.getSize());
+            logger.info("Received upload request for file: {} with size: {} bytes", file.getOriginalFilename(), file.getSize());
             logger.info("Solicitacao ID: {}, Origin: {}", solicitacaoId, origem);
 
             if (file.isEmpty()) {
@@ -117,35 +113,24 @@ public class SoliArquivoController {
             SoliArquivo soliArquivo = soliArquivoService.buscarPorId(id)
                     .orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 
-            // Check if this file is stored in Google Drive
-            if (googleDriveOAuthEnabled && googleDriveOAuthService.isInitialized() && soliArquivo.getDriveFileId() != null) {
-                // Download file from Google Drive
-                logger.info("Downloading file from Google Drive: {}", soliArquivo.getDriveFileId());
-                InputStream inputStream = googleDriveOAuthService.downloadFile(soliArquivo.getDriveFileId());
-                InputStreamResource resource = new InputStreamResource(inputStream);
-                
+            // Download file from local storage (original behavior)
+            Path filePath = Paths.get(soliArquivo.getCaminhofisico());
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_OCTET_STREAM)
                         .header(HttpHeaders.CONTENT_DISPOSITION,
                                 "attachment; filename=\"" + soliArquivo.getNomearquivo() + "\"")
                         .body(resource);
             } else {
-                // Download file from local storage (original behavior)
-                Path filePath = Paths.get(soliArquivo.getCaminhofisico());
-                Resource resource = new UrlResource(filePath.toUri());
-
-                if (resource.exists()) {
-                    return ResponseEntity.ok()
-                            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                            .header(HttpHeaders.CONTENT_DISPOSITION,
-                                    "attachment; filename=\"" + soliArquivo.getNomearquivo() + "\"")
-                            .body(resource);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
+                return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException e) {
             logger.error("Malformed URL error during file download for ID {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IOException e) {
+            logger.error("IO Exception during file download for ID {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (Exception e) {
             logger.error("Error during file download for ID {}: {}", id, e.getMessage(), e);

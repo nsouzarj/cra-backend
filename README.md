@@ -266,7 +266,7 @@ The system implements a modern file attachment system using the SoliArquivo enti
 
 ### API Endpoints
 - `POST /api/soli-arquivos/upload` - Upload a new file attachment
-- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
+- ` `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
 - `GET /api/soli-arquivos/{id}` - Get a specific file by ID
 - `PUT /api/soli-arquivos/{id}` - Update file information
 - `DELETE /api/soli-arquivos/{id}` - Delete a file (with access control)
@@ -280,9 +280,11 @@ The system supports storing files in Google Drive when enabled:
 - Configure OAuth credentials in application properties
 - Files are automatically stored in Google Drive when uploaded
 - Download and delete operations work seamlessly with Google Drive
-- Fallback to local storage when OAuth is disabled or fails
+- **When OAuth2 is enabled and properly configured, files are always stored in Google Drive**
+- **Fallback to local storage only occurs when OAuth2 is disabled or not properly configured**
 
 See [GOOGLE_DRIVE_OAUTH.md](GOOGLE_DRIVE_OAUTH.md) for detailed configuration instructions.
+See [GOOGLE_CLOUD_CONSOLE_SETUP.md](GOOGLE_CLOUD_CONSOLE_SETUP.md) for Google Cloud Console setup instructions.
 
 ## 7. Security Implementation
 

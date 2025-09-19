@@ -31,13 +31,9 @@ public class SoliArquivoService {
     
     private final SoliArquivoRepository soliArquivoRepository;
     private final SolicitacaoRepository solicitacaoRepository;
-    private final GoogleDriveOAuthService googleDriveOAuthService;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
-    
-    @Value("${google.drive.oauth.enabled:false}")
-    private boolean googleDriveOAuthEnabled;
 
     // Setter method for testing purposes
     public void setUploadDir(String uploadDir) {
@@ -45,7 +41,7 @@ public class SoliArquivoService {
     }
 
     /**
-     * Save a new file attachment
+     * Save an attachment file for a solicitation
      *
      * @param file          The file to save
      * @param solicitacaoId The ID of the solicitacao to attach the file to
@@ -54,6 +50,10 @@ public class SoliArquivoService {
      * @throws IOException If there's an error saving the file
      */
     public SoliArquivo salvarAnexo(MultipartFile file, Long solicitacaoId, String origem) throws IOException {
+        logger.info("Saving attachment for solicitacao ID: {}", solicitacaoId);
+        logger.info("Origin: {}", origem);
+        logger.info("File name: {}", file.getOriginalFilename());
+        logger.info("File size: {} bytes", file.getSize());
     
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoId)
                 .orElseThrow(() -> {
@@ -61,42 +61,9 @@ public class SoliArquivoService {
                     return new RuntimeException("Solicitação não encontrada");
                 });
         
-        // Check if Google Drive OAuth is enabled and properly initialized
-        if (googleDriveOAuthEnabled && googleDriveOAuthService.isInitialized()) {
-            // Upload file to Google Drive using OAuth
-            logger.info("Uploading file to Google Drive using OAuth...");
-            try {
-                String originalFilename = file.getOriginalFilename();
-                String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-                
-                String driveFileId = googleDriveOAuthService.uploadFile(file, uniqueFilename);
-                
-                // Create and save the SoliArquivo entity with Google Drive info
-                SoliArquivo soliArquivo = new SoliArquivo();
-                soliArquivo.setSolicitacao(solicitacao);
-                soliArquivo.setNomearquivo(originalFilename);
-                soliArquivo.setDatainclusao(LocalDateTime.now());
-                soliArquivo.setCaminhofisico("Google Drive OAuth: " + driveFileId);
-                soliArquivo.setOrigem(origem);
-                soliArquivo.setAtivo(true);
-                soliArquivo.setCaminhorelativo("/api/soli-arquivos/" + soliArquivo.getId() + "/download");
-                soliArquivo.setDriveFileId(driveFileId); // Store the Google Drive file ID
-                
-                logger.info("Saving SoliArquivo entity to database...");
-                SoliArquivo saved = soliArquivoRepository.save(soliArquivo);
-                logger.info("SoliArquivo entity saved successfully with ID: {}", saved.getId());
-                return saved;
-            } catch (Exception e) {
-                logger.error("Failed to upload file to Google Drive using OAuth: {}", e.getMessage(), e);
-                // Fallback to local storage if Google Drive fails
-                logger.info("Falling back to local storage...");
-                return saveFileLocally(file, solicitacao, origem);
-            }
-        } else {
-            // Save the file to the filesystem (original behavior)
-            // This is used when OAuth is not enabled or not properly initialized
-            return saveFileLocally(file, solicitacao, origem);
-        }
+        // Always save files locally since Google Drive OAuth is disabled
+        logger.info("Saving file locally");
+        return saveFileLocally(file, solicitacao, origem);
     }
     
     /**
@@ -207,19 +174,8 @@ public class SoliArquivoService {
         SoliArquivo soliArquivo = soliArquivoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
 
-        // Check if this file was stored in Google Drive using OAuth
-        if (googleDriveOAuthEnabled && googleDriveOAuthService.isInitialized() && soliArquivo.getDriveFileId() != null) {
-            // Delete the file from Google Drive using OAuth
-            try {
-                googleDriveOAuthService.deleteFile(soliArquivo.getDriveFileId());
-            } catch (IOException e) {
-                // Log the error but don't stop the deletion process
-                logger.error("Failed to delete file from Google Drive using OAuth: {}", e.getMessage(), e);
-            }
-        } 
-        // Otherwise, it's a local file
-        else if (soliArquivo.getCaminhofisico() != null) {
-            // Delete the physical file
+        // Delete the physical file
+        if (soliArquivo.getCaminhofisico() != null) {
             try {
                 Path filePath = Paths.get(soliArquivo.getCaminhofisico());
                 Files.deleteIfExists(filePath);

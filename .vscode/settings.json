@@ -7,5 +7,6 @@
         "observacao",
         "Solicitacao"
     ],
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "terminal.integrated.defaultProfile.windows": "Command Prompt"
 }
