@@ -18,6 +18,9 @@ public class SoliArquivoMapper {
         dto.setOrigem(soliArquivo.getOrigem());
         dto.setAtivo(soliArquivo.isAtivo());
         dto.setCaminhoRelativo(soliArquivo.getCaminhorelativo());
+        dto.setStorageLocation(soliArquivo.getStorageLocation());
+        dto.setGoogleDriveFileId(soliArquivo.getGoogleDriveFileId());
+        dto.setUserId(soliArquivo.getUserId());
         
         return dto;
     }
@@ -35,6 +38,9 @@ public class SoliArquivoMapper {
         entity.setOrigem(dto.getOrigem());
         entity.setAtivo(dto.isAtivo());
         entity.setCaminhorelativo(dto.getCaminhoRelativo());
+        entity.setStorageLocation(dto.getStorageLocation());
+        entity.setGoogleDriveFileId(dto.getGoogleDriveFileId());
+        entity.setUserId(dto.getUserId());
         
         return entity;
     }

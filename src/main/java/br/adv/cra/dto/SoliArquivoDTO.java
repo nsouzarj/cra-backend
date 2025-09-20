@@ -27,4 +27,16 @@ public class SoliArquivoDTO {
     
     @JsonProperty("caminhoRelativo")
     private String caminhoRelativo;
+    
+    // Storage location: "local" or "google_drive"
+    @JsonProperty("storageLocation")
+    private String storageLocation = "local";
+    
+    // Google Drive file ID (when stored in Google Drive)
+    @JsonProperty("googleDriveFileId")
+    private String googleDriveFileId;
+    
+    // User ID who owns this file (for Google Drive access)
+    @JsonProperty("userId")
+    private Long userId;
 }

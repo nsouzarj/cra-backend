@@ -16,6 +16,9 @@ The new implementation uses a simplified approach with the following components:
    - origem: Source of the file (e.g., "correspondente" or "usuario")
    - ativo: Boolean flag indicating if the file is active
    - caminhorelativo: Relative HTTP path to access the file
+   - storageLocation: Storage location ("local" or "google_drive")
+   - googleDriveFileId: Google Drive file ID (when stored in Google Drive)
+   - userId: User ID who owns this file (for Google Drive access)
 
 2. **Solicitacao**: Updated to include a one-to-many relationship with SoliArquivo
 
@@ -25,21 +28,31 @@ The new implementation uses a simplified approach with the following components:
 ### Services
 1. **SoliArquivoService**: Business logic for handling file operations including:
    - File upload with unique naming (UUID + original filename)
-   - File storage in configurable directory
+   - File storage in configurable directory or Google Drive
    - Access control (correspondents can only delete their own files)
-   - File retrieval and deletion
+   - File retrieval and deletion from both local storage and Google Drive
+   - Fallback to local storage if Google Drive operations fail
+
+2. **GoogleDriveService**: Business logic for interacting with Google Drive API including:
+   - File upload to Google Drive using application-level OAuth2 credentials
+   - File download from Google Drive
+   - File deletion from Google Drive
+   - Timeout handling to prevent hanging
 
 ### Controllers
 1. **SoliArquivoController**: REST endpoints for file attachment operations:
    - POST /api/soli-arquivos/upload: Upload a new file attachment
    - GET /api/soli-arquivos/solicitacao/{solicitacaoId}: Get all files for a solicitation
    - GET /api/soli-arquivos/{id}: Get a specific file by ID
+   - GET /api/soli-arquivos/{id}/download: Download a specific file
    - PUT /api/soli-arquivos/{id}: Update file information
    - DELETE /api/soli-arquivos/{id}: Delete a file (with access control)
 
 ### Tests
 1. **SoliArquivoServiceTest**: Unit tests for the file attachment service
 2. **SoliArquivoControllerTest**: Unit tests for the file attachment controller
+3. **GoogleDriveServiceTest**: Unit tests for the Google Drive service
+4. **GoogleDriveServiceTimeoutTest**: Unit tests for Google Drive service timeout handling
 
 ## Removed Components
 The following components from the old implementation have been removed as they are no longer needed:
@@ -61,11 +74,30 @@ The naming pattern is: `{UUID}_{original_filename}`
 For example, if a user uploads a file named "document.pdf", it will be stored as something like:
 `550e8400-e29b-41d4-a716-446655440000_document.pdf`
 
+For Google Drive storage, the original filename is preserved.
+
 ## Configuration
 The file storage directory is configured in `application.properties`:
 ```
 file.upload-dir=D:\Projetos\craweb\arquivos
 ```
+
+Google Drive OAuth configuration:
+```
+google.drive.oauth.enabled=true
+google.drive.oauth.client.id=your-client-id
+google.drive.oauth.client.secret=your-client-secret
+google.drive.folder.id=optional-folder-id
+```
+
+## Storage Selection
+The system supports two storage modes:
+1. **Local Storage**: Files stored on the local filesystem
+2. **Google Drive Storage**: Files stored in Google Drive using application-level OAuth2 credentials
+
+Storage selection is determined by:
+- The `storageLocation` parameter provided by the client
+- Whether Google Drive integration is enabled
 
 ## Access Control
 The implementation includes access control logic where:
@@ -73,3 +105,17 @@ The implementation includes access control logic where:
 - Administrators and other users can delete any file
 
 This is implemented in the `podeDeletar` method in `SoliArquivoService`.
+
+## Error Handling and Fallbacks
+The implementation includes robust error handling:
+- If Google Drive operations fail, the system falls back to local storage
+- Timeout handling prevents the application from hanging during Google Drive service initialization
+- Detailed logging helps with troubleshooting
+- Clear error messages are provided to users
+
+## Simplified Google Drive Integration
+The Google Drive integration has been simplified to use application-level OAuth2 credentials:
+- No user-specific authentication required
+- All files stored in a predefined Google Drive folder
+- Simplified API with no user ID parameter needed
+- See [SIMPLIFIED_GOOGLE_DRIVE_INTEGRATION.md](SIMPLIFIED_GOOGLE_DRIVE_INTEGRATION.md) for detailed setup instructions

@@ -71,6 +71,8 @@ As seguintes tags estão configuradas para organizar a documentação:
 - `tipo-solicitacao` - Operações relacionadas aos tipos de solicitações
 - `uf` - Operações relacionadas às unidades federativas
 - `usuario` - Operações relacionadas a usuários
+- `soli-arquivo` - Operações relacionadas a arquivos anexados às solicitações
+- `google-drive` - Operações relacionadas à integração com Google Drive
 
 ## Segurança
 
@@ -94,6 +96,24 @@ springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.swagger-ui.operationsSorter=method
 springdoc.swagger-ui.tagsSorter=alpha
 ```
+
+## Novos Endpoints Documentados
+
+### Soli Arquivo (soli-arquivo)
+Endpoints para gerenciar arquivos anexados às solicitações:
+- `POST /api/soli-arquivos/upload` - Upload de arquivo com seleção de armazenamento
+- `GET /api/soli-arquivos/{id}` - Obter informações de um arquivo
+- `GET /api/soli-arquivos/{id}/download` - Baixar um arquivo
+- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Listar arquivos de uma solicitação
+- `PUT /api/soli-arquivos/{id}` - Atualizar informações de um arquivo
+- `DELETE /api/soli-arquivos/{id}` - Excluir um arquivo
+
+### Google Drive (google-drive)
+Endpoints para gerenciar a integração com o Google Drive:
+- `GET /api/google-drive/authorize` - Iniciar fluxo de autorização do Google Drive
+- `GET /api/google-drive/callback` - Callback OAuth2 do Google Drive
+- `GET /api/google-drive/status` - Verificar status da conexão com o Google Drive
+- `DELETE /api/google-drive/disconnect` - Desconectar conta do Google Drive
 
 ## Solução de Problemas
 

@@ -41,5 +41,15 @@ public class SoliArquivo implements Serializable {
 	@Column(length = 500)
 	private String caminhorelativo;
 	
-	// Removed driveFileId field as Google Drive integration is no longer used
+	// Storage location: "local" or "google_drive"
+	@Column(name = "storage_location", length = 20)
+	private String storageLocation = "local";
+	
+	// Google Drive file ID (when stored in Google Drive)
+	@Column(name = "google_drive_file_id", length = 255)
+	private String googleDriveFileId;
+	
+	// User ID who owns this file (for Google Drive access)
+	@Column(name = "user_id")
+	private Long userId;
 }

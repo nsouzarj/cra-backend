@@ -1,7 +1,7 @@
 # File Attachment API
 
 ## Overview
-This document describes the file attachment functionality in the CRA Backend system. The API allows users to attach files to solicitations with proper access control.
+This document describes the file attachment functionality in the CRA Backend system. The API allows users to attach files to solicitations with proper access control and selective storage options (local or Google Drive).
 
 ## New Implementation (SoliArquivo)
 
@@ -13,10 +13,13 @@ The new implementation uses a simplified approach with the SoliArquivo entity:
 - `solicitacao` (Solicitacao): Reference to the associated solicitation
 - `nomearquivo` (String): Name of the uploaded file
 - `datainclusao` (LocalDateTime): Timestamp when the file was uploaded
-- `caminhofisico` (String): Physical path where the file is stored
+- `caminhofisico` (String): Physical path where the file is stored (local storage only)
 - `origem` (String): Source of the file (e.g., "correspondente" or "usuario")
 - `ativo` (boolean): Boolean flag indicating if the file is active
-- `caminhorelativo` (String): Relative HTTP path to access the file
+- `caminhorelativo` (String): Relative HTTP path to access the file (local storage only)
+- `storageLocation` (String): Where the file is stored ("local" or "google_drive")
+- `googleDriveFileId` (String): Google Drive file ID (when stored in Google Drive)
+- `userId` (Long): ID of the user who owns the file (for Google Drive access)
 
 ### SoliArquivoRepository
 JPA repository for managing SoliArquivo entities with the following methods:
@@ -28,12 +31,13 @@ JPA repository for managing SoliArquivo entities with the following methods:
 Business logic for handling file operations including:
 
 #### Methods
-- `salvarAnexo(MultipartFile file, Long solicitacaoId, String origem)`: Save a new file attachment with UUID + original filename naming
+- `salvarAnexo(MultipartFile file, Long solicitacaoId, String origem, String storageLocation, Long userId)`: Save a new file attachment with UUID + original filename naming
 - `listarAnexosPorSolicitacao(Long solicitacaoId)`: Get all files for a solicitation
 - `buscarPorId(Long id)`: Get a specific file by ID
 - `atualizar(Long id, SoliArquivo soliArquivo)`: Update file information
 - `deletar(Long id)`: Delete a file
 - `podeDeletar(Long id, String origem)`: Check if a file can be deleted by a specific origin
+- `getFileContent(Long id, Long userId)`: Get file content as InputStream from either local storage or Google Drive
 
 ### SoliArquivoController
 REST endpoints for file attachment operations:
@@ -44,6 +48,8 @@ REST endpoints for file attachment operations:
     - `file` (MultipartFile): The file to upload
     - `solicitacaoId` (Long): The ID of the solicitation to attach the file to
     - `origem` (String, optional): The origin of the file (default: "usuario")
+    - `storageLocation` (String, optional): Where to store the file ("local" or "google_drive", default: "local")
+    - `userId` (Long, optional): The ID of the user uploading the file (required for Google Drive storage)
   - Response: Created SoliArquivoDTO
 
 - `GET /api/soli-arquivos/solicitacao/{solicitacaoId}`: Get all files for a solicitation
@@ -55,6 +61,12 @@ REST endpoints for file attachment operations:
   - Parameters:
     - `id` (Long): The ID of the file
   - Response: SoliArquivoDTO
+
+- `GET /api/soli-arquivos/{id}/download`: Download a specific file
+  - Parameters:
+    - `id` (Long): The ID of the file
+    - `userId` (Long, optional): The ID of the user requesting the download (required for Google Drive files)
+  - Response: File content as downloadable resource
 
 - `PUT /api/soli-arquivos/{id}`: Update file information
   - Parameters:
@@ -88,10 +100,40 @@ Data Transfer Object for API responses containing:
 - `origem` (String): Source of the file
 - `ativo` (boolean): Active status
 - `caminhoRelativo` (String): Relative HTTP path to access the file
+- `storageLocation` (String): Where the file is stored ("local" or "google_drive")
+- `googleDriveFileId` (String): Google Drive file ID (when stored in Google Drive)
+- `userId` (Long): ID of the user who owns the file (for Google Drive access)
+
+## Google Drive Integration API
+
+### GoogleDriveController
+REST endpoints for managing Google Drive OAuth2 flow:
+
+#### Endpoints
+- `GET /api/google-drive/authorize`: Initiate Google Drive OAuth flow
+  - Parameters:
+    - `userId` (Long): The ID of the user connecting their Google Drive
+  - Response: Redirect to Google OAuth2 consent screen
+
+- `GET /api/google-drive/callback`: Handle OAuth callback
+  - Parameters:
+    - `code` (String): The authorization code from Google
+    - `state` (String): The user ID passed in the state parameter
+  - Response: Success or error message
+
+- `GET /api/google-drive/status`: Check Google Drive connection status
+  - Parameters:
+    - `userId` (Long): The ID of the user
+  - Response: Connection status
+
+- `DELETE /api/google-drive/disconnect`: Disconnect Google Drive
+  - Parameters:
+    - `userId` (Long): The ID of the user
+  - Response: Success or error message
 
 ## API Usage Examples
 
-### Upload a File
+### Upload a File to Local Storage
 ```bash
 curl -X POST \
   http://localhost:8081/cra-api/api/soli-arquivos/upload \
@@ -99,6 +141,18 @@ curl -X POST \
   -F 'file=@/path/to/file.pdf' \
   -F 'solicitacaoId=123' \
   -F 'origem=correspondente'
+```
+
+### Upload a File to Google Drive
+```bash
+curl -X POST \
+  http://localhost:8081/cra-api/api/soli-arquivos/upload \
+  -H 'content-type: multipart/form-data' \
+  -F 'file=@/path/to/file.pdf' \
+  -F 'solicitacaoId=123' \
+  -F 'origem=correspondente' \
+  -F 'storageLocation=google_drive' \
+  -F 'userId=456'
 ```
 
 ### List Files for a Solicitation
@@ -113,6 +167,18 @@ curl -X GET \
   http://localhost:8081/cra-api/api/soli-arquivos/456
 ```
 
+### Download a File from Local Storage
+```bash
+curl -X GET \
+  http://localhost:8081/cra-api/api/soli-arquivos/456/download
+```
+
+### Download a File from Google Drive
+```bash
+curl -X GET \
+  http://localhost:8081/cra-api/api/soli-arquivos/456/download?userId=789
+```
+
 ### Update File Information
 ```bash
 curl -X PUT \
@@ -124,7 +190,9 @@ curl -X PUT \
     "nomearquivo": "updated-file.pdf",
     "origem": "usuario",
     "ativo": true,
-    "caminhoRelativo": "/arquivos/updated-file.pdf"
+    "caminhoRelativo": "/arquivos/updated-file.pdf",
+    "storageLocation": "local",
+    "userId": 789
   }'
 ```
 
@@ -134,6 +202,24 @@ curl -X DELETE \
   http://localhost:8081/cra-api/api/soli-arquivos/456?origem=correspondente
 ```
 
+### Connect Google Drive Account
+```bash
+curl -X GET \
+  http://localhost:8081/cra-api/api/google-drive/authorize?userId=456
+```
+
+### Check Google Drive Connection Status
+```bash
+curl -X GET \
+  http://localhost:8081/cra-api/api/google-drive/status?userId=456
+```
+
+### Disconnect Google Drive Account
+```bash
+curl -X DELETE \
+  http://localhost:8081/cra-api/api/google-drive/disconnect?userId=456
+```
+
 ## Access Control
 The implementation includes access control logic where:
 - Correspondents can only delete files they uploaded
@@ -141,8 +227,23 @@ The implementation includes access control logic where:
 
 This is implemented in the `podeDeletar` method in `SoliArquivoService`.
 
+## Selective Storage
+The implementation supports selective storage where:
+- Files can be stored locally or in Google Drive
+- Storage location is selected at upload time
+- Both storage options work seamlessly with the same API
+
 ## Configuration
 The file storage directory is configured in `application.properties`:
 ```
 file.upload-dir=D:\Projetos\craweb\arquivos
+```
+
+Google Drive OAuth configuration:
+```
+google.drive.oauth.enabled=true
+google.drive.oauth.client.id=your-client-id
+google.drive.oauth.client.secret=your-client-secret
+google.drive.folder.id=optional-folder-id
+google.drive.oauth.redirect.uri=http://localhost:8081/cra-api/api/google-drive/callback
 ```

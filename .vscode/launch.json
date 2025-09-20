@@ -43,10 +43,9 @@
                 "-Djavax.net.ssl.keyStore=",
                 "-Djdk.tls.client.protocols=TLSv1.2",
                 "-Dserver.ssl.enabled=false",
-                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-on6hdl2unuvnc6qgjf6an10u0v4i0kcv.apps.googleusercontent.com",
-                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
-                "-DGOOGLE_DRIVE_REDIRECT_URI=http://localhost:8081/Callback",
-                "-DGOOGLE_DRIVE_FOLDER_ID=1cXM4Pq2FVXh8dWoRICDNMjMIZOrNa9gc"
+                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com",
+                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
+                "-DGOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-"
             ]
         },
         {
@@ -60,10 +59,9 @@
                 "-Djavax.net.ssl.keyStore=",
                 "-Djdk.tls.client.protocols=TLSv1.2",
                 "-Dserver.ssl.enabled=false",
-                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-on6hdl2unuvnc6qgjf6an10u0v4i0kcv.apps.googleusercontent.com",
-                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
-                "-DGOOGLE_DRIVE_REDIRECT_URI=http://localhost:8081/Callback",
-                "-DGOOGLE_DRIVE_FOLDER_ID=1cXM4Pq2FVXh8dWoRICDNMjMIZOrNa9gc"
+                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com",
+                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
+                "-DGOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-"
             ]
         },
         {
@@ -79,10 +77,9 @@
                 "-Djdk.tls.client.protocols=TLSv1.2",
                 "-Dserver.ssl.enabled=false",
                 "-Djava.security.manager=allow",
-                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-on6hdl2unuvnc6qgjf6an10u0v4i0kcv.apps.googleusercontent.com",
-                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
-                "-DGOOGLE_DRIVE_REDIRECT_URI=http://localhost:8081/Callback",
-                "-DGOOGLE_DRIVE_FOLDER_ID=1cXM4Pq2FVXh8dWoRICDNMjMIZOrNa9gc"
+                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com",
+                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
+                "-DGOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-"
             ]
         },
         {

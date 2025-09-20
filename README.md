@@ -178,7 +178,7 @@ The system follows a **layered architecture** pattern:
 - **DOCKER.md**: Docker setup guide.
 - **SWAGGER_GUIDE.md**: API documentation guide.
 - **FILE_ATTACHMENT_API.md**: File attachment API details.
-- **GOOGLE_DRIVE_OAUTH.md**: Google Drive OAuth integration guide.
+- **GOOGLE_DRIVE_INTEGRATION.md**: Google Drive integration guide.
 - **Dockerfile**: Multi-stage Docker build configuration.
 - **docker-compose.yml / docker-compose.dev.yml**: Docker Compose files for deployment.
 
@@ -211,46 +211,18 @@ The system follows a **layered architecture** pattern:
 - `DELETE /api/solicitacoes/{id}` - Delete solicitation
 
 ### File Attachments (SoliArquivos)
-- `POST /api/soli-arquivos/upload` - Upload file attachment
-- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - List files for solicitation
-- `GET /api/soli-arquivos/{id}` - Get file by ID
-- `PUT /api/soli-arquivos/{id}` - Update file metadata
-- `DELETE /api/soli-arquivos/{id}` - Delete file (with access control)
+- `POST /api/soli-arquivos/upload` - Upload a new file attachment
+- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
+- `GET /api/soli-arquivos/{id}` - Get a specific file by ID
+- `GET /api/soli-arquivos/{id}/download` - Download a specific file
+- `PUT /api/soli-arquivos/{id}` - Update file information
+- `DELETE /api/soli-arquivos/{id}` - Delete a file (with access control)
 
-### Courts (Comarcas)
-- `GET /api/comarcas` - List all courts
-- `GET /api/comarcas/{id}` - Get court by ID
-- `POST /api/comarcas` - Create new court
-- `PUT /api/comarcas/{id}` - Update court
-- `DELETE /api/comarcas/{id}` - Delete court
-
-### Correspondents
-- `GET /api/correspondentes` - List all correspondents
-- `GET /api/correspondentes/{id}` - Get correspondent by ID
-- `POST /api/correspondentes` - Create new correspondent
-- `PUT /api/correspondentes/{id}` - Update correspondent
-- `DELETE /api/correspondentes/{id}` - Delete correspondent
-
-### Status Types
-- `GET /api/status-solicitacao` - List all solicitation statuses
-- `GET /api/status-solicitacao/{id}` - Get status by ID
-- `POST /api/status-solicitacao` - Create new status
-- `PUT /api/status-solicitacao/{id}` - Update status
-- `DELETE /api/status-solicitacao/{id}` - Delete status
-
-### Request Types
-- `GET /api/tipo-solicitacao` - List all solicitation types
-- `GET /api/tipo-solicitacao/{id}` - Get type by ID
-- `POST /api/tipo-solicitacao` - Create new type
-- `PUT /api/tipo-solicitacao/{id}` - Update type
-- `DELETE /api/tipo-solicitacao/{id}` - Delete type
-
-### States (UFs)
-- `GET /api/ufs` - List all states
-- `GET /api/ufs/{id}` - Get state by ID
-- `POST /api/ufs` - Create new state
-- `PUT /api/ufs/{id}` - Update state
-- `DELETE /api/ufs/{id}` - Delete state
+### Google Drive Integration
+- `GET /api/google-drive/authorize` - Initiate Google Drive OAuth flow
+- `GET /api/google-drive/callback` - Handle OAuth callback
+- `GET /api/google-drive/status` - Check Google Drive connection status
+- `DELETE /api/google-drive/disconnect` - Disconnect Google Drive
 
 ## 6. File Attachment Implementation
 
@@ -263,10 +235,11 @@ The system implements a modern file attachment system using the SoliArquivo enti
 - RESTful API for upload, retrieval, update, and deletion
 - Unique file naming to prevent conflicts
 - Optional Google Drive OAuth integration for cloud storage
+- Selective storage: Choose between local storage and Google Drive per file
 
 ### API Endpoints
 - `POST /api/soli-arquivos/upload` - Upload a new file attachment
-- ` `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
+- `GET /api/soli-arquivos/solicitacao/{solicitacaoId}` - Get all files for a solicitation
 - `GET /api/soli-arquivos/{id}` - Get a specific file by ID
 - `PUT /api/soli-arquivos/{id}` - Update file information
 - `DELETE /api/soli-arquivos/{id}` - Delete a file (with access control)
@@ -278,46 +251,73 @@ The system implements a modern file attachment system using the SoliArquivo enti
 ### Google Drive OAuth Integration
 The system supports storing files in Google Drive when enabled:
 - Configure OAuth credentials in application properties
-- Files are automatically stored in Google Drive when uploaded
-- Download and delete operations work seamlessly with Google Drive
-- **When OAuth2 is enabled and properly configured, files are always stored in Google Drive**
-- **Fallback to local storage only occurs when OAuth2 is disabled or not properly configured**
+- Files can be selectively stored in Google Drive or locally
+- Download and delete operations work seamlessly with both storage options
+- Users can connect/disconnect their Google Drive accounts
 
-See [GOOGLE_DRIVE_OAUTH.md](GOOGLE_DRIVE_OAUTH.md) for detailed configuration instructions.
-See [GOOGLE_CLOUD_CONSOLE_SETUP.md](GOOGLE_CLOUD_CONSOLE_SETUP.md) for Google Cloud Console setup instructions.
+### File Naming Convention
+Files are stored with a unique name generated by combining a UUID with the original filename to ensure:
+- Uniqueness across all uploaded files
+- Preservation of the original filename for identification
+- Compatibility with file system limitations
 
-## 7. Security Implementation
+The naming pattern is: `{UUID}_{original_filename}`
 
-### Authentication
-JWT-based authentication with refresh tokens for enhanced security.
+For example, if a user uploads a file named "document.pdf", it will be stored as something like:
+`550e8400-e29b-41d4-a716-446655440000_document.pdf`
 
-### Authorization
-Role-based access control with three roles:
-- **ADMIN**: Full system access
-- **ADVOGADO**: Lawyer access to relevant processes
-- **CORRESPONDENTE**: Correspondent access to assigned processes
+### Configuration
+The file storage directory is configured in `application.properties`:
+```
+file.upload-dir=D:\Projetos\craweb\arquivos
+```
 
-### Password Security
-Passwords are securely hashed using Spring Security's `PasswordEncoder`.
+Google Drive OAuth configuration:
+```
+google.drive.oauth.enabled=true
+google.drive.oauth.client.id=your-client-id
+google.drive.oauth.client.secret=your-client-secret
+google.drive.folder.id=optional-folder-id
+google.drive.oauth.redirect.uri=http://localhost:8081/cra-api/api/google-drive/callback
+```
 
-## 8. Database Schema
+## 7. API Documentation (Swagger)
 
-The system uses a comprehensive database schema with entities for:
-- Users and authentication
-- Legal processes and solicitations
-- Courts and jurisdictions
-- Correspondents and their assignments
-- File attachments with metadata
-- Status and type classifications
-- States and geographic information
+The API is fully documented using Swagger/OpenAPI 3.0. To access the documentation:
 
-## 9. Testing
+1. Start the application:
+   ```bash
+   mvn spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
 
-The project includes unit tests for controllers and services to ensure functionality and prevent regressions.
+2. Open your browser and navigate to:
+   ```
+   http://localhost:8081/cra-api/swagger-ui.html
+   ```
 
-## 10. Documentation
+The documentation includes:
+- Interactive API testing interface
+- Detailed endpoint descriptions
+- Request/response schemas
+- Authentication information
+- Example requests and responses
 
-Comprehensive documentation is available through:
-- This README file
-- Swagger/OpenAPI documentation at `/swagger-ui.html`
-- Additional markdown files for specific features
+API Tags available in Swagger:
+- `auth`: Authentication and authorization operations
+- `comarca`: Court district operations
+- `correspondente`: Legal correspondent operations
+- `orgao`: Government agency operations
+- `processo`: Legal process operations
+- `solicitacao`: Service request operations
+- `status-solicitacao`: Request status operations
+- `tipo-solicitacao`: Request type operations
+- `uf`: Brazilian state operations
+- `usuario`: User operations
+- `soli-arquivo`: File attachment operations
+- `google-drive`: Google Drive integration operations
+
+All endpoints are documented with:
+- Detailed descriptions
+- Parameter information
+- Response codes and schemas
+- Example values

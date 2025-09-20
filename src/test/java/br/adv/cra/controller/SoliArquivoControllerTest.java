@@ -51,6 +51,7 @@ class SoliArquivoControllerTest {
 
         Long solicitacaoId = 1L;
         String origem = "usuario";
+        String storageLocation = "local";
 
         SoliArquivoDTO dto = new SoliArquivoDTO();
         dto.setId(1L);
@@ -62,17 +63,18 @@ class SoliArquivoControllerTest {
         dto.setCaminhoRelativo("/arquivos/test.txt");
 
         // Configure mocks
-        when(soliArquivoService.salvarAnexo(any(), eq(solicitacaoId), eq(origem))).thenReturn(new SoliArquivo());
+        when(soliArquivoService.salvarAnexo(any(), eq(solicitacaoId), eq(origem), eq(storageLocation))).thenReturn(new SoliArquivo());
 
         // Execute the request
         mockMvc.perform(multipart("/api/soli-arquivos/upload")
                 .file(file)
                 .param("solicitacaoId", solicitacaoId.toString())
-                .param("origem", origem))
+                .param("origem", origem)
+                .param("storageLocation", storageLocation))
                 .andExpect(status().isCreated());
 
         // Verify interactions
-        verify(soliArquivoService, times(1)).salvarAnexo(any(), eq(solicitacaoId), eq(origem));
+        verify(soliArquivoService, times(1)).salvarAnexo(any(), eq(solicitacaoId), eq(origem), eq(storageLocation));
     }
 
     @Test

@@ -48,7 +48,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
         @Tag(name = "usuario", description = "Operações relacionadas a usuários\n\n" +
             "Endpoints para gerenciar usuários do sistema. " +
             "Permite criar, ler, atualizar e deletar informações sobre usuários, " +
-            "bem como gerenciar seus perfis e permissões.")
+            "bem como gerenciar seus perfis e permissões."),
+        @Tag(name = "soli-arquivo", description = "Operações relacionadas a arquivos anexados às solicitações\n\n" +
+            "Endpoints para gerenciar arquivos anexados às solicitações. " +
+            "Permite fazer upload, download, listar, atualizar e deletar arquivos, " +
+            "com suporte a armazenamento local ou no Google Drive."),
+        @Tag(name = "google-drive", description = "Operações relacionadas à integração com Google Drive\n\n" +
+            "Endpoints para gerenciar a integração com o Google Drive. " +
+            "Permite conectar, desconectar e verificar o status da conta do Google Drive do usuário, " +
+            "bem como fazer upload e download de arquivos diretamente do Google Drive.")
     }
 )
 public class SwaggerDocumentationConfig {
