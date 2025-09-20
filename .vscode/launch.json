@@ -59,9 +59,13 @@
                 "-Djavax.net.ssl.keyStore=",
                 "-Djdk.tls.client.protocols=TLSv1.2",
                 "-Dserver.ssl.enabled=false",
-                "-DGOOGLE_DRIVE_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com",
-                "-DGOOGLE_DRIVE_CLIENT_SECRET=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",
-                "-DGOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-"
+                "GOOGLE_DRIVE_OAUTH_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com",
+                "GOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-",
+                "GOOGLE_DRIVE_OAUTH_CLIENT_SECRET=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",
+                "GOOGLE_DRIVE_OAUTH_REDIRECT_URI=https://localhost:8081/cra-api/api/google-drive/callback"
+
+
+                
             ]
         },
         {
