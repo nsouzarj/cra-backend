@@ -28,6 +28,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/dbcra
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=nso1810
+      - GOOGLE_DRIVE_OAUTH_CLIENT_ID=514473695163-8cq4j925224rtln7e43m7cb4892g7bkt.apps.googleusercontent.com
+      - GOOGLE_DRIVE_OAUTH_CLIENT_SECRET=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
+      - GOOGLE_DRIVE_FOLDER_ID=1rP56ReCpHnQqbmIKWfzJgK_m01EH7_G-
+      - GOOGLE_DRIVE_OAUTH_REDIRECT_URI=https://cra-backend-nnb0.onrender.com/cra-api/api/google-drive/callback
     depends_on:
       - postgres
     volumes:

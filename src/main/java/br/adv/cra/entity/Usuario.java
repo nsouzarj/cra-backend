@@ -45,6 +45,7 @@ public class Usuario implements Serializable {
     @JsonIgnoreProperties("usuarios")
     private Correspondente correspondente;
     
+    /**
     // Custom setter to handle deserialization when only ID is provided
     @JsonSetter("correspondente")
     public void setCorrespondenteFromId(Object correspondenteObj) {
@@ -62,6 +63,8 @@ public class Usuario implements Serializable {
             this.correspondente = null;
         }
     }
+
+    */
     
     private Integer tipo; // 1-Adm, 2-Advgodado, 3-Correspondente
     
