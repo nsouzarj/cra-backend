@@ -321,6 +321,20 @@ public class GoogleDriveService {
                 logger.info("File downloaded successfully from Google Drive");
                 
                 return result;
+            } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+                // Handle specific Google Drive API errors
+                logger.error("Google Drive API error during download attempt {}/{}: {}", attempt, MAX_RETRIES, e.getStatusCode(), e);
+                if (e.getStatusCode() == 404) {
+                    logger.error("File not found in Google Drive with ID: {}", fileId);
+                    throw new IOException("File not found in Google Drive with ID: " + fileId, e);
+                } else if (e.getStatusCode() == 403) {
+                    logger.error("Permission denied accessing file in Google Drive with ID: {}", fileId);
+                    throw new IOException("Permission denied accessing file in Google Drive with ID: " + fileId, e);
+                } else if (e.getStatusCode() == 401) {
+                    logger.error("Authentication failed for Google Drive access with file ID: {}", fileId);
+                    throw new IOException("Authentication failed for Google Drive access with file ID: " + fileId, e);
+                }
+                throw e; // Re-throw for retry logic
             } catch (GeneralSecurityException e) {
                 logger.error("Security exception during Google Drive download: ", e);
                 throw new IOException("Failed to download file from Google Drive due to security issues", e);
@@ -385,6 +399,21 @@ public class GoogleDriveService {
                 service.files().delete(fileId).execute();
                 logger.info("File deleted successfully from Google Drive with ID: {}", fileId);
                 return;
+            } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+                // Handle specific Google Drive API errors
+                logger.error("Google Drive API error during deletion attempt {}/{}: {}", attempt, MAX_RETRIES, e.getStatusCode(), e);
+                if (e.getStatusCode() == 404) {
+                    logger.warn("File not found in Google Drive with ID: {} during deletion - may have already been deleted", fileId);
+                    // Don't throw an error for file not found during deletion
+                    return;
+                } else if (e.getStatusCode() == 403) {
+                    logger.error("Permission denied deleting file in Google Drive with ID: {}", fileId);
+                    throw new IOException("Permission denied deleting file in Google Drive with ID: " + fileId, e);
+                } else if (e.getStatusCode() == 401) {
+                    logger.error("Authentication failed for Google Drive access during deletion with file ID: {}", fileId);
+                    throw new IOException("Authentication failed for Google Drive access during deletion with file ID: " + fileId, e);
+                }
+                throw e; // Re-throw for retry logic
             } catch (GeneralSecurityException e) {
                 logger.error("Security exception during Google Drive deletion: ", e);
                 throw new IOException("Failed to delete file from Google Drive due to security issues", e);
@@ -583,6 +612,41 @@ public class GoogleDriveService {
         }
     }
     
+    /**
+     * Check if a file exists in Google Drive
+     * 
+     * @param fileId The Google Drive file ID
+     * @return true if the file exists, false otherwise
+     */
+    public boolean fileExists(String fileId) {
+        try {
+            logger.info("Checking if file exists in Google Drive with ID: {}", fileId);
+            
+            // Ensure we have valid tokens before proceeding
+            ensureValidAccessToken();
+            
+            // Create Google Drive service
+            Drive service = createDriveService();
+            
+            // Try to get file metadata
+            service.files().get(fileId).setFields("id").execute();
+            logger.info("File exists in Google Drive with ID: {}", fileId);
+            return true;
+        } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+            // Handle specific Google Drive API errors
+            if (e.getStatusCode() == 404) {
+                logger.info("File not found in Google Drive with ID: {}", fileId);
+                return false;
+            } else {
+                logger.error("Google Drive API error checking file existence: {}", e.getStatusCode(), e);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error checking file existence in Google Drive: {}", e.getMessage(), e);
+            return false;
+        }
+    }
+
     /**
      * Clear stored tokens (for logout/disconnect)
      */

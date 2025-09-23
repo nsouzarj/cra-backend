@@ -179,9 +179,35 @@ public class SoliArquivoController {
                     .header(HttpHeaders.CONTENT_DISPOSITION,
                             "attachment; filename=\"" + soliArquivo.getNomearquivo() + "\"")
                     .body(resource);
+        } catch (java.io.IOException e) {
+            logger.error("IO Exception during file download for ID {}: {}", id, e.getMessage(), e);
+            // Check if it's a specific Google Drive error
+            if (e.getMessage().contains("File not found in Google Drive")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                    .body(new InputStreamResource(new java.io.ByteArrayInputStream(
+                        "File not found in Google Drive. It may have been deleted.".getBytes())));
+            } else if (e.getMessage().contains("Permission denied")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                    .body(new InputStreamResource(new java.io.ByteArrayInputStream(
+                        "Permission denied accessing file in Google Drive.".getBytes())));
+            } else if (e.getMessage().contains("Authentication failed")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                    .body(new InputStreamResource(new java.io.ByteArrayInputStream(
+                        "Authentication failed for Google Drive access.".getBytes())));
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                .body(new InputStreamResource(new java.io.ByteArrayInputStream(
+                    ("Error downloading file: " + e.getMessage()).getBytes())));
         } catch (Exception e) {
             logger.error("Error during file download for ID {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                .body(new InputStreamResource(new java.io.ByteArrayInputStream(
+                    ("Unexpected error during file download: " + e.getMessage()).getBytes())));
         }
     }
 
@@ -286,6 +312,55 @@ public class SoliArquivoController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Check if a file exists in its storage location
+     * 
+     * @param id The ID of the file attachment to check
+     * @return true if the file exists, false otherwise
+     */
+    @GetMapping("/{id}/exists")
+    @Operation(
+        summary = "Verificar se um arquivo existe",
+        description = "Verifica se um arquivo anexado existe em seu local de armazenamento"
+    )
+    @ApiResponse(responseCode = "200", description = "Verificação realizada com sucesso")
+    @ApiResponse(responseCode = "400", description = "ID inválido")
+    @ApiResponse(responseCode = "404", description = "Arquivo não encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    public ResponseEntity<Map<String, Object>> fileExists(
+        @Parameter(description = "ID do arquivo a ser verificado", required = true)
+        @PathVariable Long id
+    ) {
+        // Validate the ID parameter
+        if (id == null || id <= 0) {
+            logger.warn("Invalid ID parameter received for file existence check: {}", id);
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            SoliArquivo soliArquivo = soliArquivoService.buscarPorId(id)
+                    .orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
+
+            boolean exists = soliArquivoService.fileExists(id);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", id);
+            response.put("exists", exists);
+            response.put("storageLocation", soliArquivo.getStorageLocation());
+            
+            if ("google_drive".equals(soliArquivo.getStorageLocation())) {
+                response.put("googleDriveFileId", soliArquivo.getGoogleDriveFileId());
+            } else {
+                response.put("filePath", soliArquivo.getCaminhofisico());
+            }
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error checking file existence for ID {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -111,40 +111,54 @@ public class SoliArquivoService {
     private SoliArquivo saveFileToGoogleDrive(MultipartFile file, Solicitacao solicitacao, String origem) throws IOException {
         logger.info("Starting Google Drive file save operation");
         
-        // Upload file to Google Drive
-        String googleDriveFileId = googleDriveService.uploadFile(file);
-        
-        // Create and save the SoliArquivo entity
-        logger.info("Creating SoliArquivo entity for Google Drive file with ID: {}", googleDriveFileId);
-        SoliArquivo soliArquivo = new SoliArquivo();
-        soliArquivo.setSolicitacao(solicitacao);
-        soliArquivo.setNomearquivo(file.getOriginalFilename());
-        soliArquivo.setDatainclusao(LocalDateTime.now());
-        soliArquivo.setCaminhofisico(null); // No physical path for Google Drive files
-        soliArquivo.setOrigem(origem);
-        soliArquivo.setAtivo(true); // Default to active
-        soliArquivo.setCaminhorelativo(null); // No relative path for Google Drive files
-        soliArquivo.setStorageLocation("google_drive");
-        soliArquivo.setGoogleDriveFileId(googleDriveFileId);
-        soliArquivo.setUserId(null);
-        
-        logger.info("Saving SoliArquivo entity to database");
+        String googleDriveFileId = null;
         try {
+            // Upload file to Google Drive
+            googleDriveFileId = googleDriveService.uploadFile(file);
+            
+            // Create and save the SoliArquivo entity
+            logger.info("Creating SoliArquivo entity for Google Drive file with ID: {}", googleDriveFileId);
+            SoliArquivo soliArquivo = new SoliArquivo();
+            soliArquivo.setSolicitacao(solicitacao);
+            soliArquivo.setNomearquivo(file.getOriginalFilename());
+            soliArquivo.setDatainclusao(LocalDateTime.now());
+            soliArquivo.setCaminhofisico(null); // No physical path for Google Drive files
+            soliArquivo.setOrigem(origem);
+            soliArquivo.setAtivo(true); // Default to active
+            soliArquivo.setCaminhorelativo(null); // No relative path for Google Drive files
+            soliArquivo.setStorageLocation("google_drive");
+            soliArquivo.setGoogleDriveFileId(googleDriveFileId);
+            soliArquivo.setUserId(null);
+            
+            logger.info("Saving SoliArquivo entity to database");
             SoliArquivo saved = soliArquivoRepository.save(soliArquivo);
             logger.info("SoliArquivo entity saved successfully with ID: {}", saved.getId());
             return saved;
-        } catch (Exception e) {
-            logger.error("Failed to save SoliArquivo entity to database: {}", e.getMessage(), e);
-            // If database save fails, try to delete the file from Google Drive
-            try {
-                logger.info("Attempting to clean up Google Drive file due to database save failure");
-                googleDriveService.deleteFile(googleDriveFileId);
-            } catch (IOException deleteException) {
-                logger.error("Failed to delete file from Google Drive after database save failure: {}", deleteException.getMessage(), deleteException);
-            } catch (Exception deleteException) {
-                logger.error("Failed to delete file from Google Drive after database save failure: {}", deleteException.getMessage(), deleteException);
+        } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+            // Handle specific Google Drive API errors
+            logger.error("Google Drive API error during file upload: {}", e.getStatusCode(), e);
+            if (e.getStatusCode() == 403) {
+                logger.error("Permission denied uploading file to Google Drive");
+                throw new IOException("Permission denied uploading file to Google Drive. Check sharing permissions.", e);
+            } else if (e.getStatusCode() == 401) {
+                logger.error("Authentication failed for Google Drive access during upload");
+                throw new IOException("Authentication failed for Google Drive access during upload.", e);
+            } else {
+                logger.error("Google Drive API error during upload: {}", e.getMessage(), e);
+                throw new IOException("Google Drive API error during upload: " + e.getMessage(), e);
             }
-            throw e;
+        } catch (Exception e) {
+            logger.error("Failed to save file to Google Drive: {}", e.getMessage(), e);
+            // If we have a file ID, try to delete the file from Google Drive since database save failed
+            if (googleDriveFileId != null) {
+                try {
+                    logger.info("Attempting to clean up Google Drive file due to upload failure");
+                    googleDriveService.deleteFile(googleDriveFileId);
+                } catch (Exception deleteException) {
+                    logger.error("Failed to delete file from Google Drive after upload failure: {}", deleteException.getMessage(), deleteException);
+                }
+            }
+            throw new IOException("Failed to save file to Google Drive: " + e.getMessage(), e);
         }
     }
     
@@ -284,6 +298,22 @@ public class SoliArquivoService {
                 logger.info("Deleting file from Google Drive with ID: {}", soliArquivo.getGoogleDriveFileId());
                 googleDriveService.deleteFile(soliArquivo.getGoogleDriveFileId());
                 logger.info("File deleted from Google Drive successfully");
+            } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+                // Handle specific Google Drive API errors
+                logger.error("Google Drive API error during file deletion: {}", e.getStatusCode(), e);
+                if (e.getStatusCode() == 404) {
+                    logger.warn("File not found in Google Drive during deletion - may have already been deleted");
+                    // Continue with database deletion even if file is not found
+                } else if (e.getStatusCode() == 403) {
+                    logger.error("Permission denied deleting file from Google Drive: {}", e.getMessage(), e);
+                    throw new RuntimeException("Permission denied deleting file from Google Drive", e);
+                } else if (e.getStatusCode() == 401) {
+                    logger.error("Authentication failed for Google Drive access during deletion: {}", e.getMessage(), e);
+                    throw new RuntimeException("Authentication failed for Google Drive access", e);
+                } else {
+                    logger.error("Google Drive API error during deletion: {}", e.getMessage(), e);
+                    throw new RuntimeException("Error deleting file from Google Drive: " + e.getMessage(), e);
+                }
             } catch (SocketException e) {
                 logger.error("Network error during Google Drive file deletion: ", e);
                 throw new RuntimeException("Network error while deleting file from Google Drive", e);
@@ -293,6 +323,7 @@ public class SoliArquivoService {
             } catch (RuntimeException e) {
                 // Log the error but don't stop the deletion process
                 logger.error("Failed to delete file from Google Drive: {}", e.getMessage(), e);
+                throw e; // Re-throw runtime exceptions
             } catch (Exception e) {
                 // Log the error but don't stop the deletion process
                 logger.error("Failed to delete file from Google Drive: {}", e.getMessage(), e);
@@ -366,6 +397,20 @@ public class SoliArquivoService {
                 InputStream result = googleDriveService.downloadFile(soliArquivo.getGoogleDriveFileId());
                 logger.info("File downloaded successfully from Google Drive");
                 return result;
+            } catch (com.google.api.client.googleapis.json.GoogleJsonResponseException e) {
+                // Handle specific Google Drive API errors
+                logger.error("Google Drive API error during file download: {}", e.getStatusCode(), e);
+                if (e.getStatusCode() == 404) {
+                    logger.error("File not found in Google Drive with ID: {}", soliArquivo.getGoogleDriveFileId());
+                    throw new IOException("File not found in Google Drive. It may have been deleted or the ID is incorrect.", e);
+                } else if (e.getStatusCode() == 403) {
+                    logger.error("Permission denied accessing file in Google Drive with ID: {}", soliArquivo.getGoogleDriveFileId());
+                    throw new IOException("Permission denied accessing file in Google Drive. Check sharing permissions.", e);
+                } else if (e.getStatusCode() == 401) {
+                    logger.error("Authentication failed for Google Drive access");
+                    throw new IOException("Authentication failed for Google Drive access. Please re-authenticate.", e);
+                }
+                throw new IOException("Google Drive API error: " + e.getMessage(), e);
             } catch (SocketException e) {
                 logger.error("Network error during Google Drive file download: ", e);
                 throw new IOException("Network error while downloading file from Google Drive", e);
@@ -382,6 +427,33 @@ public class SoliArquivoService {
             Path filePath = Paths.get(soliArquivo.getCaminhofisico());
             return new FileInputStream(filePath.toFile());
         }
+    }
+
+    /**
+     * Check if a file exists in its storage location
+     * 
+     * @param id The ID of the file attachment
+     * @return true if the file exists, false otherwise
+     */
+    public boolean fileExists(Long id) {
+        logger.info("Checking if file exists for file ID: {}", id);
+        
+        SoliArquivo soliArquivo = soliArquivoRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("File attachment with ID {} not found", id);
+                    return new RuntimeException("Arquivo não encontrado");
+                });
+        
+        if ("google_drive".equals(soliArquivo.getStorageLocation()) && soliArquivo.getGoogleDriveFileId() != null) {
+            // For Google Drive storage, check if file exists in Google Drive
+            return googleDriveService.fileExists(soliArquivo.getGoogleDriveFileId());
+        } else if (soliArquivo.getCaminhofisico() != null) {
+            // For local storage, check if file exists in filesystem
+            Path filePath = Paths.get(soliArquivo.getCaminhofisico());
+            return Files.exists(filePath);
+        }
+        
+        return false;
     }
     
     /**
