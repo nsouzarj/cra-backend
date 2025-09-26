@@ -94,7 +94,35 @@ public class SoliArquivoService {
         soliArquivo.setAtivo(true);
         soliArquivo.setStorageLocation(storageLocation);
         
-        // Save the entity first to get an ID
+        // Handle file storage based on storage location
+        if ("google_drive".equals(storageLocation)) {
+            // Save to Google Drive
+            String googleDriveFileId = googleDriveService.uploadFile(file);
+            soliArquivo.setGoogleDriveFileId(googleDriveFileId);
+        } else {
+            // Save locally
+            // Generate unique filename
+            String uniqueFilename = java.util.UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            
+            // Get upload directory from properties or use default
+            String uploadDir = System.getProperty("user.dir") + "/uploads";
+            java.io.File dir = new java.io.File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            
+            // Create full file path
+            String filePath = uploadDir + "/" + uniqueFilename;
+            
+            // Save file to local storage
+            file.transferTo(new java.io.File(filePath));
+            
+            // Set local storage fields
+            soliArquivo.setCaminhofisico(filePath);
+            soliArquivo.setCaminhorelativo("/uploads/" + uniqueFilename);
+        }
+        
+        // Save the entity
         soliArquivo = soliArquivoRepository.save(soliArquivo);
         
         return soliArquivo;
