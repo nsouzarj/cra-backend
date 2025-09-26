@@ -8,7 +8,9 @@ import br.adv.cra.entity.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
+public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>, JpaSpecificationExecutor<Solicitacao> {
     
     List<Solicitacao> findByUsuario(Usuario usuario);
     

@@ -2,6 +2,7 @@ package br.adv.cra.controller;
 
 import br.adv.cra.dto.PaginatedResponseDTO;
 import br.adv.cra.dto.SolicitacaoDTO;
+import br.adv.cra.dto.SolicitacaoFiltroDTO;
 import br.adv.cra.entity.Comarca;
 import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Processo;
@@ -578,6 +579,30 @@ public class SolicitacaoController {
             Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
             Pageable pageable = PageRequest.of(page, size, sort);
             Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorComarcaECorrespondente(comarca, correspondente, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Page<Solicitacao> emptyPage = Page.empty();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
+    /**
+     * Advanced search endpoint for requests with multiple combined filters.
+     * 
+     * @param filtro The filter criteria
+     * @return Page of requests matching the filter criteria
+     */
+    @PostMapping("/buscar/avancado")
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarAvancado(@RequestBody SolicitacaoFiltroDTO filtro) {
+        try {
+            Sort sort = Sort.by(Sort.Direction.fromString(filtro.getDirection()), filtro.getSortBy());
+            Pageable pageable = PageRequest.of(filtro.getPage(), filtro.getSize(), sort);
+            
+            // Use the new service method for advanced search
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarAvancado(filtro, pageable);
             long totalTableElements = solicitacaoService.contarTodas();
             PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
             return ResponseEntity.ok(response);

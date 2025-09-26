@@ -1,6 +1,7 @@
 package br.adv.cra.service;
 
 import br.adv.cra.dto.SolicitacaoDTO;
+import br.adv.cra.dto.SolicitacaoFiltroDTO;
 import br.adv.cra.entity.Comarca;
 import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Processo;
@@ -9,10 +10,12 @@ import br.adv.cra.entity.StatusSolicitacao;
 import br.adv.cra.entity.Usuario;
 import br.adv.cra.repository.SolicitacaoRepository;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
+import br.adv.cra.specification.SolicitacaoSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -459,11 +462,46 @@ public class SolicitacaoService {
         return solicitacaoRepository.findByStatusexterno(statusexterno, pageable);
     }
     
+    /**
+     * Advanced search method that handles multiple combined filters from SolicitacaoFiltroDTO
+     * 
+     * @param filtro The filter criteria
+     * @param pageable Pagination information
+     * @return Page of solicitacoes matching all provided filter criteria
+     */
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarAvancado(SolicitacaoFiltroDTO filtro, Pageable pageable) {
+        // Build specification based on provided filters
+        Specification<Solicitacao> spec = Specification.where(null);
+        
+        // Add filters to specification
+        spec = spec.and(SolicitacaoSpecification.comarcaIdEquals(filtro.getComarcaId()));
+        spec = spec.and(SolicitacaoSpecification.correspondenteIdEquals(filtro.getCorrespondenteId()));
+        spec = spec.and(SolicitacaoSpecification.processoIdEquals(filtro.getProcessoId()));
+        spec = spec.and(SolicitacaoSpecification.usuarioIdEquals(filtro.getUsuarioId()));
+        spec = spec.and(SolicitacaoSpecification.statusIdEquals(filtro.getStatusId()));
+        spec = spec.and(SolicitacaoSpecification.grupoEquals(filtro.getGrupo()));
+        spec = spec.and(SolicitacaoSpecification.statusExternoEquals(filtro.getStatusExterno()));
+        spec = spec.and(SolicitacaoSpecification.textoContains(filtro.getTexto()));
+        spec = spec.and(SolicitacaoSpecification.dataBetween(filtro.getDataInicio(), filtro.getDataFim()));
+        spec = spec.and(SolicitacaoSpecification.pagoEquals(filtro.getPago()));
+        spec = spec.and(SolicitacaoSpecification.concluidaEquals(filtro.getConcluida()));
+        spec = spec.and(SolicitacaoSpecification.atrasadaEquals(filtro.getAtrasada()));
+        spec = spec.and(SolicitacaoSpecification.numeroContains(filtro.getNumero()));
+        spec = spec.and(SolicitacaoSpecification.varaContains(filtro.getVara()));
+        spec = spec.and(SolicitacaoSpecification.requerenteContains(filtro.getRequerente()));
+        spec = spec.and(SolicitacaoSpecification.requeridoContains(filtro.getRequerido()));
+        spec = spec.and(SolicitacaoSpecification.ufEquals(filtro.getUf()));
+        
+        // Execute query with specification
+        return solicitacaoRepository.findAll(spec, pageable);
+    }
+    
     @Transactional(readOnly = true)
     public Long contarPorUsuario(Usuario usuario) {
         return solicitacaoRepository.countByUsuario(usuario);
     }
-    
+
     @Transactional(readOnly = true)
     public Long contarPendentes() {
         return solicitacaoRepository.countPendentes();
