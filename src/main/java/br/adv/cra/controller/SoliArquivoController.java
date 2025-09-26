@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -268,10 +269,15 @@ public class SoliArquivoController {
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<List<SoliArquivoDTO>> listarAnexosPorSolicitacao(
         @Parameter(description = "ID da solicitação para listar os arquivos", required = true)
-        @PathVariable Long solicitacaoId
+        @PathVariable Long solicitacaoId,
+        @Parameter(description = "Campo para ordenar os resultados", example = "datainclusao")
+        @RequestParam(defaultValue = "datainclusao") String sortBy,
+        @Parameter(description = "Direção da ordenação (ASC ou DESC)", example = "DESC")
+        @RequestParam(defaultValue = "DESC") String direction
     ) {
         try {
-            List<SoliArquivo> soliArquivos = soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<SoliArquivo> soliArquivos = soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId, sort);
             List<SoliArquivoDTO> dtos = soliArquivos.stream()
                     .map(SoliArquivoMapper::toDTO)
                     .collect(Collectors.toList());

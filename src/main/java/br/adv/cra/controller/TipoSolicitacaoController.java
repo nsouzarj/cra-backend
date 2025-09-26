@@ -4,6 +4,7 @@ import br.adv.cra.entity.TipoSolicitacao;
 import br.adv.cra.service.TipoSolicitacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,9 +70,12 @@ public class TipoSolicitacaoController {
      * @return List of all request types
      */
     @GetMapping
-    public ResponseEntity<List<TipoSolicitacao>> listarTodos() {
+    public ResponseEntity<List<TipoSolicitacao>> listarTodos(
+            @RequestParam(defaultValue = "especie") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.listarTodos();
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.listarTodos(sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -84,9 +88,12 @@ public class TipoSolicitacaoController {
      * @return List of all request types ordered by species
      */
     @GetMapping("/ordenados")
-    public ResponseEntity<List<TipoSolicitacao>> listarTodosOrdenados() {
+    public ResponseEntity<List<TipoSolicitacao>> listarTodosOrdenados(
+            @RequestParam(defaultValue = "especie") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.listarTodosOrdenados();
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.listarTodosOrdenados(sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -117,9 +124,13 @@ public class TipoSolicitacaoController {
      * @return List of matching request types
      */
     @GetMapping("/buscar/especie")
-    public ResponseEntity<List<TipoSolicitacao>> buscarPorEspecie(@RequestParam String especie) {
+    public ResponseEntity<List<TipoSolicitacao>> buscarPorEspecie(
+            @RequestParam String especie,
+            @RequestParam(defaultValue = "especie") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorEspecie(especie);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorEspecie(especie, sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -133,9 +144,13 @@ public class TipoSolicitacaoController {
      * @return List of matching request types
      */
     @GetMapping("/buscar/descricao")
-    public ResponseEntity<List<TipoSolicitacao>> buscarPorDescricao(@RequestParam String descricao) {
+    public ResponseEntity<List<TipoSolicitacao>> buscarPorDescricao(
+            @RequestParam String descricao,
+            @RequestParam(defaultValue = "descricao") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorDescricao(descricao);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorDescricao(descricao, sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -149,9 +164,13 @@ public class TipoSolicitacaoController {
      * @return List of request types with the specified type
      */
     @GetMapping("/buscar/tipo/{tipo}")
-    public ResponseEntity<List<TipoSolicitacao>> buscarPorTipo(@PathVariable String tipo) {
+    public ResponseEntity<List<TipoSolicitacao>> buscarPorTipo(
+            @PathVariable String tipo,
+            @RequestParam(defaultValue = "especie") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorTipo(tipo);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorTipo(tipo, sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -165,9 +184,13 @@ public class TipoSolicitacaoController {
      * @return List of request types with the specified visibility
      */
     @GetMapping("/buscar/visualizar/{visualizar}")
-    public ResponseEntity<List<TipoSolicitacao>> buscarPorVisualizar(@PathVariable Boolean visualizar) {
+    public ResponseEntity<List<TipoSolicitacao>> buscarPorVisualizar(
+            @PathVariable Boolean visualizar,
+            @RequestParam(defaultValue = "especie") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorVisualizar(visualizar);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<TipoSolicitacao> tiposSolicitacao = tipoSolicitacaoService.buscarPorVisualizar(visualizar, sort);
             return ResponseEntity.ok(tiposSolicitacao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

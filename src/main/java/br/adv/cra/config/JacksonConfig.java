@@ -1,5 +1,6 @@
 package br.adv.cra.config;
 
+import br.adv.cra.entity.Solicitacao;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -27,7 +28,12 @@ public class JacksonConfig {
         customModule.addSerializer(LocalDateTime.class, new CustomLocalDateTimeSerializer());
         mapper.registerModule(customModule);
         
+        // Add mixin for Solicitacao to handle relationships properly
+        mapper.addMixIn(Solicitacao.class, SolicitacaoMixin.class);
+        
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
         mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
         return mapper;
     }

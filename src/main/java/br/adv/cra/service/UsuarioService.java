@@ -1,8 +1,10 @@
 package br.adv.cra.service;
 
+import br.adv.cra.dto.UsuarioDTO;
 import br.adv.cra.entity.Usuario;
 import br.adv.cra.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +34,13 @@ public class UsuarioService {
     }
     
     public Usuario atualizar(Usuario usuario) {
+
         if (!usuarioRepository.existsById(usuario.getId())) {
             throw new RuntimeException("Usuário não encontrado");
+        }
+
+        if (usuario.getDataentrada() == null) {
+            usuario.setDataentrada(LocalDateTime.now());
         }
         // Only update password if it's provided (not empty)
         Optional<Usuario> usuarioExistente = usuarioRepository.findById(usuario.getId());
@@ -92,18 +100,54 @@ public class UsuarioService {
     }
     
     @Transactional(readOnly = true)
+    public List<UsuarioDTO> listarTodosDTO() {
+        return usuarioRepository.findAll(Sort.by(Sort.Direction.ASC, "nomecompleto")).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    private UsuarioDTO toDTO(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
+        dto.setNomecompleto(usuario.getNomecompleto());
+        dto.setLogin(usuario.getLogin());
+        dto.setEmailprincipal(usuario.getEmailprincipal());
+        dto.setEmailsecundario(usuario.getEmailsecundario());
+        dto.setEmailresponsavel(usuario.getEmailresponsavel());
+        dto.setTipo(usuario.getTipo());
+        dto.setAtivo(usuario.isAtivo());
+        dto.setDataentrada(usuario.getDataentrada());
+        return dto;
+    }
+    
+    @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+        return usuarioRepository.findAll(Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> listarTodos(Sort sort) {
+        return usuarioRepository.findAll(sort);
     }
     
     @Transactional(readOnly = true)
     public List<Usuario> listarAtivos() {
-        return usuarioRepository.findByAtivoTrue();
+        return usuarioRepository.findByAtivoTrue(Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> listarAtivos(Sort sort) {
+        return usuarioRepository.findByAtivoTrue(sort);
     }
     
     @Transactional(readOnly = true)
     public List<Usuario> listarInativos() {
-        return usuarioRepository.findByAtivoFalse();
+        return usuarioRepository.findByAtivoFalse(Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> listarInativos(Sort sort) {
+        return usuarioRepository.findByAtivoFalse(sort);
     }
     
     @Transactional(readOnly = true)
@@ -118,17 +162,32 @@ public class UsuarioService {
     
     @Transactional(readOnly = true)
     public List<Usuario> buscarPorTipo(Integer tipo) {
-        return usuarioRepository.findByTipo(tipo);
+        return usuarioRepository.findByTipo(tipo, Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarPorTipo(Integer tipo, Sort sort) {
+        return usuarioRepository.findByTipo(tipo, sort);
     }
     
     @Transactional(readOnly = true)
     public List<Usuario> buscarPorNome(String nome) {
-        return usuarioRepository.findByNomeCompletoContaining(nome);
+        return usuarioRepository.findByNomeCompletoContaining(nome, Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarPorNome(String nome, Sort sort) {
+        return usuarioRepository.findByNomeCompletoContaining(nome, sort);
     }
     
     @Transactional(readOnly = true)
     public List<Usuario> buscarPorEmail(String email) {
-        return usuarioRepository.findByAnyEmail(email);
+        return usuarioRepository.findByAnyEmail(email, Sort.by(Sort.Direction.ASC, "nomecompleto"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarPorEmail(String email, Sort sort) {
+        return usuarioRepository.findByAnyEmail(email, sort);
     }
     
     @Transactional(readOnly = true)

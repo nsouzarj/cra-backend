@@ -4,6 +4,7 @@ import br.adv.cra.entity.StatusSolicitacao;
 import br.adv.cra.service.StatusSolicitacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,9 +80,12 @@ public class StatusSolicitacaoController {
      * @return List of all request statuses ordered by status
      */
     @GetMapping
-    public ResponseEntity<?> listarTodos() {
+    public ResponseEntity<?> listarTodos(
+            @RequestParam(defaultValue = "status") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<StatusSolicitacao> statusList = statusSolicitacaoService.listarTodos();
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<StatusSolicitacao> statusList = statusSolicitacaoService.listarTodos(sort);
             return ResponseEntity.ok(statusList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar status de solicitação: " + e.getMessage());
@@ -112,9 +116,13 @@ public class StatusSolicitacaoController {
      * @return List of matching request statuses
      */
     @GetMapping("/buscar/status")
-    public ResponseEntity<?> buscarPorStatus(@RequestParam String status) {
+    public ResponseEntity<?> buscarPorStatus(
+            @RequestParam String status,
+            @RequestParam(defaultValue = "status") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<StatusSolicitacao> statusList = statusSolicitacaoService.buscarPorStatusContaining(status);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<StatusSolicitacao> statusList = statusSolicitacaoService.buscarPorStatusContaining(status, sort);
             return ResponseEntity.ok(statusList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar status de solicitação: " + e.getMessage());

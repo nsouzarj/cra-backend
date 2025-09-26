@@ -33,8 +33,8 @@ class SoliArquivoServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // Set the upload directory for testing
-        soliArquivoService.setUploadDir(System.getProperty("java.io.tmpdir"));
+        // Note: uploadDir is configured via Spring properties, not via a setter method
+        // The actual upload directory will be determined by the application configuration
     }
 
     @Test

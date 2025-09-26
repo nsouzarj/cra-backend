@@ -26,45 +26,63 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
     
     @Override
     public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        JsonNode node = parser.getCodec().readTree(parser);
-        
-        // Handle array format [year, month, day, hour, minute, second, nanosecond]
-        if (node.isArray() && node.size() >= 3) {
-            int year = node.get(0).asInt();
-            int month = node.get(1).asInt();
-            int day = node.get(2).asInt();
-            int hour = node.size() > 3 ? node.get(3).asInt() : 0;
-            int minute = node.size() > 4 ? node.get(4).asInt() : 0;
-            int second = node.size() > 5 ? node.get(5).asInt() : 0;
-            // int nanosecond = node.size() > 6 ? node.get(6).asInt() : 0;
-            
-            return LocalDateTime.of(year, month, day, hour, minute, second);
-        }
-        
-        // Handle string format
-        String dateString = node.asText().trim();
-        
-        if (dateString.isEmpty()) {
-            return null;
-        }
-        
-        // Try each formatter until one works
-        for (DateTimeFormatter formatter : FORMATTERS) {
+        try {
+            // Try to deserialize using the default deserializer first
+            return super.deserialize(parser, context);
+        } catch (Exception e) {
+            // If that fails, try our custom approach
             try {
-                if (formatter.toString().contains("HH") || formatter.toString().contains("HH:mm")) {
-                    // For formatters with time, parse as LocalDateTime directly
-                    return LocalDateTime.parse(dateString, formatter);
-                } else {
-                    // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
-                    LocalDate date = LocalDate.parse(dateString, formatter);
-                    return date.atStartOfDay();
+                JsonNode node = parser.getCodec().readTree(parser);
+                
+                // Handle null case
+                if (node == null || node.isNull()) {
+                    return null;
                 }
-            } catch (DateTimeParseException e) {
-                // Continue to next formatter
+                
+                // Handle array format [year, month, day, hour, minute, second, nanosecond]
+                if (node.isArray() && node.size() >= 3) {
+                    int year = node.get(0).asInt();
+                    int month = node.get(1).asInt();
+                    int day = node.get(2).asInt();
+                    int hour = node.size() > 3 ? node.get(3).asInt() : 0;
+                    int minute = node.size() > 4 ? node.get(4).asInt() : 0;
+                    int second = node.size() > 5 ? node.get(5).asInt() : 0;
+                    // int nanosecond = node.size() > 6 ? node.get(6).asInt() : 0;
+                    
+                    return LocalDateTime.of(year, month, day, hour, minute, second);
+                }
+                
+                // Handle string format
+                if (node.isTextual()) {
+                    String dateString = node.asText().trim();
+                    
+                    if (dateString.isEmpty()) {
+                        return null;
+                    }
+                    
+                    // Try each formatter until one works
+                    for (DateTimeFormatter formatter : FORMATTERS) {
+                        try {
+                            if (formatter.toString().contains("HH") || formatter.toString().contains("HH:mm")) {
+                                // For formatters with time, parse as LocalDateTime directly
+                                return LocalDateTime.parse(dateString, formatter);
+                            } else {
+                                // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
+                                LocalDate date = LocalDate.parse(dateString, formatter);
+                                return date.atStartOfDay();
+                            }
+                        } catch (DateTimeParseException ex) {
+                            // Continue to next formatter
+                        }
+                    }
+                }
+                
+                // If we can't parse it, return null instead of throwing an exception
+                return null;
+            } catch (Exception ex) {
+                // If any error occurs, return null
+                return null;
             }
         }
-        
-        // If none of the formatters worked, throw an exception
-        throw new IOException("Unable to parse date: " + dateString);
     }
 }

@@ -3,6 +3,7 @@ package br.adv.cra.controller;
 import br.adv.cra.entity.Uf;
 import br.adv.cra.service.UfService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,12 @@ public class UfController {
      * @return List of all UFs ordered by name
      */
     @GetMapping
-    public ResponseEntity<List<Uf>> listarTodas() {
+    public ResponseEntity<List<Uf>> listarTodas(
+            @RequestParam(defaultValue = "nome") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Uf> ufs = ufService.listarTodas();
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<Uf> ufs = ufService.listarTodas(sort);
             return ResponseEntity.ok(ufs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -81,9 +85,13 @@ public class UfController {
      * @return List of matching UFs
      */
     @GetMapping("/buscar/nome")
-    public ResponseEntity<List<Uf>> buscarPorNome(@RequestParam String nome) {
+    public ResponseEntity<List<Uf>> buscarPorNome(
+            @RequestParam String nome,
+            @RequestParam(defaultValue = "nome") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Uf> ufs = ufService.buscarPorNome(nome);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            List<Uf> ufs = ufService.buscarPorNome(nome, sort);
             return ResponseEntity.ok(ufs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

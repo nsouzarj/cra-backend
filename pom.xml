@@ -44,6 +44,18 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
+        <!-- Spring Boot Starter Cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        
+        <!-- Caffeine Cache Provider -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        
         <!-- JWT Support -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

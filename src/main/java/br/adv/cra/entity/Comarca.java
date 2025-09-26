@@ -1,5 +1,6 @@
 package br.adv.cra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Comarca implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -31,11 +33,13 @@ public class Comarca implements Serializable {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {})
     @JoinColumn(name = "uf_id", nullable = false)
+    @JsonIgnoreProperties({"comarcas", "hibernateLazyInitializer", "handler"})
     private Uf uf;
 
     private boolean ativo;
     
     // Adding the inverse relationship with Solicitacao
     @OneToMany(mappedBy = "comarca", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"comarca", "hibernateLazyInitializer", "handler"})
     private List<Solicitacao> solicitacoes;
 }

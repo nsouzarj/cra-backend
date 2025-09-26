@@ -88,8 +88,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/tipos-solicitacao/**").hasAnyRole("ADMIN", "ADVOGADO", "CORRESPONDENTE")
                         .requestMatchers("/api/soli-arquivos/upload").permitAll() // Allow public access to file uploads
                         .requestMatchers("/api/soli-arquivos/*/download").permitAll() // Allow public access to file downloads
-                        .requestMatchers("/api/soli-arquivos/**").hasAnyRole("ADMIN", "ADVOGADO", "CORRESPONDENTE") // Restrict other soli-arquivos operations
-                        .requestMatchers("/arquivos/**").permitAll() // Allow public access to uploaded files
+                        .requestMatchers("/api/soli-arquivos/**").hasAnyRole("ADMIN", "ADVOGADO", "CORRESPONDENTE")
+                        .requestMatchers("/api/dashboard").hasAnyRole("ADMIN","ADVOGADO","CORRESPONDENTE")
+                        .requestMatchers("/arquivos/**").hasAnyRole("ADMIN","ADVOGADO","CORRESPONDENTE") // Allow public access to uploaded files
                         .anyRequest().authenticated()
                 );
         

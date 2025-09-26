@@ -1,5 +1,6 @@
 package br.adv.cra.service;
 
+import br.adv.cra.dto.OrgaoDTO;
 import br.adv.cra.entity.Orgao;
 import br.adv.cra.repository.OrgaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,22 @@ public class OrgaoService {
         Optional<Orgao> orgao = orgaoRepository.findById(id);
         log.info("Órgão encontrado: {}", orgao.isPresent());
         return orgao;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<OrgaoDTO> listarTodosDTO() {
+        try {
+            log.info("Listando todos os órgãos DTO");
+            List<OrgaoDTO> orgaos = orgaoRepository.findAllOrderByDescricao().stream()
+                    .map(orgao -> new OrgaoDTO(orgao.getId(), orgao.getDescricao()))
+                    .collect(Collectors.toList());
+            log.info("Total de órgãos DTO encontrados: {}", orgaos.size());
+            return orgaos;
+        } catch (Exception e) {
+            log.error("Erro ao listar órgãos DTO", e);
+            e.printStackTrace();
+            throw e;
+        }
     }
     
     @Transactional(readOnly = true)

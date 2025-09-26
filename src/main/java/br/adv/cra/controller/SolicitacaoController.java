@@ -1,6 +1,10 @@
 package br.adv.cra.controller;
 
+import br.adv.cra.dto.PaginatedResponseDTO;
+import br.adv.cra.dto.SolicitacaoDTO;
+import br.adv.cra.entity.Comarca;
 import br.adv.cra.entity.Correspondente;
+import br.adv.cra.entity.Processo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.StatusSolicitacao;
 import br.adv.cra.entity.Usuario;
@@ -9,6 +13,10 @@ import br.adv.cra.service.StatusSolicitacaoService;
 import br.adv.cra.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -162,107 +170,161 @@ public class SolicitacaoController {
     }
     
     /**
-     * Lists all requests.
+     * Lists all requests with pagination.
      * 
-     * @return List of all requests
+     * @return Page of requests
      */
     @GetMapping
-    public ResponseEntity<List<Solicitacao>> listarTodas() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarTodas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarTodas();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarTodas(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Retrieves a request by ID.
+     * Lists all requests DTO with pagination.
      * 
-     * @param id The ID of the request to retrieve
-     * @return The request if found, or 404 if not found
+     * @return Page of requests DTO
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Solicitacao> buscarPorId(@PathVariable Long id) {
+    @GetMapping("/list/dto")
+    public ResponseEntity<PaginatedResponseDTO<SolicitacaoDTO>> listarTodasDTO(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            return solicitacaoService.buscarPorId(id)
-                    .map(solicitacao -> ResponseEntity.ok(solicitacao))
-                    .orElse(ResponseEntity.notFound().build());
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<SolicitacaoDTO> solicitacoes = solicitacaoService.listarTodasDTO(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<SolicitacaoDTO> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Lists pending requests.
+     * Lists pending requests with pagination.
      * 
-     * @return List of pending requests
+     * @return Page of pending requests
      */
     @GetMapping("/pendentes")
-    public ResponseEntity<List<Solicitacao>> listarPendentes() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarPendentes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarPendentes();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarPendentes(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Lists completed requests.
+     * Lists completed requests with pagination.
      * 
-     * @return List of completed requests
+     * @return Page of completed requests
      */
     @GetMapping("/concluidas")
-    public ResponseEntity<List<Solicitacao>> listarConcluidas() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarConcluidas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dataconclusao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarConcluidas();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarConcluidas(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Lists overdue requests.
+     * Lists overdue requests with pagination.
      * 
-     * @return List of overdue requests
+     * @return Page of overdue requests
      */
     @GetMapping("/atrasadas")
-    public ResponseEntity<List<Solicitacao>> listarAtrasadas() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarAtrasadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dataprazo") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarAtrasadas();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarAtrasadas(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Lists paid requests.
+     * Lists paid requests with pagination.
      * 
-     * @return List of paid requests
+     * @return Page of paid requests
      */
     @GetMapping("/pagas")
-    public ResponseEntity<List<Solicitacao>> listarPagas() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarPagas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarPagas();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarPagas(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Lists unpaid requests.
+     * Lists unpaid requests with pagination.
      * 
-     * @return List of unpaid requests
+     * @return Page of unpaid requests
      */
     @GetMapping("/nao-pagas")
-    public ResponseEntity<List<Solicitacao>> listarNaoPagas() {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarNaoPagas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarNaoPagas();
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.listarNaoPagas(pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -272,10 +334,15 @@ public class SolicitacaoController {
      * Finds requests by user ID, where the user is associated with the correspondente of the requests.
      * 
      * @param usuarioId The user ID to search for
-     * @return List of requests for the specified user's correspondente
+     * @return Page of requests for the specified user's correspondente
      */
     @GetMapping("/usuario/{usuarioId}/correspondente")
-    public ResponseEntity<List<Solicitacao>> buscarPorUsuarioCorrespondente(@PathVariable Long usuarioId) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorUsuarioCorrespondente(
+            @PathVariable Long usuarioId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
             // First, fetch the usuario by ID
             Usuario usuario = usuarioService.buscarPorId(usuarioId)
@@ -283,14 +350,21 @@ public class SolicitacaoController {
             
             // Check if the usuario has a correspondente
             if (usuario.getCorrespondente() == null) {
-                return ResponseEntity.ok(List.of()); // Return empty list if no correspondente
+                // Return empty page if no correspondente
+                Page<Solicitacao> emptyPage = Page.empty();
+                long totalTableElements = solicitacaoService.contarTodas();
+                PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(emptyPage, totalTableElements);
+                return ResponseEntity.ok(response);
             }
             
             // Fetch solicitacoes by the usuario's correspondente
             Correspondente correspondente = usuario.getCorrespondente();
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorCorrespondente(correspondente);
-            
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorCorrespondente(correspondente, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
@@ -299,107 +373,266 @@ public class SolicitacaoController {
     }
     
     /**
-     * Finds requests by user.
+     * Finds requests by user with pagination.
      * 
      * @param usuarioId The user ID to search for
-     * @return List of requests for the specified user
+     * @return Page of requests for the specified user
      */
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<Solicitacao>> buscarPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorUsuario(
+            @PathVariable Long usuarioId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
             // Create a Usuario object with the ID to pass to the service
             Usuario usuario = new Usuario();
             usuario.setId(usuarioId);
             
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorUsuario(usuario);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorUsuario(usuario, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Finds requests by correspondente.
+     * Finds requests by correspondente with pagination.
      * 
      * @param correspondenteId The correspondente ID to search for
-     * @return List of requests for the specified correspondente
+     * @return Page of requests for the specified correspondente
      */
     @GetMapping("/correspondente/{correspondenteId}")
-    public ResponseEntity<List<Solicitacao>> buscarPorCorrespondente(@PathVariable Long correspondenteId) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorCorrespondente(
+            @PathVariable Long correspondenteId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
             // Create a Correspondente object with the ID to pass to the service
             Correspondente correspondente = new Correspondente();
             correspondente.setId(correspondenteId);
             
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorCorrespondente(correspondente);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorCorrespondente(correspondente, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Searches requests by date range.
+     * Searches requests by date range with pagination.
      * 
      * @param inicio The start date/time
      * @param fim The end date/time
-     * @return List of requests within the specified date range
+     * @return Page of requests within the specified date range
      */
     @GetMapping("/buscar/periodo")
-    public ResponseEntity<List<Solicitacao>> buscarPorPeriodo(
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorPeriodo(inicio, fim);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorPeriodo(inicio, fim, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Searches requests by text (partial match).
+     * Searches requests by text (partial match) with pagination.
      * 
      * @param texto The text to search for
-     * @return List of matching requests
+     * @return Page of matching requests
      */
     @GetMapping("/buscar/texto")
-    public ResponseEntity<List<Solicitacao>> buscarPorTexto(@RequestParam String texto) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorTexto(
+            @RequestParam String texto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorTexto(texto);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorTexto(texto, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Finds requests by group.
+     * Finds requests by court (comarca) and correspondente with pagination.
+     * 
+     * @param comarcaId The court ID to search for
+     * @param correspondenteId The correspondente ID to search for
+     * @return Page of requests in the specified court and correspondente
+     */
+    @GetMapping("/buscar/comarca/{comarcaId}/correspondente/{correspondenteId}")
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarcaECorrespondente(
+            @PathVariable Long comarcaId,
+            @PathVariable Long correspondenteId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
+        try {
+            // Create a Comarca object with the ID to pass to the service
+            br.adv.cra.entity.Comarca comarca = new br.adv.cra.entity.Comarca();
+            comarca.setId(comarcaId);
+            
+            // Create a Correspondente object with the ID to pass to the service
+            br.adv.cra.entity.Correspondente correspondente = new br.adv.cra.entity.Correspondente();
+            correspondente.setId(correspondenteId);
+            
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorComarcaECorrespondente(comarca, correspondente, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Page<Solicitacao> emptyPage = Page.empty();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
+    /**
+     * Finds requests by court (comarca) with pagination.
+     * 
+     * @param comarcaId The court ID to search for
+     * @return Page of requests in the specified court
+     */
+    @GetMapping("/buscar/comarca/{comarcaId}")
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarca(
+            @PathVariable Long comarcaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
+        try {
+            // Create a Comarca object with the ID to pass to the service
+            br.adv.cra.entity.Comarca comarca = new br.adv.cra.entity.Comarca();
+            comarca.setId(comarcaId);
+            
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorComarca(comarca, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Page<Solicitacao> emptyPage = Page.empty();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
+    /**
+     * Finds requests by court (comarca) and correspondente with pagination using query parameters.
+     * This endpoint is designed to match the frontend request format.
+     * 
+     * @param comarcaId The court ID to search for
+     * @param correspondenteId The correspondente ID to search for
+     * @return Page of requests in the specified court and correspondente
+     */
+    @GetMapping("/buscar/comarca")
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarcaECorrespondenteQuery(
+            @RequestParam Long comarcaId,
+            @RequestParam Long correspondenteId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
+        try {
+            // Create a Comarca object with the ID to pass to the service
+            br.adv.cra.entity.Comarca comarca = new br.adv.cra.entity.Comarca();
+            comarca.setId(comarcaId);
+            
+            // Create a Correspondente object with the ID to pass to the service
+            br.adv.cra.entity.Correspondente correspondente = new br.adv.cra.entity.Correspondente();
+            correspondente.setId(correspondenteId);
+            
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorComarcaECorrespondente(comarca, correspondente, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Page<Solicitacao> emptyPage = Page.empty();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    
+    /**
+     * Finds requests by group with pagination.
      * 
      * @param grupo The group ID to search for
-     * @return List of requests in the specified group
+     * @return Page of requests in the specified group
      */
     @GetMapping("/buscar/grupo/{grupo}")
-    public ResponseEntity<List<Solicitacao>> buscarPorGrupo(@PathVariable Integer grupo) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorGrupo(
+            @PathVariable Integer grupo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorGrupo(grupo);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorGrupo(grupo, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     /**
-     * Finds requests by external status.
+     * Finds requests by external status with pagination.
      * 
      * @param status The external status to search for
-     * @return List of requests with the specified external status
+     * @return Page of requests with the specified external status
      */
     @GetMapping("/buscar/status/{status}")
-    public ResponseEntity<List<Solicitacao>> buscarPorStatus(@PathVariable String status) {
+    public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorStatus(
+            @PathVariable String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datasolicitacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.buscarPorStatusExterno(status);
-            return ResponseEntity.ok(solicitacoes);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Solicitacao> solicitacoes = solicitacaoService.buscarPorStatusExterno(status, pageable);
+            long totalTableElements = solicitacaoService.contarTodas();
+            PaginatedResponseDTO<Solicitacao> response = new PaginatedResponseDTO<>(solicitacoes, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -470,6 +703,23 @@ public class SolicitacaoController {
         try {
             Long count = solicitacaoService.contarPendentes();
             return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    /**
+     * Retrieves a request by ID.
+     * 
+     * @param id The ID of the request to retrieve
+     * @return The request if found, or 404 if not found
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Solicitacao> buscarPorId(@PathVariable Long id) {
+        try {
+            return solicitacaoService.buscarPorId(id)
+                    .map(solicitacao -> ResponseEntity.ok(solicitacao))
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

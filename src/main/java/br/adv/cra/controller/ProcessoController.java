@@ -1,10 +1,17 @@
 package br.adv.cra.controller;
 
+import br.adv.cra.entity.Comarca;
+import br.adv.cra.entity.Orgao;
 import br.adv.cra.entity.Processo;
 import br.adv.cra.service.ProcessoService;
 import br.adv.cra.dto.ProcessoDTO;
+import br.adv.cra.dto.PaginatedResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -94,15 +101,46 @@ public class ProcessoController {
     }
     
     /**
-     * Lists all processes.
+     * Lists all processes with pagination.
      * 
-     * @return List of all processes
+     * @return Page of processes
      */
     @GetMapping
-    public ResponseEntity<List<Processo>> listarTodos() {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> listarTodos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.listarTodos();
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.listarTodos(pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    /**
+     * Lists all processes DTO with pagination.
+     * 
+     * @return Page of processes DTO
+     */
+    @GetMapping("/list/dto")
+    public ResponseEntity<PaginatedResponseDTO<ProcessoDTO>> listarTodosDTO(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
+        try {
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<ProcessoDTO> processos = processoService.listarTodosDTO(pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<ProcessoDTO> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -143,140 +181,226 @@ public class ProcessoController {
     }
     
     /**
-     * Searches processes by process number (partial match).
+     * Searches processes by process number (partial match) with pagination.
      * 
      * @param numero The process number to search for
-     * @return List of matching processes
+     * @return Page of matching processes
      */
     @GetMapping("/buscar/numero-pesquisa")
-    public ResponseEntity<?> buscarPorNumeroProcessoPesquisa(@RequestParam String numero) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorNumeroProcessoPesquisa(
+            @RequestParam String numero,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorNumeroProcessoPesquisa(numero);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorNumeroProcessoPesquisa(numero, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Searches processes by party name (partial match).
+     * Searches processes by party name (partial match) with pagination.
      * 
      * @param parte The party name to search for
-     * @return List of matching processes
+     * @return Page of matching processes
      */
     @GetMapping("/buscar/parte")
-    public ResponseEntity<?> buscarPorParte(@RequestParam String parte) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorParte(
+            @RequestParam String parte,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorParte(parte);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorParte(parte, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Searches processes by opposing party name (partial match).
+     * Searches processes by opposing party name (partial match) with pagination.
      * 
      * @param adverso The opposing party name to search for
-     * @return List of matching processes
+     * @return Page of matching processes
      */
     @GetMapping("/buscar/adverso")
-    public ResponseEntity<?> buscarPorAdverso(@RequestParam String adverso) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorAdverso(
+            @RequestParam String adverso,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorAdverso(adverso);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorAdverso(adverso, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Finds processes by status.
+     * Finds processes by status with pagination.
      * 
      * @param status The process status to search for
-     * @return List of processes with the specified status
+     * @return Page of processes with the specified status
      */
     @GetMapping("/buscar/status/{status}")
-    public ResponseEntity<?> buscarPorStatus(@PathVariable String status) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorStatus(
+            @PathVariable String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorStatus(status);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorStatus(status, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Searches processes by subject (partial match).
+     * Searches processes by subject (partial match) with pagination.
      * 
      * @param assunto The subject to search for
-     * @return List of matching processes
+     * @return Page of matching processes
      */
     @GetMapping("/buscar/assunto")
-    public ResponseEntity<?> buscarPorAssunto(@RequestParam String assunto) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorAssunto(
+            @RequestParam String assunto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorAssunto(assunto);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorAssunto(assunto, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Searches processes by electronic process (partial match).
+     * Searches processes by electronic process (partial match) with pagination.
      * 
      * @param processoEletronico The electronic process to search for
-     * @return List of matching processes
+     * @return Page of matching processes
      */
     @GetMapping("/buscar/processo-eletronico")
-    public ResponseEntity<?> buscarPorProcessoEletronico(@RequestParam String processoEletronico) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorProcessoEletronico(
+            @RequestParam String processoEletronico,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            List<Processo> processos = processoService.buscarPorProcessoEletronico(processoEletronico);
-            return ResponseEntity.ok(processos);
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorProcessoEletronico(processoEletronico, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Finds processes by court.
+     * Finds processes by court with pagination.
      * 
      * @param comarcaId The court ID to search for
-     * @return List of processes in the specified court
+     * @return Page of processes in the specified court
      */
     @GetMapping("/buscar/comarca/{comarcaId}")
-    public ResponseEntity<?> buscarPorComarca(@PathVariable Long comarcaId) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorComarca(
+            @PathVariable Long comarcaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            // Note: In a real implementation, you would fetch the Comarca first
-            // This is simplified for demonstration
-            List<Processo> processos = processoService.listarTodos()
-                    .stream()
-                    .filter(p -> p.getComarca() != null && p.getComarca().getId().equals(comarcaId))
-                    .toList();
-            return ResponseEntity.ok(processos);
+            // Create a Comarca object with the ID to pass to the service
+            Comarca comarca = new Comarca();
+            comarca.setId(comarcaId);
+            
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorComarca(comarca, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
     /**
-     * Finds processes by court.
+     * Finds processes by court with pagination.
      * 
      * @param orgaoId The court ID to search for
-     * @return List of processes in the specified court
+     * @return Page of processes in the specified court
      */
     @GetMapping("/buscar/orgao/{orgaoId}")
-    public ResponseEntity<?> buscarPorOrgao(@PathVariable Long orgaoId) {
+    public ResponseEntity<PaginatedResponseDTO<Processo>> buscarPorOrgao(
+            @PathVariable Long orgaoId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "numeroprocesso") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
         try {
-            // Note: In a real implementation, you would fetch the Orgao first
-            // This is simplified for demonstration
-            List<Processo> processos = processoService.listarTodos()
-                    .stream()
-                    .filter(p -> p.getOrgao() != null && p.getOrgao().getId().equals(orgaoId))
-                    .toList();
-            return ResponseEntity.ok(processos);
+            // Create an Orgao object with the ID to pass to the service
+            Orgao orgao = new Orgao();
+            orgao.setId(orgaoId);
+            
+            Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Processo> processos = processoService.buscarPorOrgao(orgao, pageable);
+            long totalTableElements = processoService.contarTodos();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(processos, totalTableElements);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar processos: " + e.getMessage());
+            Page<Processo> emptyPage = Page.empty();
+            PaginatedResponseDTO<Processo> response = new PaginatedResponseDTO<>(emptyPage, 0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     

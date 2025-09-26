@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface OrgaoRepository extends JpaRepository<Orgao, Long> {
     
-    @Query("SELECT o FROM Orgao o WHERE o.descricao LIKE %:descricao%")
+    @Query("SELECT o FROM Orgao o WHERE o.descricao LIKE CONCAT('%', :descricao, '%')")
     List<Orgao> findByDescricaoContaining(@Param("descricao") String descricao);
     
     @Query("SELECT o FROM Orgao o ORDER BY o.descricao ASC")

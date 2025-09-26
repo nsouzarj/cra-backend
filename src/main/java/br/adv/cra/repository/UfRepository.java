@@ -1,6 +1,7 @@
 package br.adv.cra.repository;
 
 import br.adv.cra.entity.Uf;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,8 +15,11 @@ public interface UfRepository extends JpaRepository<Uf, Long> {
     
     Optional<Uf> findBySigla(String sigla);
     
-    @Query("SELECT u FROM Uf u WHERE u.nome LIKE %:nome%")
+    @Query("SELECT u FROM Uf u WHERE u.nome LIKE CONCAT('%', :nome, '%')")
     List<Uf> findByNomeContaining(@Param("nome") String nome);
+    
+    @Query("SELECT u FROM Uf u WHERE u.nome LIKE CONCAT('%', :nome, '%')")
+    List<Uf> findByNomeContaining(@Param("nome") String nome, Sort sort);
     
     boolean existsBySigla(String sigla);
     

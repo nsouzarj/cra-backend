@@ -63,4 +63,16 @@ public class EnderecoService {
     public List<Endereco> buscarPorLogradouro(String logradouro) {
         return enderecoRepository.findByLogradouroContaining(logradouro);
     }
+    
+    @Transactional(readOnly = true)
+    public boolean existeCep(String cep) {
+        List<Endereco> enderecos = enderecoRepository.findByCep(cep);
+        return !enderecos.isEmpty();
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean existeCepParaOutroEndereco(String cep, Long id) {
+        List<Endereco> enderecos = enderecoRepository.findByCep(cep);
+        return enderecos.stream().anyMatch(e -> !e.getId().equals(id));
+    }
 }

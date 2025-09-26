@@ -3,6 +3,7 @@ package br.adv.cra.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,21 @@ public class GlobalExceptionHandler {
         );
         
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+    
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        log.error("HTTP message not readable exception occurred: ", ex);
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+                "Erro de formato de dados",
+                "Os dados enviados estão em um formato inválido. Verifique se a estrutura JSON está correta.",
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                null
+        );
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
     
     @ExceptionHandler(RuntimeException.class)

@@ -1,5 +1,6 @@
 package br.adv.cra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Processo implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -45,10 +47,12 @@ public class Processo implements Serializable {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {})
     @JoinColumn(name = "comarca_idcomarca")
+    @JsonIgnoreProperties({"solicitacoes", "hibernateLazyInitializer", "handler"})
     private Comarca comarca;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = {})
     @JoinColumn(name = "orgao_idorgao")
+    @JsonIgnoreProperties({"solicitacoes", "hibernateLazyInitializer", "handler"})
     private Orgao orgao;
     
     private Integer numorgao;

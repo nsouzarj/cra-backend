@@ -1,5 +1,6 @@
 package br.adv.cra.service;
 
+import br.adv.cra.dto.SolicitacaoDTO;
 import br.adv.cra.entity.Comarca;
 import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Processo;
@@ -9,12 +10,16 @@ import br.adv.cra.entity.Usuario;
 import br.adv.cra.repository.SolicitacaoRepository;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -133,28 +138,168 @@ public class SolicitacaoService {
     }
     
     @Transactional(readOnly = true)
+    public List<SolicitacaoDTO> listarTodasDTO() {
+        return solicitacaoRepository.findAll(Sort.by(Sort.Direction.DESC, "datasolicitacao")).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public SolicitacaoDTO toDTO(Solicitacao solicitacao) {
+        SolicitacaoDTO dto = new SolicitacaoDTO();
+        dto.setIdsolicitacao(solicitacao.getId());
+        dto.setDatasolicitacao(solicitacao.getDatasolicitacao());
+        dto.setDataconclusao(solicitacao.getDataconclusao());
+        dto.setDataagendamento(solicitacao.getDataagendamento());
+        dto.setDataprazo(solicitacao.getDataprazo());
+        dto.setNumero(solicitacao.getNumero());
+        dto.setVara(solicitacao.getVara());
+        dto.setUf(solicitacao.getUf());
+        dto.setRequerente(solicitacao.getRequerente());
+        dto.setRequerido(solicitacao.getRequerido());
+        dto.setObservacao(solicitacao.getObservacao());
+        dto.setInstrucoes(solicitacao.getInstrucoes());
+        dto.setComplemento(solicitacao.getComplemento());
+        dto.setJustificativa(solicitacao.getJustificativa());
+        dto.setTratposaudiencia(solicitacao.getTratposaudiencia());
+        dto.setNumcontrole(solicitacao.getNumcontrole());
+        dto.setTempreposto(solicitacao.isTempreposto());
+        dto.setConvolada(solicitacao.isConvolada());
+        dto.setHoraudiencia(solicitacao.getHoraudiencia());
+        dto.setStatusexterno(solicitacao.getStatusexterno());
+        dto.setValor(solicitacao.getValor());
+        dto.setValordaalcada(solicitacao.getValordaalcada());
+        dto.setEmailenvio(solicitacao.getEmailenvio());
+        dto.setPago(solicitacao.getPago());
+        dto.setGrupo(solicitacao.getGrupo());
+        dto.setPropostaacordo(solicitacao.isPropostaacordo());
+        dto.setAudinterna(solicitacao.isAudinterna());
+        dto.setLide(solicitacao.getLide());
+        dto.setAvaliacaonota(solicitacao.getAvaliacaonota());
+        dto.setTextoavaliacao(solicitacao.getTextoavaliacao());
+        
+        if (solicitacao.getComarca() != null) {
+            dto.setComarcaId(solicitacao.getComarca().getId());
+            dto.setComarcaNome(solicitacao.getComarca().getNome());
+        }
+        
+        if (solicitacao.getProcesso() != null) {
+            dto.setProcessoId(solicitacao.getProcesso().getId());
+            dto.setProcessoNumero(solicitacao.getProcesso().getNumeroprocesso());
+        }
+        
+        if (solicitacao.getStatusSolicitacao() != null) {
+            dto.setStatusSolicitacaoId(solicitacao.getStatusSolicitacao().getIdstatus());
+            dto.setStatusSolicitacaoStatus(solicitacao.getStatusSolicitacao().getStatus());
+        }
+        
+        if (solicitacao.getUsuario() != null) {
+            dto.setUsuarioId(solicitacao.getUsuario().getId());
+            dto.setUsuarioNome(solicitacao.getUsuario().getNomecompleto());
+        }
+        
+        if (solicitacao.getTipoSolicitacao() != null) {
+            dto.setTipoSolicitacaoId(solicitacao.getTipoSolicitacao().getIdtiposolicitacao());
+            dto.setTipoSolicitacaoEspecie(solicitacao.getTipoSolicitacao().getEspecie());
+        }
+        
+        if (solicitacao.getCorrespondente() != null) {
+            dto.setCorrespondenteId(solicitacao.getCorrespondente().getId());
+            dto.setCorrespondenteNome(solicitacao.getCorrespondente().getNome());
+        }
+        
+        return dto;
+    }
+    
+    @Transactional(readOnly = true)
     public List<Solicitacao> listarTodas() {
-        return solicitacaoRepository.findAll();
+        return solicitacaoRepository.findAll(Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarTodas(Sort sort) {
+        return solicitacaoRepository.findAll(sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarTodas(Pageable pageable) {
+        return solicitacaoRepository.findAll(pageable);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<SolicitacaoDTO> listarTodasDTO(Pageable pageable) {
+        Page<Solicitacao> solicitacoes = solicitacaoRepository.findAll(pageable);
+        return solicitacoes.map(this::toDTO);
+    }
+    
+    @Transactional(readOnly = true)
+    public long contarTodas() {
+        return solicitacaoRepository.countAllSolicitacoes();
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorUsuario(Usuario usuario) {
-        return solicitacaoRepository.findByUsuario(usuario);
+        return solicitacaoRepository.findByUsuario(usuario, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorUsuario(Usuario usuario, Sort sort) {
+        return solicitacaoRepository.findByUsuario(usuario, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorUsuario(Usuario usuario, Pageable pageable) {
+        return solicitacaoRepository.findByUsuario(usuario, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorProcesso(Processo processo) {
-        return solicitacaoRepository.findByProcesso(processo);
+        return solicitacaoRepository.findByProcesso(processo, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorProcesso(Processo processo, Sort sort) {
+        return solicitacaoRepository.findByProcesso(processo, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorProcesso(Processo processo, Pageable pageable) {
+        return solicitacaoRepository.findByProcesso(processo, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorComarca(Comarca comarca) {
-        return solicitacaoRepository.findByComarca(comarca);
+        return solicitacaoRepository.findByComarca(comarca, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorComarca(Comarca comarca, Sort sort) {
+        return solicitacaoRepository.findByComarca(comarca, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorComarca(Comarca comarca, Pageable pageable) {
+        return solicitacaoRepository.findByComarca(comarca, pageable);
+    }
+    
+    // Adding method to find solicitacoes by comarca and correspondente
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorComarcaECorrespondente(Comarca comarca, Correspondente correspondente, Pageable pageable) {
+        return solicitacaoRepository.findByComarcaAndCorrespondente(comarca, correspondente, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorCorrespondente(Correspondente correspondente) {
-        return solicitacaoRepository.findByCorrespondente(correspondente);
+        return solicitacaoRepository.findByCorrespondente(correspondente, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorCorrespondente(Correspondente correspondente, Sort sort) {
+        return solicitacaoRepository.findByCorrespondente(correspondente, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorCorrespondente(Correspondente correspondente, Pageable pageable) {
+        return solicitacaoRepository.findByCorrespondente(correspondente, pageable);
     }
     
     /**
@@ -166,52 +311,152 @@ public class SolicitacaoService {
      */
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorUsuarioECorrespondente(Usuario usuario, Correspondente correspondente) {
-        return solicitacaoRepository.findByUsuarioAndCorrespondente(usuario, correspondente);
+        return solicitacaoRepository.findByUsuarioAndCorrespondente(usuario, correspondente, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorUsuarioECorrespondente(Usuario usuario, Correspondente correspondente, Sort sort) {
+        return solicitacaoRepository.findByUsuarioAndCorrespondente(usuario, correspondente, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorUsuarioECorrespondente(Usuario usuario, Correspondente correspondente, Pageable pageable) {
+        return solicitacaoRepository.findByUsuarioAndCorrespondente(usuario, correspondente, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
-        return solicitacaoRepository.findByDatasolicitacaoBetween(inicio, fim);
+        return solicitacaoRepository.findByDatasolicitacaoBetween(inicio, fim, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim, Sort sort) {
+        return solicitacaoRepository.findByDatasolicitacaoBetween(inicio, fim, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim, Pageable pageable) {
+        return solicitacaoRepository.findByDatasolicitacaoBetween(inicio, fim, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> listarPendentes() {
-        return solicitacaoRepository.findPendentes();
+        return solicitacaoRepository.findPendentes(Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarPendentes(Sort sort) {
+        return solicitacaoRepository.findPendentes(sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarPendentes(Pageable pageable) {
+        return solicitacaoRepository.findPendentes(pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> listarConcluidas() {
-        return solicitacaoRepository.findConcluidas();
+        return solicitacaoRepository.findConcluidas(Sort.by(Sort.Direction.DESC, "dataconclusao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarConcluidas(Sort sort) {
+        return solicitacaoRepository.findConcluidas(sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarConcluidas(Pageable pageable) {
+        return solicitacaoRepository.findConcluidas(pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> listarPagas() {
-        return solicitacaoRepository.findByPagoTrue();
+        return solicitacaoRepository.findByPagoTrue(Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarPagas(Sort sort) {
+        return solicitacaoRepository.findByPagoTrue(sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarPagas(Pageable pageable) {
+        return solicitacaoRepository.findByPagoTrue(pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> listarNaoPagas() {
-        return solicitacaoRepository.findByPagoFalse();
+        return solicitacaoRepository.findByPagoFalse(Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarNaoPagas(Sort sort) {
+        return solicitacaoRepository.findByPagoFalse(sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarNaoPagas(Pageable pageable) {
+        return solicitacaoRepository.findByPagoFalse(pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> listarAtrasadas() {
-        return solicitacaoRepository.findAtrasadas(LocalDateTime.now());
+        return solicitacaoRepository.findAtrasadas(LocalDateTime.now(), Sort.by(Sort.Direction.ASC, "dataprazo"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> listarAtrasadas(Sort sort) {
+        return solicitacaoRepository.findAtrasadas(LocalDateTime.now(), sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> listarAtrasadas(Pageable pageable) {
+        return solicitacaoRepository.findAtrasadas(LocalDateTime.now(), pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorTexto(String texto) {
-        return solicitacaoRepository.findByTextoContaining(texto);
+        return solicitacaoRepository.findByTextoContaining(texto, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorTexto(String texto, Sort sort) {
+        return solicitacaoRepository.findByTextoContaining(texto, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorTexto(String texto, Pageable pageable) {
+        return solicitacaoRepository.findByTextoContaining(texto, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorGrupo(Integer grupo) {
-        return solicitacaoRepository.findByGrupo(grupo);
+        return solicitacaoRepository.findByGrupo(grupo, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorGrupo(Integer grupo, Sort sort) {
+        return solicitacaoRepository.findByGrupo(grupo, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorGrupo(Integer grupo, Pageable pageable) {
+        return solicitacaoRepository.findByGrupo(grupo, pageable);
     }
     
     @Transactional(readOnly = true)
     public List<Solicitacao> buscarPorStatusExterno(String statusexterno) {
-        return solicitacaoRepository.findByStatusexterno(statusexterno);
+        return solicitacaoRepository.findByStatusexterno(statusexterno, Sort.by(Sort.Direction.DESC, "datasolicitacao"));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Solicitacao> buscarPorStatusExterno(String statusexterno, Sort sort) {
+        return solicitacaoRepository.findByStatusexterno(statusexterno, sort);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Solicitacao> buscarPorStatusExterno(String statusexterno, Pageable pageable) {
+        return solicitacaoRepository.findByStatusexterno(statusexterno, pageable);
     }
     
     @Transactional(readOnly = true)

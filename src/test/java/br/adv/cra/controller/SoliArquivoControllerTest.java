@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -101,7 +102,7 @@ class SoliArquivoControllerTest {
         dto2.setCaminhoRelativo("/arquivos/test2.txt");
 
         // Configure mocks
-        when(soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId))
+        when(soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId, Sort.unsorted()))
                 .thenReturn(Arrays.asList(new SoliArquivo(), new SoliArquivo()));
 
         // Execute the request
@@ -111,7 +112,7 @@ class SoliArquivoControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Verify interactions
-        verify(soliArquivoService, times(1)).listarAnexosPorSolicitacao(solicitacaoId);
+        verify(soliArquivoService, times(1)).listarAnexosPorSolicitacao(solicitacaoId, Sort.unsorted());
     }
 
     @Test

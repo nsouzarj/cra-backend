@@ -1,5 +1,6 @@
 package br.adv.cra.service;
 
+import br.adv.cra.dto.CorrespondenteDTO;
 import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Endereco;
 import br.adv.cra.repository.CorrespondenteRepository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +42,10 @@ public class CorrespondenteService {
     public Correspondente atualizar(Correspondente correspondente) {
         if (!correspondenteRepository.existsById(correspondente.getId())) {
             throw new RuntimeException("Correspondente não encontrado");
+        }
+          
+        if (correspondente.getDatacadastro() == null) {
+            correspondente.setDatacadastro(LocalDateTime.now());
         }
         
         // Handle endereco saving/updating
@@ -90,6 +96,38 @@ public class CorrespondenteService {
     @Transactional(readOnly = true)
     public Optional<Correspondente> buscarPorIdComSolicitacoes(Long id) {
         return correspondenteRepository.findByIdWithSolicitacoes(id);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<CorrespondenteDTO> listarTodosDTO() {
+        try {
+            return correspondenteRepository.findAll().stream()
+                    .map(this::toDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+            throw new RuntimeException("Erro ao buscar todos os correspondentes DTO: " + e.getMessage(), e);
+        }
+    }
+    
+    private CorrespondenteDTO toDTO(Correspondente correspondente) {
+        CorrespondenteDTO dto = new CorrespondenteDTO();
+        dto.setId(correspondente.getId());
+        dto.setNome(correspondente.getNome());
+        dto.setCpfcnpj(correspondente.getCpfcnpj());
+        dto.setOab(correspondente.getOab());
+        dto.setEmailprimario(correspondente.getEmailprimario());
+        dto.setEmailsecundario(correspondente.getEmailsecundario());
+        dto.setTelefoneprimario(correspondente.getTelefoneprimario());
+        dto.setTelefonesecundario(correspondente.getTelefonesecundario());
+        dto.setTelefonecelularprimario(correspondente.getTelefonecelularprimario());
+        dto.setTelefonecelularsecundario(correspondente.getTelefonecelularsecundario());
+        dto.setTipocorrepondente(correspondente.getTipocorrepondente());
+        dto.setDatacadastro(correspondente.getDatacadastro());
+        dto.setAtivo(correspondente.isAtivo());
+        dto.setAplicaregra1(correspondente.isAplicaregra1());
+        dto.setAplicaregra2(correspondente.isAplicaregra2());
+        return dto;
     }
     
     @Transactional(readOnly = true)

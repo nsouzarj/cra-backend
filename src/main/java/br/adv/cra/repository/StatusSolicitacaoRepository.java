@@ -1,6 +1,7 @@
 package br.adv.cra.repository;
 
 import br.adv.cra.entity.StatusSolicitacao;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,9 @@ public interface StatusSolicitacaoRepository extends JpaRepository<StatusSolicit
     
     @Query("SELECT s FROM StatusSolicitacao s WHERE s.status LIKE CONCAT('%', :status, '%')")
     List<StatusSolicitacao> findByStatusContaining(@Param("status") String status);
+    
+    @Query("SELECT s FROM StatusSolicitacao s WHERE s.status LIKE CONCAT('%', :status, '%')")
+    List<StatusSolicitacao> findByStatusContaining(@Param("status") String status, Sort sort);
     
     @Query("SELECT s FROM StatusSolicitacao s WHERE s.status = :status")
     Optional<StatusSolicitacao> findByStatus(@Param("status") String status);

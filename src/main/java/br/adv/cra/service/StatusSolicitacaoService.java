@@ -1,13 +1,16 @@
 package br.adv.cra.service;
 
+import br.adv.cra.dto.StatusSolicitacaoDTO;
 import br.adv.cra.entity.StatusSolicitacao;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +55,39 @@ public class StatusSolicitacaoService {
     }
     
     @Transactional(readOnly = true)
+    public List<StatusSolicitacaoDTO> listarTodosDTO() {
+        try {
+            log.info("Listando todos os status de solicitação DTO");
+            List<StatusSolicitacaoDTO> status = statusSolicitacaoRepository.findAllOrderByStatus().stream()
+                    .map(s -> new StatusSolicitacaoDTO(s.getIdstatus(), s.getStatus()))
+                    .collect(Collectors.toList());
+            log.info("Total de status de solicitação DTO encontrados: {}", status.size());
+            return status;
+        } catch (Exception e) {
+            log.error("Erro ao listar status de solicitação DTO", e);
+            throw e;
+        }
+    }
+    
+    @Transactional(readOnly = true)
     public List<StatusSolicitacao> listarTodos() {
         try {
             log.info("Listando todos os status de solicitação");
             List<StatusSolicitacao> status = statusSolicitacaoRepository.findAllOrderByStatus();
+            log.info("Total de status de solicitação encontrados: {}", status.size());
+            return status;
+        } catch (Exception e) {
+            log.error("Erro ao listar status de solicitação", e);
+            throw e;
+        }
+    }
+    
+    // Overloaded method with sorting
+    @Transactional(readOnly = true)
+    public List<StatusSolicitacao> listarTodos(Sort sort) {
+        try {
+            log.info("Listando todos os status de solicitação com ordenação");
+            List<StatusSolicitacao> status = statusSolicitacaoRepository.findAll(sort);
             log.info("Total de status de solicitação encontrados: {}", status.size());
             return status;
         } catch (Exception e) {
@@ -69,6 +101,20 @@ public class StatusSolicitacaoService {
         try {
             log.info("Buscando status de solicitação por status contendo: {}", status);
             List<StatusSolicitacao> statusList = statusSolicitacaoRepository.findByStatusContaining(status);
+            log.info("Total de status de solicitação encontrados com status contendo '{}': {}", status, statusList.size());
+            return statusList;
+        } catch (Exception e) {
+            log.error("Erro ao buscar status de solicitação por status contendo: {}", status, e);
+            throw e;
+        }
+    }
+    
+    // Overloaded method with sorting
+    @Transactional(readOnly = true)
+    public List<StatusSolicitacao> buscarPorStatusContaining(String status, Sort sort) {
+        try {
+            log.info("Buscando status de solicitação por status contendo: {} com ordenação", status);
+            List<StatusSolicitacao> statusList = statusSolicitacaoRepository.findByStatusContaining(status, sort);
             log.info("Total de status de solicitação encontrados com status contendo '{}': {}", status, statusList.size());
             return statusList;
         } catch (Exception e) {
