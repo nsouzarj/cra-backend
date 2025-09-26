@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,9 +35,6 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
     
-    // System timezone
-    private static final ZoneId SYSTEM_ZONE_ID = ZoneId.systemDefault();
-    
     public CustomLocalDateTimeDeserializer() {
         super(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
@@ -58,62 +54,50 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
         
         // Try our custom approach
         try {
-            JsonNode node = parser.getCodec().readTree(parser);
+            // Get the text value directly from the parser
+            String textValue = parser.getText();
             
             // Handle null case
-            if (node == null || node.isNull()) {
+            if (textValue == null || "null".equals(textValue)) {
                 return null;
             }
             
-            // Handle array format [year, month, day, hour, minute, second, nanosecond]
-            if (node.isArray() && node.size() >= 3) {
-                int year = node.get(0).asInt();
-                int month = node.get(1).asInt();
-                int day = node.get(2).asInt();
-                int hour = node.size() > 3 ? node.get(3).asInt() : 0;
-                int minute = node.size() > 4 ? node.get(4).asInt() : 0;
-                int second = node.size() > 5 ? node.get(5).asInt() : 0;
-                
-                LocalDateTime result = LocalDateTime.of(year, month, day, hour, minute, second);
-                return result;
+            // Remove quotes if present
+            if (textValue.startsWith("\"") && textValue.endsWith("\"")) {
+                textValue = textValue.substring(1, textValue.length() - 1);
             }
             
-            // Handle string format
-            if (node.isTextual()) {
-                String dateString = node.asText().trim();
-                
-                if (dateString.isEmpty()) {
-                    return null;
-                }
-                
-                // Try to parse JavaScript Date.toString() format
-                LocalDateTime jsDate = parseJavaScriptDateFormat(dateString);
-                if (jsDate != null) {
-                    return jsDate;
-                }
-                
-                // Try each formatter until one works
-                for (DateTimeFormatter formatter : FORMATTERS) {
-                    try {
-                        // Check if formatter likely contains time components
-                        String formatterString = formatter.toString();
-                        boolean hasTime = formatterString.contains("Hour") || formatterString.contains("Minute") || 
-                                        formatterString.contains("Second") || formatterString.contains("HH") || 
-                                        formatterString.contains("mm") || formatterString.contains("ss");
-                        
-                        if (hasTime) {
-                            // For formatters with time, parse as LocalDateTime directly
-                            LocalDateTime result = LocalDateTime.parse(dateString, formatter);
-                            return result;
-                        } else {
-                            // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
-                            LocalDate date = LocalDate.parse(dateString, formatter);
-                            LocalDateTime result = date.atStartOfDay();
-                            return result;
-                        }
-                    } catch (DateTimeParseException ex) {
-                        // Continue to next formatter
+            textValue = textValue.trim();
+            
+            if (textValue.isEmpty()) {
+                return null;
+            }
+            
+            // Try to parse JavaScript Date.toString() format
+            LocalDateTime jsDate = parseJavaScriptDateFormat(textValue);
+            if (jsDate != null) {
+                return jsDate;
+            }
+            
+            // Try each formatter until one works
+            for (DateTimeFormatter formatter : FORMATTERS) {
+                try {
+                    // Check if formatter likely contains time components
+                    String formatterString = formatter.toString();
+                    boolean hasTime = formatterString.contains("Hour") || formatterString.contains("Minute") || 
+                                    formatterString.contains("Second") || formatterString.contains("HH") || 
+                                    formatterString.contains("mm") || formatterString.contains("ss");
+                    
+                    if (hasTime) {
+                        // For formatters with time, parse as LocalDateTime directly
+                        return LocalDateTime.parse(textValue, formatter);
+                    } else {
+                        // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
+                        LocalDate date = LocalDate.parse(textValue, formatter);
+                        return date.atStartOfDay();
                     }
+                } catch (DateTimeParseException ex) {
+                    // Continue to next formatter
                 }
             }
             
@@ -159,8 +143,7 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
                 // Create ZonedDateTime and convert to LocalDateTime in system timezone
                 ZoneId gmtZone = ZoneId.of("GMT" + formattedOffset);
                 ZonedDateTime zonedDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, gmtZone);
-                LocalDateTime result = zonedDateTime.withZoneSameInstant(SYSTEM_ZONE_ID).toLocalDateTime();
-                return result;
+                return zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
                 
             } catch (Exception e) {
                 // If parsing fails, continue with other formats
