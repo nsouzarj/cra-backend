@@ -24,6 +24,7 @@ public class SoliArquivoService {
     
     private final SoliArquivoRepository soliArquivoRepository;
     private final SolicitacaoRepository solicitacaoRepository;
+    private final GoogleDriveService googleDriveService; // Add GoogleDriveService dependency
     
     public SoliArquivo salvar(SoliArquivo soliArquivo) {
         return soliArquivoRepository.save(soliArquivo);
@@ -106,9 +107,34 @@ public class SoliArquivoService {
     }
     
     public InputStream getFileContent(Long id) throws IOException {
-        // This is a placeholder implementation
-        // You'll need to implement the actual logic for retrieving file content based on storage location
-        throw new UnsupportedOperationException("Method getFileContent not yet implemented");
+        // Find the file entity
+        SoliArquivo soliArquivo = soliArquivoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
+        
+        // Check storage location and retrieve content accordingly
+        String storageLocation = soliArquivo.getStorageLocation();
+        
+        if ("google_drive".equals(storageLocation)) {
+            // For Google Drive storage, we need to get the file content from Google Drive
+            String googleDriveFileId = soliArquivo.getGoogleDriveFileId();
+            if (googleDriveFileId == null || googleDriveFileId.isEmpty()) {
+                throw new IOException("ID do arquivo no Google Drive não encontrado");
+            }
+            return googleDriveService.downloadFile(googleDriveFileId);
+        } else {
+            // For local storage, read the file from the file system
+            String filePath = soliArquivo.getCaminhofisico();
+            if (filePath == null || filePath.isEmpty()) {
+                throw new IOException("Caminho do arquivo não encontrado");
+            }
+            
+            java.io.File file = new java.io.File(filePath);
+            if (!file.exists()) {
+                throw new IOException("Arquivo não encontrado no sistema de arquivos: " + filePath);
+            }
+            
+            return new java.io.FileInputStream(file);
+        }
     }
     
     public List<SoliArquivo> listarAnexosPorSolicitacao(Long solicitacaoId, Sort sort) {

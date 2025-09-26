@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -26,6 +27,9 @@ class SoliArquivoServiceTest {
 
     @Mock
     private SolicitacaoRepository solicitacaoRepository;
+    
+    @Mock
+    private GoogleDriveService googleDriveService;
 
     @InjectMocks
     private SoliArquivoService soliArquivoService;
@@ -201,5 +205,93 @@ class SoliArquivoServiceTest {
 
         // Verify results
         assertTrue(result);
+    }
+    
+    @Test
+    void testGetFileContentLocalStorage() throws IOException {
+        // Prepare test data
+        Long id = 1L;
+        
+        SoliArquivo soliArquivo = new SoliArquivo();
+        soliArquivo.setId(id);
+        soliArquivo.setStorageLocation("local");
+        soliArquivo.setCaminhofisico("/non/existent/file.txt");
+        
+        // Configure mocks
+        when(soliArquivoRepository.findById(id)).thenReturn(Optional.of(soliArquivo));
+        
+        // Execute the method and verify exception (since we're not actually creating a file)
+        assertThrows(IOException.class, () -> {
+            soliArquivoService.getFileContent(id);
+        });
+        
+        // Verify interactions
+        verify(soliArquivoRepository, times(1)).findById(id);
+    }
+    
+    @Test
+    void testGetFileContentGoogleDrive() throws IOException {
+        // Prepare test data
+        Long id = 1L;
+        String googleDriveFileId = "google-drive-file-id";
+        
+        SoliArquivo soliArquivo = new SoliArquivo();
+        soliArquivo.setId(id);
+        soliArquivo.setStorageLocation("google_drive");
+        soliArquivo.setGoogleDriveFileId(googleDriveFileId);
+        
+        // Configure mocks
+        when(soliArquivoRepository.findById(id)).thenReturn(Optional.of(soliArquivo));
+        // Mock the GoogleDriveService to return an InputStream
+        when(googleDriveService.downloadFile(googleDriveFileId)).thenReturn(new java.io.ByteArrayInputStream("test content".getBytes()));
+        
+        // Execute the method
+        InputStream result = soliArquivoService.getFileContent(id);
+        
+        // Verify results
+        assertNotNull(result);
+        
+        // Verify interactions
+        verify(soliArquivoRepository, times(1)).findById(id);
+        verify(googleDriveService, times(1)).downloadFile(googleDriveFileId);
+    }
+    
+    @Test
+    void testGetFileContentNotFound() {
+        // Prepare test data
+        Long id = 1L;
+        
+        // Configure mocks
+        when(soliArquivoRepository.findById(id)).thenReturn(Optional.empty());
+        
+        // Execute the method and verify exception
+        assertThrows(RuntimeException.class, () -> {
+            soliArquivoService.getFileContent(id);
+        });
+        
+        // Verify interactions
+        verify(soliArquivoRepository, times(1)).findById(id);
+    }
+    
+    @Test
+    void testGetFileContentGoogleDriveFileIdMissing() throws IOException {
+        // Prepare test data
+        Long id = 1L;
+        
+        SoliArquivo soliArquivo = new SoliArquivo();
+        soliArquivo.setId(id);
+        soliArquivo.setStorageLocation("google_drive");
+        // Note: googleDriveFileId is null/missing
+        
+        // Configure mocks
+        when(soliArquivoRepository.findById(id)).thenReturn(Optional.of(soliArquivo));
+        
+        // Execute the method and verify exception
+        assertThrows(IOException.class, () -> {
+            soliArquivoService.getFileContent(id);
+        });
+        
+        // Verify interactions
+        verify(soliArquivoRepository, times(1)).findById(id);
     }
 }
