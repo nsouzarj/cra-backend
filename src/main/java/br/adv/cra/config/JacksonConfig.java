@@ -20,7 +20,8 @@ public class JacksonConfig {
         ObjectMapper mapper = new ObjectMapper();
         
         // Register JavaTimeModule for basic JSR310 support
-        mapper.registerModule(new JavaTimeModule());
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        mapper.registerModule(javaTimeModule);
         
         // Register our custom module with the custom serializer and deserializer
         SimpleModule customModule = new SimpleModule();
@@ -35,6 +36,10 @@ public class JacksonConfig {
         mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
         mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
         mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
+        
+        // Set timezone to system default
+        mapper.setTimeZone(java.util.TimeZone.getDefault());
+        
         return mapper;
     }
 }

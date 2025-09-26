@@ -480,10 +480,13 @@ public class SolicitacaoService {
         spec = spec.and(SolicitacaoSpecification.processoIdEquals(filtro.getProcessoId()));
         spec = spec.and(SolicitacaoSpecification.usuarioIdEquals(filtro.getUsuarioId()));
         spec = spec.and(SolicitacaoSpecification.statusIdEquals(filtro.getStatusId()));
+        spec = spec.and(SolicitacaoSpecification.statusEquals(filtro.getStatus())); // Add status by name filter
         spec = spec.and(SolicitacaoSpecification.grupoEquals(filtro.getGrupo()));
         spec = spec.and(SolicitacaoSpecification.statusExternoEquals(filtro.getStatusExterno()));
         spec = spec.and(SolicitacaoSpecification.textoContains(filtro.getTexto()));
         spec = spec.and(SolicitacaoSpecification.dataBetween(filtro.getDataInicio(), filtro.getDataFim()));
+        spec = spec.and(SolicitacaoSpecification.dataConclusaoBetween(filtro.getDataConclusaoInicio(), filtro.getDataConclusaoFim()));
+        spec = spec.and(SolicitacaoSpecification.dataPrazoBetween(filtro.getDataPrazoInicio(), filtro.getDataPrazoFim()));
         spec = spec.and(SolicitacaoSpecification.pagoEquals(filtro.getPago()));
         spec = spec.and(SolicitacaoSpecification.concluidaEquals(filtro.getConcluida()));
         spec = spec.and(SolicitacaoSpecification.atrasadaEquals(filtro.getAtrasada()));

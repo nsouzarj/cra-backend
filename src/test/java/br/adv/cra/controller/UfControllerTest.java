@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +48,8 @@ class UfControllerTest {
     @Test
     void testListarTodas() throws Exception {
         List<Uf> ufs = Arrays.asList(uf1, uf2);
-        when(ufService.listarTodas()).thenReturn(ufs);
+        // Mock the method with sorting parameters as called by the controller
+        when(ufService.listarTodas(Sort.by(Sort.Direction.ASC, "nome"))).thenReturn(ufs);
 
         mockMvc.perform(get("/api/ufs")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -110,7 +111,8 @@ class UfControllerTest {
     @Test
     void testBuscarPorNome() throws Exception {
         List<Uf> ufs = Arrays.asList(uf1);
-        when(ufService.buscarPorNome("São Paulo")).thenReturn(ufs);
+        // Mock the method with sorting parameters as called by the controller
+        when(ufService.buscarPorNome("São Paulo", Sort.by(Sort.Direction.ASC, "nome"))).thenReturn(ufs);
 
         mockMvc.perform(get("/api/ufs/buscar/nome?nome=São Paulo")
                 .contentType(MediaType.APPLICATION_JSON))

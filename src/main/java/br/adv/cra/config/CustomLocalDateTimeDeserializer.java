@@ -6,10 +6,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
     
@@ -20,6 +25,20 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
         DateTimeFormatter.ofPattern("yyyy-MM-dd")
     };
     
+    // Pattern for JavaScript Date.toString() format: "Wed Sep 17 2025 00:00:00 GMT-0300 (Brasilia Standard Time)"
+    private static final Pattern JS_DATE_PATTERN = Pattern.compile(
+        "[A-Za-z]{3}\\s+([A-Za-z]{3})\\s+(\\d{1,2})\\s+(\\d{4})\\s+(\\d{1,2}):(\\d{2}):(\\d{2})\\s+GMT([+-]\\d{4}).*"
+    );
+    
+    // Month names mapping
+    private static final String[] MONTH_NAMES = {
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+    
+    // System timezone
+    private static final ZoneId SYSTEM_ZONE_ID = ZoneId.systemDefault();
+    
     public CustomLocalDateTimeDeserializer() {
         super(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
@@ -28,61 +47,126 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
     public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         try {
             // Try to deserialize using the default deserializer first
-            return super.deserialize(parser, context);
+            LocalDateTime result = super.deserialize(parser, context);
+            // If the default deserializer succeeded and returned a non-null value, use it
+            if (result != null) {
+                return result;
+            }
         } catch (Exception e) {
-            // If that fails, try our custom approach
-            try {
-                JsonNode node = parser.getCodec().readTree(parser);
+            // Continue with custom approach if default fails
+        }
+        
+        // Try our custom approach
+        try {
+            JsonNode node = parser.getCodec().readTree(parser);
+            
+            // Handle null case
+            if (node == null || node.isNull()) {
+                return null;
+            }
+            
+            // Handle array format [year, month, day, hour, minute, second, nanosecond]
+            if (node.isArray() && node.size() >= 3) {
+                int year = node.get(0).asInt();
+                int month = node.get(1).asInt();
+                int day = node.get(2).asInt();
+                int hour = node.size() > 3 ? node.get(3).asInt() : 0;
+                int minute = node.size() > 4 ? node.get(4).asInt() : 0;
+                int second = node.size() > 5 ? node.get(5).asInt() : 0;
                 
-                // Handle null case
-                if (node == null || node.isNull()) {
+                LocalDateTime result = LocalDateTime.of(year, month, day, hour, minute, second);
+                return result;
+            }
+            
+            // Handle string format
+            if (node.isTextual()) {
+                String dateString = node.asText().trim();
+                
+                if (dateString.isEmpty()) {
                     return null;
                 }
                 
-                // Handle array format [year, month, day, hour, minute, second, nanosecond]
-                if (node.isArray() && node.size() >= 3) {
-                    int year = node.get(0).asInt();
-                    int month = node.get(1).asInt();
-                    int day = node.get(2).asInt();
-                    int hour = node.size() > 3 ? node.get(3).asInt() : 0;
-                    int minute = node.size() > 4 ? node.get(4).asInt() : 0;
-                    int second = node.size() > 5 ? node.get(5).asInt() : 0;
-                    // int nanosecond = node.size() > 6 ? node.get(6).asInt() : 0;
-                    
-                    return LocalDateTime.of(year, month, day, hour, minute, second);
+                // Try to parse JavaScript Date.toString() format
+                LocalDateTime jsDate = parseJavaScriptDateFormat(dateString);
+                if (jsDate != null) {
+                    return jsDate;
                 }
                 
-                // Handle string format
-                if (node.isTextual()) {
-                    String dateString = node.asText().trim();
-                    
-                    if (dateString.isEmpty()) {
-                        return null;
-                    }
-                    
-                    // Try each formatter until one works
-                    for (DateTimeFormatter formatter : FORMATTERS) {
-                        try {
-                            if (formatter.toString().contains("HH") || formatter.toString().contains("HH:mm")) {
-                                // For formatters with time, parse as LocalDateTime directly
-                                return LocalDateTime.parse(dateString, formatter);
-                            } else {
-                                // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
-                                LocalDate date = LocalDate.parse(dateString, formatter);
-                                return date.atStartOfDay();
-                            }
-                        } catch (DateTimeParseException ex) {
-                            // Continue to next formatter
+                // Try each formatter until one works
+                for (DateTimeFormatter formatter : FORMATTERS) {
+                    try {
+                        // Check if formatter likely contains time components
+                        String formatterString = formatter.toString();
+                        boolean hasTime = formatterString.contains("Hour") || formatterString.contains("Minute") || 
+                                        formatterString.contains("Second") || formatterString.contains("HH") || 
+                                        formatterString.contains("mm") || formatterString.contains("ss");
+                        
+                        if (hasTime) {
+                            // For formatters with time, parse as LocalDateTime directly
+                            LocalDateTime result = LocalDateTime.parse(dateString, formatter);
+                            return result;
+                        } else {
+                            // For date-only formatters, parse as LocalDate and convert to LocalDateTime at start of day
+                            LocalDate date = LocalDate.parse(dateString, formatter);
+                            LocalDateTime result = date.atStartOfDay();
+                            return result;
                         }
+                    } catch (DateTimeParseException ex) {
+                        // Continue to next formatter
+                    }
+                }
+            }
+            
+            // If we can't parse it, return null instead of throwing an exception
+            return null;
+        } catch (Exception ex) {
+            // If any error occurs, return null
+            return null;
+        }
+    }
+    
+    /**
+     * Parse JavaScript Date.toString() format: "Wed Sep 17 2025 00:00:00 GMT-0300 (Brasilia Standard Time)"
+     */
+    private LocalDateTime parseJavaScriptDateFormat(String dateString) {
+        Matcher matcher = JS_DATE_PATTERN.matcher(dateString);
+        if (matcher.matches()) {
+            try {
+                String monthStr = matcher.group(1);
+                int day = Integer.parseInt(matcher.group(2));
+                int year = Integer.parseInt(matcher.group(3));
+                int hour = Integer.parseInt(matcher.group(4));
+                int minute = Integer.parseInt(matcher.group(5));
+                int second = Integer.parseInt(matcher.group(6));
+                String timezoneOffset = matcher.group(7);
+                
+                // Convert month name to number
+                int month = -1;
+                for (int i = 0; i < MONTH_NAMES.length; i++) {
+                    if (MONTH_NAMES[i].equalsIgnoreCase(monthStr)) {
+                        month = i + 1;
+                        break;
                     }
                 }
                 
-                // If we can't parse it, return null instead of throwing an exception
-                return null;
-            } catch (Exception ex) {
-                // If any error occurs, return null
+                if (month == -1) {
+                    return null;
+                }
+                
+                // Handle timezone offset format (GMT-0300 -> -03:00)
+                String formattedOffset = timezoneOffset.substring(0, 3) + ":" + timezoneOffset.substring(3);
+                
+                // Create ZonedDateTime and convert to LocalDateTime in system timezone
+                ZoneId gmtZone = ZoneId.of("GMT" + formattedOffset);
+                ZonedDateTime zonedDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, gmtZone);
+                LocalDateTime result = zonedDateTime.withZoneSameInstant(SYSTEM_ZONE_ID).toLocalDateTime();
+                return result;
+                
+            } catch (Exception e) {
+                // If parsing fails, continue with other formats
                 return null;
             }
         }
+        return null;
     }
 }

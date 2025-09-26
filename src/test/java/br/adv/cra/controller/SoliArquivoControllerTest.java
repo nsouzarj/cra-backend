@@ -101,18 +101,18 @@ class SoliArquivoControllerTest {
         dto2.setAtivo(true);
         dto2.setCaminhoRelativo("/arquivos/test2.txt");
 
-        // Configure mocks
-        when(soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId, Sort.unsorted()))
+        // Configure mocks - match what the controller actually calls
+        when(soliArquivoService.listarAnexosPorSolicitacao(solicitacaoId, Sort.by(Sort.Direction.DESC, "datainclusao")))
                 .thenReturn(Arrays.asList(new SoliArquivo(), new SoliArquivo()));
 
-        // Execute the request
+        // Execute the request with default parameters (which match the controller defaults)
         mockMvc.perform(get("/api/soli-arquivos/solicitacao/{solicitacaoId}", solicitacaoId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Verify interactions
-        verify(soliArquivoService, times(1)).listarAnexosPorSolicitacao(solicitacaoId, Sort.unsorted());
+        verify(soliArquivoService, times(1)).listarAnexosPorSolicitacao(solicitacaoId, Sort.by(Sort.Direction.DESC, "datainclusao"));
     }
 
     @Test

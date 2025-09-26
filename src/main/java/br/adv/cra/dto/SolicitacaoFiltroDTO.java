@@ -28,6 +28,11 @@ public class SolicitacaoFiltroDTO {
     private String texto; // For text search in observacao or instrucoes
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
+    // Additional date filters
+    private LocalDateTime dataConclusaoInicio;
+    private LocalDateTime dataConclusaoFim;
+    private LocalDateTime dataPrazoInicio;
+    private LocalDateTime dataPrazoFim;
     private Boolean pago;
     private Boolean concluida;
     private Boolean atrasada;

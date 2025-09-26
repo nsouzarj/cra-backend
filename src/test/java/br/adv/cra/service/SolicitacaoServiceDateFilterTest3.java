@@ -2,8 +2,6 @@ package br.adv.cra.service;
 
 import br.adv.cra.dto.SolicitacaoFiltroDTO;
 import br.adv.cra.entity.Solicitacao;
-import br.adv.cra.entity.StatusSolicitacao;
-import br.adv.cra.entity.Correspondente;
 import br.adv.cra.repository.SolicitacaoRepository;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,13 +15,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class SolicitacaoServiceCombinedFilterTest {
+class SolicitacaoServiceDateFilterTest3 {
 
     @Mock
     private SolicitacaoRepository solicitacaoRepository;
@@ -41,14 +40,17 @@ class SolicitacaoServiceCombinedFilterTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void testBuscarAvancado_StatusIdAndCorrespondenteIdFilter() {
+    void testBuscarAvancado_WithDataFilters() {
         // Arrange
         SolicitacaoFiltroDTO filtro = new SolicitacaoFiltroDTO();
-        filtro.setStatusId(1L); // Status ID
-        filtro.setCorrespondenteId(2L); // Correspondente ID
+        // Setting date filters
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        filtro.setDataInicio(startDate);
+        filtro.setDataFim(endDate);
         
         Pageable pageable = PageRequest.of(0, 10);
-        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao(), new Solicitacao());
+        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao());
         Page<Solicitacao> page = new PageImpl<>(solicitacoes);
         
         when(solicitacaoRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
@@ -58,20 +60,23 @@ class SolicitacaoServiceCombinedFilterTest {
         
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
+        assertEquals(1, result.getContent().size());
         verify(solicitacaoRepository, times(1)).findAll(any(Specification.class), eq(pageable));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    void testBuscarAvancado_StatusNameAndCorrespondenteIdFilter() {
+    void testBuscarAvancado_WithDataConclusaoFilters() {
         // Arrange
         SolicitacaoFiltroDTO filtro = new SolicitacaoFiltroDTO();
-        filtro.setStatus("Pendente"); // Status name
-        filtro.setCorrespondenteId(2L); // Correspondente ID
+        // Setting date filters
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        filtro.setDataConclusaoInicio(startDate);
+        filtro.setDataConclusaoFim(endDate);
         
         Pageable pageable = PageRequest.of(0, 10);
-        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao(), new Solicitacao());
+        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao());
         Page<Solicitacao> page = new PageImpl<>(solicitacoes);
         
         when(solicitacaoRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
@@ -81,7 +86,33 @@ class SolicitacaoServiceCombinedFilterTest {
         
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
+        assertEquals(1, result.getContent().size());
+        verify(solicitacaoRepository, times(1)).findAll(any(Specification.class), eq(pageable));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void testBuscarAvancado_WithDataPrazoFilters() {
+        // Arrange
+        SolicitacaoFiltroDTO filtro = new SolicitacaoFiltroDTO();
+        // Setting date filters
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        filtro.setDataPrazoInicio(startDate);
+        filtro.setDataPrazoFim(endDate);
+        
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao());
+        Page<Solicitacao> page = new PageImpl<>(solicitacoes);
+        
+        when(solicitacaoRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        
+        // Act
+        Page<Solicitacao> result = solicitacaoService.buscarAvancado(filtro, pageable);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.getContent().size());
         verify(solicitacaoRepository, times(1)).findAll(any(Specification.class), eq(pageable));
     }
 }

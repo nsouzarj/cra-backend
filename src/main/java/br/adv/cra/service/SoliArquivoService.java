@@ -3,6 +3,7 @@ package br.adv.cra.service;
 import br.adv.cra.entity.SoliArquivo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.repository.SoliArquivoRepository;
+import br.adv.cra.repository.SolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,7 @@ public class SoliArquivoService {
 
     
     private final SoliArquivoRepository soliArquivoRepository;
+    private final SolicitacaoRepository solicitacaoRepository;
     
     public SoliArquivo salvar(SoliArquivo soliArquivo) {
         return soliArquivoRepository.save(soliArquivo);
@@ -74,12 +77,26 @@ public class SoliArquivoService {
         return soliArquivoRepository.findBySolicitacao(solicitacao, sort);
     }
     
-    // Added missing methods that the controller is trying to call
+    // Implementation of the missing methods
     
     public SoliArquivo salvarAnexo(MultipartFile file, Long solicitacaoId, String origem, String storageLocation) throws IOException {
-        // This is a placeholder implementation
-        // You'll need to implement the actual logic for saving attachments
-        throw new UnsupportedOperationException("Method salvarAnexo not yet implemented");
+        // Find the solicitacao
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoId)
+                .orElseThrow(() -> new RuntimeException("Solicitação não encontrada"));
+        
+        // Create a new SoliArquivo entity
+        SoliArquivo soliArquivo = new SoliArquivo();
+        soliArquivo.setSolicitacao(solicitacao);
+        soliArquivo.setNomearquivo(file.getOriginalFilename());
+        soliArquivo.setDatainclusao(LocalDateTime.now());
+        soliArquivo.setOrigem(origem);
+        soliArquivo.setAtivo(true);
+        soliArquivo.setStorageLocation(storageLocation);
+        
+        // Save the entity first to get an ID
+        soliArquivo = soliArquivoRepository.save(soliArquivo);
+        
+        return soliArquivo;
     }
     
     // Backward compatibility method
@@ -90,7 +107,7 @@ public class SoliArquivoService {
     
     public InputStream getFileContent(Long id) throws IOException {
         // This is a placeholder implementation
-        // You'll need to implement the actual logic for retrieving file content
+        // You'll need to implement the actual logic for retrieving file content based on storage location
         throw new UnsupportedOperationException("Method getFileContent not yet implemented");
     }
     
@@ -100,13 +117,35 @@ public class SoliArquivoService {
     
     public boolean fileExists(Long id) {
         // This is a placeholder implementation
-        // You'll need to implement the actual logic for checking if a file exists
+        // You'll need to implement the actual logic for checking if a file exists based on storage location
         return soliArquivoRepository.existsById(id);
     }
     
     public boolean podeDeletar(Long id, String origem) {
-        // This is a placeholder implementation
-        // You'll need to implement the actual logic for checking delete permissions
-        return true; // Allow deletion by default for now
+        // Check if the file exists
+        Optional<SoliArquivo> soliArquivoOpt = soliArquivoRepository.findById(id);
+        if (!soliArquivoOpt.isPresent()) {
+            return false;
+        }
+        
+        SoliArquivo soliArquivo = soliArquivoOpt.get();
+        
+        // Admins can delete any file
+        if ("admin".equals(origem)) {
+            return true;
+        }
+        
+        // Users can delete their own files
+        if ("usuario".equals(origem) && "usuario".equals(soliArquivo.getOrigem())) {
+            return true;
+        }
+        
+        // Correspondentes can delete their own files
+        if ("correspondente".equals(origem) && "correspondente".equals(soliArquivo.getOrigem())) {
+            return true;
+        }
+        
+        // Default: cannot delete
+        return false;
     }
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.Path;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class SolicitacaoSpecification {
     
@@ -131,12 +132,18 @@ public class SolicitacaoSpecification {
             
             Path<LocalDateTime> dataPath = root.get("datasolicitacao");
             
-            if (inicio != null && fim != null) {
-                return criteriaBuilder.between(dataPath, inicio, fim);
+            // Ajustar o fim do intervalo para o final do dia, se necessário
+            LocalDateTime fimAjustado = fim;
+            if (fim != null && fim.toLocalTime().equals(java.time.LocalTime.MIDNIGHT)) {
+                fimAjustado = fim.with(java.time.LocalTime.MAX);
+            }
+            
+            if (inicio != null && fimAjustado != null) {
+                return criteriaBuilder.between(dataPath, inicio, fimAjustado);
             } else if (inicio != null) {
                 return criteriaBuilder.greaterThanOrEqualTo(dataPath, inicio);
             } else {
-                return criteriaBuilder.lessThanOrEqualTo(dataPath, fim);
+                return criteriaBuilder.lessThanOrEqualTo(dataPath, fimAjustado);
             }
         };
     }
@@ -166,6 +173,54 @@ public class SolicitacaoSpecification {
         };
     }
     
+    public static Specification<Solicitacao> dataConclusaoBetween(LocalDateTime inicio, LocalDateTime fim) {
+        return (root, query, criteriaBuilder) -> {
+            if (inicio == null && fim == null) {
+                return criteriaBuilder.conjunction();
+            }
+            
+            Path<LocalDateTime> dataPath = root.get("dataconclusao");
+            
+            // Ajustar o fim do intervalo para o final do dia, se necessário
+            LocalDateTime fimAjustado = fim;
+            if (fim != null && fim.toLocalTime().equals(java.time.LocalTime.MIDNIGHT)) {
+                fimAjustado = fim.with(java.time.LocalTime.MAX);
+            }
+            
+            if (inicio != null && fimAjustado != null) {
+                return criteriaBuilder.between(dataPath, inicio, fimAjustado);
+            } else if (inicio != null) {
+                return criteriaBuilder.greaterThanOrEqualTo(dataPath, inicio);
+            } else {
+                return criteriaBuilder.lessThanOrEqualTo(dataPath, fimAjustado);
+            }
+        };
+    }
+    
+    public static Specification<Solicitacao> dataPrazoBetween(LocalDateTime inicio, LocalDateTime fim) {
+        return (root, query, criteriaBuilder) -> {
+            if (inicio == null && fim == null) {
+                return criteriaBuilder.conjunction();
+            }
+            
+            Path<LocalDateTime> dataPath = root.get("dataprazo");
+            
+            // Ajustar o fim do intervalo para o final do dia, se necessário
+            LocalDateTime fimAjustado = fim;
+            if (fim != null && fim.toLocalTime().equals(java.time.LocalTime.MIDNIGHT)) {
+                fimAjustado = fim.with(java.time.LocalTime.MAX);
+            }
+            
+            if (inicio != null && fimAjustado != null) {
+                return criteriaBuilder.between(dataPath, inicio, fimAjustado);
+            } else if (inicio != null) {
+                return criteriaBuilder.greaterThanOrEqualTo(dataPath, inicio);
+            } else {
+                return criteriaBuilder.lessThanOrEqualTo(dataPath, fimAjustado);
+            }
+        };
+    }
+
     public static Specification<Solicitacao> atrasadaEquals(Boolean atrasada) {
         return (root, query, criteriaBuilder) -> {
             if (atrasada == null || !atrasada) {

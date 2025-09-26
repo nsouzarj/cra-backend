@@ -2,10 +2,9 @@ package br.adv.cra.service;
 
 import br.adv.cra.dto.SolicitacaoFiltroDTO;
 import br.adv.cra.entity.Solicitacao;
-import br.adv.cra.entity.StatusSolicitacao;
-import br.adv.cra.entity.Correspondente;
 import br.adv.cra.repository.SolicitacaoRepository;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
+import br.adv.cra.specification.SolicitacaoSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,13 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class SolicitacaoServiceCombinedFilterTest {
+class SolicitacaoServiceDateFilterTest2 {
 
     @Mock
     private SolicitacaoRepository solicitacaoRepository;
@@ -41,14 +41,13 @@ class SolicitacaoServiceCombinedFilterTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void testBuscarAvancado_StatusIdAndCorrespondenteIdFilter() {
+    void testBuscarAvancado_WithoutDateFilters() {
         // Arrange
         SolicitacaoFiltroDTO filtro = new SolicitacaoFiltroDTO();
-        filtro.setStatusId(1L); // Status ID
-        filtro.setCorrespondenteId(2L); // Correspondente ID
+        // Not setting any date filters - they should default to null
         
         Pageable pageable = PageRequest.of(0, 10);
-        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao(), new Solicitacao());
+        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao());
         Page<Solicitacao> page = new PageImpl<>(solicitacoes);
         
         when(solicitacaoRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
@@ -58,20 +57,25 @@ class SolicitacaoServiceCombinedFilterTest {
         
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
+        assertEquals(1, result.getContent().size());
         verify(solicitacaoRepository, times(1)).findAll(any(Specification.class), eq(pageable));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    void testBuscarAvancado_StatusNameAndCorrespondenteIdFilter() {
+    void testBuscarAvancado_WithNullDateFilters() {
         // Arrange
         SolicitacaoFiltroDTO filtro = new SolicitacaoFiltroDTO();
-        filtro.setStatus("Pendente"); // Status name
-        filtro.setCorrespondenteId(2L); // Correspondente ID
+        // Explicitly setting date filters to null
+        filtro.setDataInicio(null);
+        filtro.setDataFim(null);
+        filtro.setDataConclusaoInicio(null);
+        filtro.setDataConclusaoFim(null);
+        filtro.setDataPrazoInicio(null);
+        filtro.setDataPrazoFim(null);
         
         Pageable pageable = PageRequest.of(0, 10);
-        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao(), new Solicitacao());
+        List<Solicitacao> solicitacoes = Arrays.asList(new Solicitacao());
         Page<Solicitacao> page = new PageImpl<>(solicitacoes);
         
         when(solicitacaoRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
@@ -81,7 +85,7 @@ class SolicitacaoServiceCombinedFilterTest {
         
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
+        assertEquals(1, result.getContent().size());
         verify(solicitacaoRepository, times(1)).findAll(any(Specification.class), eq(pageable));
     }
 }

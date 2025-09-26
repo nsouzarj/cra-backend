@@ -8,6 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -95,17 +100,25 @@ class ComarcaControllerTest {
     @Test
     void testListarTodas() throws Exception {
         List<Comarca> comarcas = Arrays.asList(comarca1, comarca2);
-        when(comarcaService.listarTodas()).thenReturn(comarcas);
+        Page<Comarca> comarcaPage = new PageImpl<>(comarcas);
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "nome"));
+        
+        when(comarcaService.listarTodasOrdenadas(pageable)).thenReturn(comarcaPage);
+        when(comarcaService.contarTodas()).thenReturn(2L);
 
         mockMvc.perform(get("/api/comarcas")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "20")
+                .param("sortBy", "nome")
+                .param("direction", "ASC"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].nome").value("São Paulo"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].nome").value("Campinas"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].nome").value("São Paulo"))
+                .andExpect(jsonPath("$.content[1].id").value(2L))
+                .andExpect(jsonPath("$.content[1].nome").value("Campinas"));
     }
 
     @Test
@@ -132,31 +145,47 @@ class ComarcaControllerTest {
     @Test
     void testBuscarPorNome() throws Exception {
         List<Comarca> comarcas = Arrays.asList(comarca1);
-        when(comarcaService.buscarPorNome("São Paulo")).thenReturn(comarcas);
+        Page<Comarca> comarcaPage = new PageImpl<>(comarcas);
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "nome"));
+        
+        when(comarcaService.buscarPorNome("São Paulo", pageable)).thenReturn(comarcaPage);
+        when(comarcaService.contarTodas()).thenReturn(2L);
 
         mockMvc.perform(get("/api/comarcas/buscar/nome?nome=São Paulo")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "20")
+                .param("sortBy", "nome")
+                .param("direction", "ASC"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].nome").value("São Paulo"));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].nome").value("São Paulo"));
     }
 
     @Test
     void testBuscarPorUfSigla() throws Exception {
         List<Comarca> comarcas = Arrays.asList(comarca1, comarca2);
-        when(comarcaService.buscarPorUfSigla("SP")).thenReturn(comarcas);
+        Page<Comarca> comarcaPage = new PageImpl<>(comarcas);
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "nome"));
+        
+        when(comarcaService.buscarPorUfSigla("SP", pageable)).thenReturn(comarcaPage);
+        when(comarcaService.contarTodas()).thenReturn(2L);
 
         mockMvc.perform(get("/api/comarcas/buscar/uf/sigla/SP")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "20")
+                .param("sortBy", "nome")
+                .param("direction", "ASC"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].nome").value("São Paulo"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].nome").value("Campinas"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].nome").value("São Paulo"))
+                .andExpect(jsonPath("$.content[1].id").value(2L))
+                .andExpect(jsonPath("$.content[1].nome").value("Campinas"));
     }
 
     @Test
