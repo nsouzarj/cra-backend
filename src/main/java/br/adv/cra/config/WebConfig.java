@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Serve files from the upload directory
         // Convert Windows path separators to URL format
-        String location = "file:///" + uploadDir.replace("\\", "/") + "/";
+        String location = "file:///" + System.getProperty("user.dir").replace("\\", "/") + "/uploads/";
         registry.addResourceHandler("/arquivos/**")
                 .addResourceLocations(location);
     }
