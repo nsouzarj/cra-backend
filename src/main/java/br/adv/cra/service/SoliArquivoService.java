@@ -224,6 +224,9 @@ public class SoliArquivoService {
             return true;
         }
         
+        if("solicitante".equals(origem)){
+            return true;
+        }
         // Users can delete their own files
         if ("usuario".equals(origem) && "usuario".equals(soliArquivo.getOrigem())) {
             return true;
