@@ -50,6 +50,41 @@ public class SoliArquivoService {
         if (!soliArquivoRepository.existsById(id)) {
             throw new RuntimeException("Arquivo não encontrado");
         }
+        
+        // Get the file entity before deleting it
+        SoliArquivo soliArquivo = soliArquivoRepository.findById(id).orElseThrow(() -> new RuntimeException("Arquivo não encontrado"));
+        
+        // Handle file deletion based on storage location
+        String storageLocation = soliArquivo.getStorageLocation();
+        
+        if ("google_drive".equals(storageLocation)) {
+            // Delete from Google Drive
+            String googleDriveFileId = soliArquivo.getGoogleDriveFileId();
+            if (googleDriveFileId != null && !googleDriveFileId.isEmpty()) {
+                try {
+                    googleDriveService.deleteFile(googleDriveFileId);
+                } catch (Exception e) {
+                    // Log the error but continue with database deletion
+                    System.err.println("Failed to delete file from Google Drive: " + e.getMessage());
+                }
+            }
+        } else {
+            // Delete local file
+            String filePath = soliArquivo.getCaminhofisico();
+            if (filePath != null && !filePath.isEmpty()) {
+                try {
+                    java.io.File file = new java.io.File(filePath);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                } catch (Exception e) {
+                    // Log the error but continue with database deletion
+                    System.err.println("Failed to delete local file: " + e.getMessage());
+                }
+            }
+        }
+        
+        // Delete the database record
         soliArquivoRepository.deleteById(id);
     }
     

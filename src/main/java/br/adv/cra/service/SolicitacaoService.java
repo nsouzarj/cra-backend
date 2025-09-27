@@ -8,6 +8,7 @@ import br.adv.cra.entity.Processo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.StatusSolicitacao;
 import br.adv.cra.entity.Usuario;
+import br.adv.cra.repository.SoliArquivoRepository;
 import br.adv.cra.repository.SolicitacaoRepository;
 import br.adv.cra.repository.StatusSolicitacaoRepository;
 import br.adv.cra.specification.SolicitacaoSpecification;
@@ -31,6 +32,7 @@ public class SolicitacaoService {
     
     private final SolicitacaoRepository solicitacaoRepository;
     private final StatusSolicitacaoRepository statusSolicitacaoRepository;
+    private final SoliArquivoRepository soliArquivoRepository;
     
     public Solicitacao salvar(Solicitacao solicitacao) {
         if (solicitacao.getDatasolicitacao() == null) {
@@ -128,7 +130,10 @@ public class SolicitacaoService {
             throw new RuntimeException("Solicitação não encontrada");
         }
         
-        // First delete all related historico records to avoid foreign key constraint violation
+        // First delete all related soliArquivo records to avoid foreign key constraint violation
+        soliArquivoRepository.deleteAll(soliArquivoRepository.findBySolicitacaoIdsolicitacao(id));
+        
+        // Then delete all related historico records to avoid foreign key constraint violation
         // We need to do this because there's no HistoricoRepository
         solicitacaoRepository.deleteHistoricoBySolicitacaoId(id);
         
