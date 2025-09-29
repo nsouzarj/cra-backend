@@ -3,8 +3,10 @@ package br.adv.cra.service;
 import br.adv.cra.entity.Solicitacao;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,29 @@ public class ReportService {
     public byte[] generatePdfReport(String reportName, Map<String, Object> parameters, Collection<?> data) 
             throws JRException {
         
-        // Load the compiled Jasper report (.jasper file)
-        ClassPathResource resource = new ClassPathResource("reports/" + reportName + ".jasper");
-        
-        try (InputStream reportStream = resource.getInputStream()) {
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+        try {
+            // First try to load the compiled .jasper file
+            ClassPathResource jasperResource = new ClassPathResource("reports/" + reportName + ".jasper");
+            
+            JasperReport jasperReport;
+            if (jasperResource.exists()) {
+                // Load the compiled Jasper report (.jasper file)
+                try (InputStream reportStream = jasperResource.getInputStream()) {
+                    jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+                }
+            } else {
+                // If .jasper file doesn't exist, try to compile .jrxml file
+                ClassPathResource jrxmlResource = new ClassPathResource("reports/" + reportName + ".jrxml");
+                if (!jrxmlResource.exists()) {
+                    throw new JRException("Report template not found: " + reportName);
+                }
+                
+                // Compile the .jrxml file to JasperReport
+                try (InputStream jrxmlStream = jrxmlResource.getInputStream()) {
+                    JasperDesign jasperDesign = JRXmlLoader.load(jrxmlStream);
+                    jasperReport = JasperCompileManager.compileReport(jasperDesign);
+                }
+            }
             
             // Create data source
             JRDataSource dataSource = new JRBeanCollectionDataSource(data);
@@ -71,11 +91,29 @@ public class ReportService {
     public byte[] generateReport(String reportName, Map<String, Object> parameters, Collection<?> data, String outputType) 
             throws JRException {
         
-        // Load the compiled Jasper report (.jasper file)
-        ClassPathResource resource = new ClassPathResource("reports/" + reportName + ".jasper");
-        
-        try (InputStream reportStream = resource.getInputStream()) {
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+        try {
+            // First try to load the compiled .jasper file
+            ClassPathResource jasperResource = new ClassPathResource("reports/" + reportName + ".jasper");
+            
+            JasperReport jasperReport;
+            if (jasperResource.exists()) {
+                // Load the compiled Jasper report (.jasper file)
+                try (InputStream reportStream = jasperResource.getInputStream()) {
+                    jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+                }
+            } else {
+                // If .jasper file doesn't exist, try to compile .jrxml file
+                ClassPathResource jrxmlResource = new ClassPathResource("reports/" + reportName + ".jrxml");
+                if (!jrxmlResource.exists()) {
+                    throw new JRException("Report template not found: " + reportName);
+                }
+                
+                // Compile the .jrxml file to JasperReport
+                try (InputStream jrxmlStream = jrxmlResource.getInputStream()) {
+                    JasperDesign jasperDesign = JRXmlLoader.load(jrxmlStream);
+                    jasperReport = JasperCompileManager.compileReport(jasperDesign);
+                }
+            }
             
             // Create data source
             JRDataSource dataSource = new JRBeanCollectionDataSource(data);

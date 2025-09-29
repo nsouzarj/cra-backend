@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solicitacao-report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataAdapter" value="One Empty Record"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -40,306 +40,857 @@
 	<field name="tipoSolicitacao" class="java.lang.String"/>
 	<field name="correspondente" class="java.lang.String"/>
 	<field name="usuario" class="java.lang.String"/>
+	
+	<!-- Fields for Correspondente -->
+	<field name="correspondenteId" class="java.lang.Long"/>
+	<field name="correspondenteNome" class="java.lang.String"/>
+	<field name="correspondenteResponsavel" class="java.lang.String"/>
+	<field name="correspondenteCpfcnpj" class="java.lang.String"/>
+	<field name="correspondenteOab" class="java.lang.String"/>
+	<field name="correspondenteTipo" class="java.lang.String"/>
+	<field name="correspondenteTelefonePrimario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneSecundario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneCelularPrimario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneCelularSecundario" class="java.lang.String"/>
+	<field name="correspondenteEmailPrimario" class="java.lang.String"/>
+	<field name="correspondenteEmailSecundario" class="java.lang.String"/>
+	<field name="correspondenteDataCadastro" class="java.lang.String"/>
+	<field name="correspondenteAtivo" class="java.lang.String"/>
+	<field name="correspondenteObservacao" class="java.lang.String"/>
+	
+	<!-- Fields for Correspondente Endereco -->
+	<field name="correspondenteEnderecoLogradouro" class="java.lang.String"/>
+	<field name="correspondenteEnderecoNumero" class="java.lang.String"/>
+	<field name="correspondenteEnderecoComplemento" class="java.lang.String"/>
+	<field name="correspondenteEnderecoBairro" class="java.lang.String"/>
+	<field name="correspondenteEnderecoCidade" class="java.lang.String"/>
+	<field name="correspondenteEnderecoUf" class="java.lang.String"/>
+	<field name="correspondenteEnderecoCep" class="java.lang.String"/>
+	
+	<!-- Fields for Processo -->
+	<field name="processoId" class="java.lang.Long"/>
+	<field name="processoNumero" class="java.lang.String"/>
+	<field name="processoNumeroPesq" class="java.lang.String"/>
+	<field name="processoParte" class="java.lang.String"/>
+	<field name="processoAdverso" class="java.lang.String"/>
+	<field name="processoPosicao" class="java.lang.String"/>
+	<field name="processoStatus" class="java.lang.String"/>
+	<field name="processoCartorio" class="java.lang.String"/>
+	<field name="processoAssunto" class="java.lang.String"/>
+	<field name="processoLocalizacao" class="java.lang.String"/>
+	<field name="processoNumeroIntegracao" class="java.lang.String"/>
+	<field name="processoComarca" class="java.lang.String"/>
+	<field name="processoOrgao" class="java.lang.String"/>
+	<field name="processoNumOrgao" class="java.lang.String"/>
+	<field name="processoProcEletronico" class="java.lang.String"/>
+	<field name="processoQuantsoli" class="java.lang.Integer"/>
+	<field name="processoDataDistribuicao" class="java.lang.String"/>
+	<field name="processoObservacao" class="java.lang.String"/>
+	
 	<title>
-		<band height="79">
+		<band height="50">
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="50"/>
+				<reportElement x="0" y="0" width="555" height="30"/>
 				<textElement textAlignment="Center">
-					<font size="18" isBold="true"/>
+					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Relatório de Solicitação]]></text>
 			</staticText>
 		</band>
 	</title>
-	<detail>
-		<band height="920">
+	
+	<columnHeader>
+		<band height="20">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Campo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	
+	<detail>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[ID:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="0" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="20" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Número:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="20" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="40" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Data Solicitação:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="40" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{dataSolicitacao}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="60" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Data Conclusão:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="60" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{dataConclusao}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="80" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Data Agendamento:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="80" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{dataAgendamento}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="100" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Data Prazo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="100" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{dataPrazo}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="120" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Vara:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="120" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{vara}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="140" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[UF:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="140" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{uf}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="160" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Requerente:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="160" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{requerente}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="180" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Requerido:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="180" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{requerido}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="200" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Observação:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="200" width="455" height="40"/>
+				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{observacao}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="240" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Instruções:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="240" width="455" height="40"/>
+				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{instrucoes}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="280" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Complemento:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="280" width="455" height="40"/>
+				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{complemento}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="320" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Justificativa:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="320" width="455" height="40"/>
+				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{justificativa}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="360" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Tratamento Pós Audiência:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="360" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{tratposaudiencia}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="380" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Número Controle:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="380" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{numcontrole}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="400" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Tem Reputação:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="400" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{tempreposto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="420" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Convolada:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="420" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{convolada}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="440" width="100" height="20"/>
+				<reportElement x="0" y="40" width="150" height="20"/>
 				<text><![CDATA[Hora Audiência:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="440" width="455" height="20"/>
+				<reportElement x="150" y="40" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{horaudiencia}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="460" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Status Externo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="460" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{statusexterno}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="480" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Valor:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="480" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="500" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Valor da Alçada:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="500" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{valordaalcada}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="520" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Email Envio:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="520" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{emailenvio}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="60">
 			<staticText>
-				<reportElement x="0" y="540" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Pago:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="540" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{pago}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="560" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Grupo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="560" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{grupo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="580" width="100" height="20"/>
+				<reportElement x="0" y="40" width="150" height="20"/>
 				<text><![CDATA[Proposta Acordo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="580" width="455" height="20"/>
+				<reportElement x="150" y="40" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{propostaacordo}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="600" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Audiência Interna:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="600" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{audinterna}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="620" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Lide:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="620" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{lide}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="640" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Avaliação Nota:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="640" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{avaliacaonota}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="660" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Texto Avaliação:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="660" width="455" height="40"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{textoavaliacao}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="700" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Comarca:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="700" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{comarca}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="720" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Processo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="720" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{processo}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="740" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Status:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="740" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="760" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Tipo Solicitação:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="760" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{tipoSolicitacao}]]></textFieldExpression>
 			</textField>
+		</band>
+		
+		<band height="40">
 			<staticText>
-				<reportElement x="0" y="780" width="100" height="20"/>
+				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Correspondente:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="780" width="455" height="20"/>
+				<reportElement x="150" y="0" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{correspondente}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="800" width="100" height="20"/>
+				<reportElement x="0" y="20" width="150" height="20"/>
 				<text><![CDATA[Usuário:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="100" y="800" width="455" height="20"/>
+				<reportElement x="150" y="20" width="405" height="20"/>
 				<textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<!-- Section Header: Correspondente -->
+		<band height="30">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORRESPONDENTE]]></text>
+			</staticText>
+		</band>
+		
+		<!-- Correspondente Details -->
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteId}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteNome}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Responsável:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteResponsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[CPF/CNPJ:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteCpfcnpj}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[OAB:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteOab}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Tipo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteTipo}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Telefone Primário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteTelefonePrimario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Telefone Secundário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteTelefoneSecundario}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Telefone Celular 1:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteTelefoneCelularPrimario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Telefone Celular 2:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteTelefoneCelularSecundario}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Email Primário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEmailPrimario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Email Secundário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEmailSecundario}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Data Cadastro:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteDataCadastro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Ativo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteAtivo}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Observações:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="60"/>
+				<textFieldExpression><![CDATA[$F{correspondenteObservacao}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<!-- Correspondente Endereço -->
+		<band height="30">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="30" backcolor="#EEEEEE"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENDEREÇO DO CORRESPONDENTE]]></text>
+			</staticText>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Logradouro:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoLogradouro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Número:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoNumero}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Complemento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoComplemento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoBairro}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoCidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoUf}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{correspondenteEnderecoCep}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<!-- Section Header: Processo -->
+		<band height="30">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESSO]]></text>
+			</staticText>
+		</band>
+		
+		<!-- Processo Details -->
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoId}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Número:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoNumero}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Número Pesquisa:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoNumeroPesq}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Parte:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoParte}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Adverso:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoAdverso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Posição:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoPosicao}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Status:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Cartório:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoCartorio}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Assunto:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="60"/>
+				<textFieldExpression><![CDATA[$F{processoAssunto}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Localização:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoLocalizacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Número Integração:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoNumeroIntegracao}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Comarca:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoComarca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Órgão:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoOrgao}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Número Órgão:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoNumOrgao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Processo Eletrônico:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoProcEletronico}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Quantidade Solicitações:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoQuantsoli}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="150" height="20"/>
+				<text><![CDATA[Data Distribuição:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="20" width="405" height="20"/>
+				<textFieldExpression><![CDATA[$F{processoDataDistribuicao}]]></textFieldExpression>
+			</textField>
+		</band>
+		
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20"/>
+				<text><![CDATA[Observações:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="0" width="405" height="60"/>
+				<textFieldExpression><![CDATA[$F{processoObservacao}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
