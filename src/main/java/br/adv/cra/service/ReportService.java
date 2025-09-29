@@ -1,6 +1,9 @@
 package br.adv.cra.service;
 
 import br.adv.cra.entity.Solicitacao;
+import br.adv.cra.entity.Correspondente;
+import br.adv.cra.entity.Endereco;
+import br.adv.cra.entity.Processo;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -235,6 +238,117 @@ public class ReportService {
             data.put("usuario", solicitacao.getUsuario().getNomecompleto() != null ? solicitacao.getUsuario().getNomecompleto() : "");
         } else {
             data.put("usuario", "");
+        }
+        
+        // Add complete correspondente data
+        if (solicitacao.getCorrespondente() != null) {
+            Correspondente correspondente = solicitacao.getCorrespondente();
+            data.put("correspondenteId", correspondente.getId() != null ? correspondente.getId() : "");
+            data.put("correspondenteNome", correspondente.getNome() != null ? correspondente.getNome() : "");
+            data.put("correspondenteResponsavel", correspondente.getResponsavel() != null ? correspondente.getResponsavel() : "");
+            data.put("correspondenteCpfcnpj", correspondente.getCpfcnpj() != null ? correspondente.getCpfcnpj() : "");
+            data.put("correspondenteOab", correspondente.getOab() != null ? correspondente.getOab() : "");
+            data.put("correspondenteTipo", correspondente.getTipocorrepondente() != null ? correspondente.getTipocorrepondente() : "");
+            data.put("correspondenteTelefonePrimario", correspondente.getTelefoneprimario() != null ? correspondente.getTelefoneprimario() : "");
+            data.put("correspondenteTelefoneSecundario", correspondente.getTelefonesecundario() != null ? correspondente.getTelefonesecundario() : "");
+            data.put("correspondenteTelefoneCelularPrimario", correspondente.getTelefonecelularprimario() != null ? correspondente.getTelefonecelularprimario() : "");
+            data.put("correspondenteTelefoneCelularSecundario", correspondente.getTelefonecelularsecundario() != null ? correspondente.getTelefonecelularsecundario() : "");
+            data.put("correspondenteEmailPrimario", correspondente.getEmailprimario() != null ? correspondente.getEmailprimario() : "");
+            data.put("correspondenteEmailSecundario", correspondente.getEmailsecundario() != null ? correspondente.getEmailsecundario() : "");
+            data.put("correspondenteDataCadastro", correspondente.getDatacadastro() != null ? 
+                     correspondente.getDatacadastro().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "");
+            data.put("correspondenteAtivo", correspondente.isAtivo() ? "Sim" : "Não");
+            data.put("correspondenteObservacao", correspondente.getObservacao() != null ? correspondente.getObservacao() : "");
+            
+            // Add correspondente endereco data
+            if (correspondente.getEnderecos() != null) {
+                Endereco endereco = correspondente.getEnderecos();
+                data.put("correspondenteEnderecoLogradouro", endereco.getLogradouro() != null ? endereco.getLogradouro() : "");
+                data.put("correspondenteEnderecoNumero", endereco.getNumero() != null ? endereco.getNumero() : "");
+                data.put("correspondenteEnderecoComplemento", endereco.getComplemento() != null ? endereco.getComplemento() : "");
+                data.put("correspondenteEnderecoBairro", endereco.getBairro() != null ? endereco.getBairro() : "");
+                data.put("correspondenteEnderecoCidade", endereco.getCidade() != null ? endereco.getCidade() : "");
+                data.put("correspondenteEnderecoUf", endereco.getUf() != null ? endereco.getUf().getSigla() : "");
+                data.put("correspondenteEnderecoCep", endereco.getCep() != null ? endereco.getCep() : "");
+            } else {
+                data.put("correspondenteEnderecoLogradouro", "");
+                data.put("correspondenteEnderecoNumero", "");
+                data.put("correspondenteEnderecoComplemento", "");
+                data.put("correspondenteEnderecoBairro", "");
+                data.put("correspondenteEnderecoCidade", "");
+                data.put("correspondenteEnderecoUf", "");
+                data.put("correspondenteEnderecoCep", "");
+            }
+        } else {
+            // Set empty values for all correspondente fields
+            data.put("correspondenteId", "");
+            data.put("correspondenteNome", "");
+            data.put("correspondenteResponsavel", "");
+            data.put("correspondenteCpfcnpj", "");
+            data.put("correspondenteOab", "");
+            data.put("correspondenteTipo", "");
+            data.put("correspondenteTelefonePrimario", "");
+            data.put("correspondenteTelefoneSecundario", "");
+            data.put("correspondenteTelefoneCelularPrimario", "");
+            data.put("correspondenteTelefoneCelularSecundario", "");
+            data.put("correspondenteEmailPrimario", "");
+            data.put("correspondenteEmailSecundario", "");
+            data.put("correspondenteDataCadastro", "");
+            data.put("correspondenteAtivo", "");
+            data.put("correspondenteObservacao", "");
+            
+            // Set empty values for correspondente endereco fields
+            data.put("correspondenteEnderecoLogradouro", "");
+            data.put("correspondenteEnderecoNumero", "");
+            data.put("correspondenteEnderecoComplemento", "");
+            data.put("correspondenteEnderecoBairro", "");
+            data.put("correspondenteEnderecoCidade", "");
+            data.put("correspondenteEnderecoUf", "");
+            data.put("correspondenteEnderecoCep", "");
+        }
+        
+        // Add complete processo data
+        if (solicitacao.getProcesso() != null) {
+            Processo processo = solicitacao.getProcesso();
+            data.put("processoId", processo.getId() != null ? processo.getId() : "");
+            data.put("processoNumero", processo.getNumeroprocesso() != null ? processo.getNumeroprocesso() : "");
+            data.put("processoNumeroPesq", processo.getNumeroprocessopesq() != null ? processo.getNumeroprocessopesq() : "");
+            data.put("processoParte", processo.getParte() != null ? processo.getParte() : "");
+            data.put("processoAdverso", processo.getAdverso() != null ? processo.getAdverso() : "");
+            data.put("processoPosicao", processo.getPosicao() != null ? processo.getPosicao() : "");
+            data.put("processoStatus", processo.getStatus() != null ? processo.getStatus() : "");
+            data.put("processoCartorio", processo.getCartorio() != null ? processo.getCartorio() : "");
+            data.put("processoAssunto", processo.getAssunto() != null ? processo.getAssunto() : "");
+            data.put("processoLocalizacao", processo.getLocalizacao() != null ? processo.getLocalizacao() : "");
+            data.put("processoNumeroIntegracao", processo.getNumerointegracao() != null ? processo.getNumerointegracao() : "");
+            data.put("processoComarca", processo.getComarca() != null && processo.getComarca().getNome() != null ? processo.getComarca().getNome() : "");
+            data.put("processoOrgao", processo.getOrgao() != null && processo.getOrgao().getDescricao() != null ? processo.getOrgao().getDescricao() : "");
+            data.put("processoNumOrgao", processo.getNumorgao() != null ? processo.getNumorgao().toString() : "");
+            data.put("processoProcEletronico", processo.getProceletronico() != null ? processo.getProceletronico() : "");
+            data.put("processoQuantsoli", processo.getQuantsoli() != null ? processo.getQuantsoli() : 0);
+            data.put("processoDataDistribuicao", processo.getDatadistribuicao() != null ? 
+                     processo.getDatadistribuicao().toString() : "");
+            data.put("processoObservacao", processo.getObservacao() != null ? processo.getObservacao() : "");
+        } else {
+            // Set empty values for all processo fields
+            data.put("processoId", "");
+            data.put("processoNumero", "");
+            data.put("processoNumeroPesq", "");
+            data.put("processoParte", "");
+            data.put("processoAdverso", "");
+            data.put("processoPosicao", "");
+            data.put("processoStatus", "");
+            data.put("processoCartorio", "");
+            data.put("processoAssunto", "");
+            data.put("processoLocalizacao", "");
+            data.put("processoNumeroIntegracao", "");
+            data.put("processoComarca", "");
+            data.put("processoOrgao", "");
+            data.put("processoNumOrgao", "");
+            data.put("processoProcEletronico", "");
+            data.put("processoQuantsoli", 0);
+            data.put("processoDataDistribuicao", "");
+            data.put("processoObservacao", "");
         }
         
         reportData.add(data);

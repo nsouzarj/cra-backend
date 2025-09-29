@@ -796,13 +796,13 @@
 			</textField>
 		</band>
 		
-		<band height="40">
+		<band height="80">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Assunto:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="150" y="0" width="405" height="60"/>
+				<reportElement x="150" y="0" width="405" height="80"/>
 				<textFieldExpression><![CDATA[$F{processoAssunto}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -883,13 +883,13 @@
 			</textField>
 		</band>
 		
-		<band height="60">
+		<band height="80">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Observações:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="150" y="0" width="405" height="60"/>
+				<reportElement x="150" y="0" width="405" height="80"/>
 				<textFieldExpression><![CDATA[$F{processoObservacao}]]></textFieldExpression>
 			</textField>
 		</band>
