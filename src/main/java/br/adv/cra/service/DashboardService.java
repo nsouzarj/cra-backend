@@ -51,6 +51,7 @@ public class DashboardService {
         dashboard.setComarcasInativas(comarcaRepository.countInativas());
 
         // Solicitacao statistics
+        dashboard.setTotalSolicitacoes(solicitacaoRepository.count());
         dashboard.setPendentes(solicitacaoRepository.countPendentes());
         dashboard.setConcluidas(solicitacaoRepository.count() - solicitacaoRepository.countPendentes());
         dashboard.setPagas(solicitacaoRepository.findByPagoTrue().size());

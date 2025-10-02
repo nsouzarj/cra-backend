@@ -88,7 +88,10 @@
 	<field name="processoObservacao" class="java.lang.String"/>
 	
 	<title>
-		<band height="50">
+		<band height="70">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="70" backcolor="#CCCCCC"/>
+			</rectangle>
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="30"/>
 				<textElement textAlignment="Center">
@@ -96,6 +99,20 @@
 				</textElement>
 				<text><![CDATA[Relatório de Solicitação]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Emitido em: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="40" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	

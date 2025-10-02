@@ -8,54 +8,45 @@
         <version>3.2.5</version>
         <relativePath/>
     </parent>
-    
     <groupId>br.adv.cra</groupId>
     <artifactId>cra-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>cra-backend</name>
     <description>Backend project for CRA using Spring Boot</description>
-    
     <properties>
         <java.version>23</java.version>
     </properties>
-    
     <dependencies>
         <!-- Spring Boot Starter Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        
         <!-- Spring Boot Starter Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        
         <!-- Spring Boot Starter Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        
         <!-- Spring Boot Starter Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        
         <!-- Spring Boot Starter Cache -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-        
         <!-- Caffeine Cache Provider -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
-        
         <!-- JWT Support -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -74,28 +65,30 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
-        
         <!-- PostgreSQL Connector -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
         <!-- H2 Database for testing -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
         <!-- Spring Boot Starter Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+        <!-- Spring Security Test -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Updated Mockito for Java 23 support -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -103,13 +96,25 @@
             <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
-        
+        <!-- Mockito Inline for mocking final classes and interfaces -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Updated Byte Buddy for Java 23 support -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.10</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Jackson for JSON processing -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-        
         <!-- Lombok for reducing boilerplate code -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -117,60 +122,51 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-        
         <!-- Swagger/OpenAPI Documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
-        
         <!-- Google Drive API Client -->
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>2.0.0</version>
         </dependency>
-        
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
             <version>1.34.1</version>
         </dependency>
-        
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-drive</artifactId>
             <version>v3-rev20220815-2.0.0</version>
         </dependency>
-        
         <!-- Google Auth Library for handling credentials -->
         <dependency>
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-oauth2-http</artifactId>
             <version>1.19.0</version>
         </dependency>
-        
         <!-- Apache Commons IO for IOUtils -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.20.0</version>
         </dependency>
-        
         <!-- Jakarta Annotations for PostConstruct -->
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <version>2.1.1</version>
         </dependency>
-        
         <!-- JavaMail API for Email Service -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-        
         <!-- JasperReports for Reporting Service -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
@@ -178,7 +174,6 @@
             <version>6.20.0</version>
         </dependency>
     </dependencies>
-    
     <build>
         <plugins>
             <plugin>
@@ -193,6 +188,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -208,15 +204,16 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.1.2</version>
                 <configuration>
                     <argLine>-Dnet.bytebuddy.experimental=true</argLine>
-                    <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
+            
         </plugins>
     </build>
 </project>
