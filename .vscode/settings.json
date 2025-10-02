@@ -8,5 +8,13 @@
         "Solicitacao"
     ],
     "java.debug.settings.onBuildFailureProceed": true,
-    "terminal.integrated.defaultProfile.windows": "Command Prompt"
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "koverage.coverageFileNames": [
+        
+        "lcov.info",
+        "cov.xml",
+        "clover.xml",
+        "coverage.xml",
+        "jacoco.xml"
+    ]
 }
