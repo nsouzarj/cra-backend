@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SoliArquivoServiceMockitoTest {
+class SoliArquivoServiceTest {
 
     @Mock
     private SoliArquivoRepository soliArquivoRepository;

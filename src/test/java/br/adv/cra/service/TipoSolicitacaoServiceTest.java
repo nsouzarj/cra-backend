@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class TipoSolicitacaoServiceMockitoTest {
+class TipoSolicitacaoServiceTest {
 
     @Mock
     private TipoSolicitacaoRepository tipoSolicitacaoRepository;

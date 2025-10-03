@@ -98,14 +98,12 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>${bytebuddy.version}</version>
-            <scope>test</scope>
+            <version>${bytebuddy.version}</version> <!-- Let Spring Boot manage this if possible, but keeping for Java 23 -->
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
-            <version>${bytebuddy.version}</version>
-            <scope>test</scope>
+            <version>${bytebuddy.version}</version> <!-- Let Spring Boot manage this if possible, but keeping for Java 23 -->
         </dependency>
         <!-- Updated Mockito for better Java 23 compatibility -->
         <dependency>

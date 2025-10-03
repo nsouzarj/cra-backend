@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProcessoServiceMockitoTest {
+class ProcessoServiceTest {
 
     @Mock
     private ProcessoRepository processoRepository;

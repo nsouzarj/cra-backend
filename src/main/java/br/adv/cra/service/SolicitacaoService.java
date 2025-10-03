@@ -476,6 +476,11 @@ public class SolicitacaoService {
      */
     @Transactional(readOnly = true)
     public Page<Solicitacao> buscarAvancado(SolicitacaoFiltroDTO filtro, Pageable pageable) {
+        // Add a null check to handle cases where no filter is provided.
+        if (filtro == null) {
+            return Page.empty(pageable);
+        }
+
         // Build specification based on provided filters
         Specification<Solicitacao> spec = Specification.where(null);
         

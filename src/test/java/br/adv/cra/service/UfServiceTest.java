@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UfServiceMockitoTest {
+class UfServiceTest {
 
     @Mock
     private UfRepository ufRepository;

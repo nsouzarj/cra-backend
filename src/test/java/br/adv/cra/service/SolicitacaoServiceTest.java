@@ -5,6 +5,7 @@ import br.adv.cra.dto.SolicitacaoFiltroDTO;
 import br.adv.cra.entity.*;
 import br.adv.cra.repository.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -27,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SolicitacaoServiceMockitoTest {
+class SolicitacaoServiceTest {
 
     @Mock
     private SolicitacaoRepository solicitacaoRepository;
@@ -130,8 +132,8 @@ class SolicitacaoServiceMockitoTest {
     }
 
     @Test
-    @SuppressWarnings("squid:S2699") // Assertion is done via System.out
-    void setStatus_ShouldChangeStatus_WhenFound() {
+    @DisplayName("Deve alterar o status de uma solicitação")
+    void setStatus_ShouldChangeStatus() {
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
         when(statusSolicitacaoRepository.findById(2L)).thenReturn(Optional.of(statusConcluida));
         when(solicitacaoRepository.saveAndFlush(any(Solicitacao.class))).thenReturn(solicitacao);
@@ -143,20 +145,7 @@ class SolicitacaoServiceMockitoTest {
     }
 
     @Test
-    @SuppressWarnings("squid:S2699") // Assertion is done via System.out
-    void setStatus_ShouldWarnWhenChangingConcluida() {
-        solicitacao.setStatusSolicitacao(statusConcluida);
-        StatusSolicitacao novoStatus = new StatusSolicitacao(3L, "Em Andamento");
-        when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
-        when(statusSolicitacaoRepository.findById(3L)).thenReturn(Optional.of(novoStatus));
-        when(solicitacaoRepository.saveAndFlush(any(Solicitacao.class))).thenReturn(solicitacao);
-
-        solicitacaoService.setStatus(1L, 3L);
-
-        // A verificação aqui é mais sobre a lógica de log (System.out) que foi executada
-    }
-
-    @Test
+    @DisplayName("Deve lançar exceção ao alterar status se a solicitação não for encontrada")
     void setStatus_ShouldThrowException_WhenSolicitacaoNotFound() {
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -164,8 +153,17 @@ class SolicitacaoServiceMockitoTest {
     }
 
     @Test
-    @SuppressWarnings("squid:S2699") // Assertion is done via System.out
-    void setStatusPorNome_ShouldChangeStatus_WhenFound() {
+    @DisplayName("Deve lançar exceção ao alterar status se o status não for encontrado")
+    void setStatus_ShouldThrowException_WhenStatusNotFound() {
+        when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
+        when(statusSolicitacaoRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> solicitacaoService.setStatus(1L, 2L));
+    }
+
+    @Test
+    @DisplayName("Deve alterar o status de uma solicitação pelo nome do status")
+    void setStatusPorNome_ShouldChangeStatus() {
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
         when(statusSolicitacaoRepository.findByStatus("Concluída")).thenReturn(Optional.of(statusConcluida));
         when(solicitacaoRepository.saveAndFlush(any(Solicitacao.class))).thenReturn(solicitacao);
@@ -177,20 +175,8 @@ class SolicitacaoServiceMockitoTest {
     }
 
     @Test
-    @SuppressWarnings("squid:S2699") // Assertion is done via System.out
-    void setStatusPorNome_ShouldWarnWhenChangingConcluida() {
-        solicitacao.setStatusSolicitacao(statusConcluida);
-        StatusSolicitacao novoStatus = new StatusSolicitacao(3L, "Em Andamento");
-        when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
-        when(statusSolicitacaoRepository.findByStatus("Em Andamento")).thenReturn(Optional.of(novoStatus));
-        when(solicitacaoRepository.saveAndFlush(any(Solicitacao.class))).thenReturn(solicitacao);
-
-        solicitacaoService.setStatusPorNome(1L, "Em Andamento");
-        // A verificação aqui é mais sobre a lógica de log (System.out) que foi executada
-    }
-
-    @Test
-    void setStatusPorNome_ShouldThrowException_WhenStatusNotFound() {
+    @DisplayName("Deve lançar exceção ao alterar status por nome se o status não for encontrado")
+    void setStatusPorNome_ShouldThrowException_WhenStatusNameNotFound() {
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
         when(statusSolicitacaoRepository.findByStatus("Inexistente")).thenReturn(Optional.empty());
 
@@ -198,7 +184,8 @@ class SolicitacaoServiceMockitoTest {
     }
 
     @Test
-    void concluir_ShouldSetConclusionDateAndObservation() {
+    @DisplayName("Deve concluir uma solicitação, definindo data e adicionando observação")
+    void concluir_ShouldSetDateAndAppendObservation() {
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
         when(solicitacaoRepository.save(any(Solicitacao.class))).thenReturn(solicitacao);
 
@@ -206,22 +193,38 @@ class SolicitacaoServiceMockitoTest {
         Solicitacao concluida = solicitacaoService.concluir(1L, obsConclusao);
 
         assertNotNull(concluida.getDataconclusao());
-        assertTrue(concluida.getObservacao().contains(obsConclusao));
+        assertEquals("Observação inicial\n\nConclusão: " + obsConclusao, concluida.getObservacao());
         verify(solicitacaoRepository, times(1)).save(solicitacao);
     }
 
     @Test
-    void concluir_ShouldHandleNullObservation() {
+    @DisplayName("Deve concluir uma solicitação sem alterar a observação se a nova for nula")
+    void concluir_ShouldNotChangeObservation_WhenNewObservationIsNull() {
         solicitacao.setObservacao("Obs original.");
         when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
         when(solicitacaoRepository.save(any(Solicitacao.class))).thenReturn(solicitacao);
 
         Solicitacao concluida = solicitacaoService.concluir(1L, null);
 
-        assertNotNull(concluida.getDataconclusao());
+        assertNotNull(concluida.getDataconclusao()); // A data de conclusão ainda deve ser definida
         assertEquals("Obs original.", concluida.getObservacao()); // Observation should not change
         verify(solicitacaoRepository, times(1)).save(solicitacao);
     }
+
+    @Test
+    @DisplayName("Deve concluir uma solicitação sem alterar a observação se a nova for em branco")
+    void concluir_ShouldNotChangeObservation_WhenNewObservationIsBlank() {
+        solicitacao.setObservacao("Obs original.");
+        when(solicitacaoRepository.findById(1L)).thenReturn(Optional.of(solicitacao));
+        when(solicitacaoRepository.save(any(Solicitacao.class))).thenReturn(solicitacao);
+
+        Solicitacao concluida = solicitacaoService.concluir(1L, "   "); // Observação em branco
+
+        assertNotNull(concluida.getDataconclusao());
+        assertEquals("Obs original.", concluida.getObservacao());
+        verify(solicitacaoRepository, times(1)).save(solicitacao);
+    }
+
 
     @Test
     void concluir_ShouldThrowException_WhenNotFound() {
@@ -778,6 +781,18 @@ class SolicitacaoServiceMockitoTest {
 
         assertEquals(1, result.getTotalElements());
         verify(solicitacaoRepository).findAll(any(Specification.class), eq(pageable));
+    }
+
+    @Test
+    @DisplayName("Deve retornar uma página vazia na busca avançada se o filtro for nulo")
+    void buscarAvancado_ShouldReturnEmptyPage_WhenFilterIsNull() {
+        Pageable pageable = PageRequest.of(0, 10);
+        // Quando o filtro é nulo, o serviço deve retornar uma página vazia sem chamar o repositório.
+
+        Page<Solicitacao> result = solicitacaoService.buscarAvancado(null, pageable);
+
+        assertTrue(result.isEmpty());
+        verify(solicitacaoRepository, never()).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test

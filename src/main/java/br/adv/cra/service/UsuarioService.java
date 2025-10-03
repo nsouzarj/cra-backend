@@ -34,25 +34,21 @@ public class UsuarioService {
     }
     
     public Usuario atualizar(Usuario usuario) {
+        // Busca o usuário existente uma única vez.
+        Usuario usuarioAtual = usuarioRepository.findById(usuario.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (!usuarioRepository.existsById(usuario.getId())) {
-            throw new RuntimeException("Usuário não encontrado");
-        }
-
+        // Mantém a data de entrada original se a nova for nula.
         if (usuario.getDataentrada() == null) {
-            usuario.setDataentrada(LocalDateTime.now());
+            usuario.setDataentrada(usuarioAtual.getDataentrada());
         }
-        // Only update password if it's provided (not empty)
-        Optional<Usuario> usuarioExistente = usuarioRepository.findById(usuario.getId());
-        if (usuarioExistente.isPresent()) {
-            Usuario usuarioAtual = usuarioExistente.get();
-            // Preserve existing password if new password is empty
-            if (usuario.getSenha() == null || usuario.getSenha().isEmpty()) {
-                usuario.setSenha(usuarioAtual.getSenha());
-            } else {
-                // Encrypt new password
-                usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-            }
+
+        // Se a nova senha for nula ou vazia, mantém a senha antiga.
+        if (usuario.getSenha() == null || usuario.getSenha().isEmpty()) {
+            usuario.setSenha(usuarioAtual.getSenha());
+        } else {
+            // Criptografa a nova senha se ela for fornecida.
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         }
         return usuarioRepository.save(usuario);
     }
