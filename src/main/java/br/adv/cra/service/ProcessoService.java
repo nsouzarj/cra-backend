@@ -51,60 +51,7 @@ public class ProcessoService {
         return comarcaRepository.findById(comarcaId);
     }
     
-    /**
-     * Obtém um órgão existente pela descrição
-     * @param descricao Descrição do órgão
-     * @return Optional com o órgão encontrado
-     */
-    private Optional<Orgao> getOrgaoExistentePorDescricao(String descricao) {
-        if (descricao == null || descricao.isEmpty()) {
-            return Optional.empty();
-        }
-        List<Orgao> orgaos = orgaoRepository.findByDescricaoContaining(descricao);
-        return orgaos.isEmpty() ? Optional.empty() : Optional.of(orgaos.get(0));
-    }
-    
     public Processo salvar(Processo processo) {
-        // Extrai o ID do órgão se foi enviado um objeto Orgao completo
-        Long orgaoId = null;
-        if (processo.getOrgao() != null) {
-            orgaoId = processo.getOrgao().getId();
-        }
-        
-        // Extrai o ID da comarca se foi enviado um objeto Comarca completo
-        Long comarcaId = null;
-        if (processo.getComarca() != null) {
-            comarcaId = processo.getComarca().getId();
-        }
-        
-        // Desassocia completamente o órgão e comarca do processo para evitar criação acidental
-        processo.setOrgao(null);
-        processo.setComarca(null);
-        
-        // Associa o órgão existente, se fornecido
-        if (orgaoId != null) {
-            // Verifica se o órgão existe
-            Optional<Orgao> orgaoExistente = getOrgaoExistente(orgaoId);
-            if (orgaoExistente.isPresent()) {
-                // Associa o órgão existente ao processo
-                processo.setOrgao(orgaoExistente.get());
-            } else {
-                throw new RuntimeException("Órgão com ID " + orgaoId + " não encontrado");
-            }
-        }
-        
-        // Associa a comarca existente, se fornecida
-        if (comarcaId != null) {
-            // Verifica se a comarca existe
-            Optional<Comarca> comarcaExistente = getComarcaExistente(comarcaId);
-            if (comarcaExistente.isPresent()) {
-                // Associa a comarca existente ao processo
-                processo.setComarca(comarcaExistente.get());
-            } else {
-                throw new RuntimeException("Comarca com ID " + comarcaId + " não encontrada");
-            }
-        }
-        
         // Salva o processo com as associações corretas
         return processoRepository.save(processo);
     }
@@ -155,46 +102,6 @@ public class ProcessoService {
     public Processo atualizar(Processo processo) {
         if (!processoRepository.existsById(processo.getId())) {
             throw new RuntimeException("Processo não encontrado");
-        }
-        
-        // Extrai o ID do órgão se foi enviado um objeto Orgao completo
-        Long orgaoId = null;
-        if (processo.getOrgao() != null) {
-            orgaoId = processo.getOrgao().getId();
-        }
-        
-        // Extrai o ID da comarca se foi enviado um objeto Comarca completo
-        Long comarcaId = null;
-        if (processo.getComarca() != null) {
-            comarcaId = processo.getComarca().getId();
-        }
-        
-        // Desassocia completamente o órgão e comarca do processo para evitar criação acidental
-        processo.setOrgao(null);
-        processo.setComarca(null);
-        
-        // Associa o órgão existente, se fornecido
-        if (orgaoId != null) {
-            // Verifica se o órgão existe
-            Optional<Orgao> orgaoExistente = getOrgaoExistente(orgaoId);
-            if (orgaoExistente.isPresent()) {
-                // Associa o órgão existente ao processo
-                processo.setOrgao(orgaoExistente.get());
-            } else {
-                throw new RuntimeException("Órgão com ID " + orgaoId + " não encontrado");
-            }
-        }
-        
-        // Associa a comarca existente, se fornecida
-        if (comarcaId != null) {
-            // Verifica se a comarca existe
-            Optional<Comarca> comarcaExistente = getComarcaExistente(comarcaId);
-            if (comarcaExistente.isPresent()) {
-                // Associa a comarca existente ao processo
-                processo.setComarca(comarcaExistente.get());
-            } else {
-                throw new RuntimeException("Comarca com ID " + comarcaId + " não encontrada");
-            }
         }
         
         // Atualiza o processo com as associações
@@ -416,6 +323,7 @@ public class ProcessoService {
     
     @Transactional(readOnly = true)
     public Long contarPorStatus(String status) {
-        return processoRepository.countByStatus(status);
+        Long count = processoRepository.countByStatus(status);
+        return count != null ? count : 0L;
     }
 }
