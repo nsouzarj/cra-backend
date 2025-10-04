@@ -13,6 +13,10 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
+# Installs freetype, which is required by JasperReports
+RUN apk add --no-cache freetype
+
+
 # Copy source code
 COPY src ./src
 
