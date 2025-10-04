@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -264,5 +265,96 @@ class AuthServiceTest {
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> authService.getCurrentUser(authentication));
         assertEquals("Usuário não autenticado!", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve testar o hash da senha com sucesso quando a senha corresponde")
+    void testPasswordHash_Success_PasswordMatches() {
+        when(usuarioRepository.findByLogin("testuser")).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
+
+        Map<String, Object> result = authService.testPasswordHash("testuser", "password");
+
+        assertEquals("SUCCESS", result.get("status"));
+        assertTrue((Boolean) result.get("passwordMatches"));
+    }
+
+    @Test
+    @DisplayName("Deve falhar o teste de hash da senha quando a senha não corresponde")
+    void testPasswordHash_Failure_PasswordDoesNotMatch() {
+        when(usuarioRepository.findByLogin("testuser")).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("wrongpassword", "hashedPassword")).thenReturn(false);
+
+        Map<String, Object> result = authService.testPasswordHash("testuser", "wrongpassword");
+
+        assertEquals("FAILED", result.get("status"));
+        assertFalse((Boolean) result.get("passwordMatches"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro no teste de hash se o usuário não for encontrado")
+    void testPasswordHash_Error_UserNotFound() {
+        when(usuarioRepository.findByLogin("unknownuser")).thenReturn(Optional.empty());
+
+        Map<String, Object> result = authService.testPasswordHash("unknownuser", "password");
+
+        assertEquals("ERROR", result.get("status"));
+        assertEquals("Usuário não encontrado!", result.get("message"));
+    }
+
+    @Test
+    @DisplayName("Deve depurar a geração de JWT com sucesso")
+    void debugJwtGeneration_Success() {
+        String fakeToken = "header.payload.signature";
+        when(jwtUtils.generateTokenFromUsername("testuser")).thenReturn(fakeToken);
+        when(jwtUtils.validateJwtToken(fakeToken)).thenReturn(true);
+        when(jwtUtils.getUserNameFromJwtToken(fakeToken)).thenReturn("testuser");
+
+        Map<String, Object> result = authService.debugJwtGeneration("testuser");
+
+        assertEquals("SUCCESS", result.get("status"));
+        assertTrue((Boolean) result.get("tokenValid"));
+        assertTrue((Boolean) result.get("usernameMatches"));
+        assertEquals("testuser", result.get("extractedUsername"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro na depuração de JWT se o token for malformado")
+    void debugJwtGeneration_Error_MalformedToken() {
+        String malformedToken = "invalid-token";
+        when(jwtUtils.generateTokenFromUsername("testuser")).thenReturn(malformedToken);
+
+        Map<String, Object> result = authService.debugJwtGeneration("testuser");
+
+        assertEquals("ERROR", result.get("status"));
+        assertTrue(((String) result.get("message")).contains("parts instead of 3"));
+    }
+
+    @Test
+    @DisplayName("Deve indicar token inválido na depuração de JWT")
+    void debugJwtGeneration_TokenInvalid() {
+        String fakeToken = "header.payload.signature";
+        when(jwtUtils.generateTokenFromUsername("testuser")).thenReturn(fakeToken);
+        when(jwtUtils.validateJwtToken(fakeToken)).thenReturn(false);
+
+        Map<String, Object> result = authService.debugJwtGeneration("testuser");
+
+        assertEquals("SUCCESS", result.get("status")); // Generation was successful
+        assertFalse((Boolean) result.get("tokenValid"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro na depuração de JWT se a extração do username falhar")
+    void debugJwtGeneration_Error_ExtractionFails() {
+        String fakeToken = "header.payload.signature";
+        when(jwtUtils.generateTokenFromUsername("testuser")).thenReturn(fakeToken);
+        when(jwtUtils.validateJwtToken(fakeToken)).thenReturn(true);
+        when(jwtUtils.getUserNameFromJwtToken(fakeToken)).thenThrow(new RuntimeException("Extraction failed"));
+
+        Map<String, Object> result = authService.debugJwtGeneration("testuser");
+
+        assertEquals("SUCCESS", result.get("status"));
+        assertTrue((Boolean) result.get("tokenValid"));
+        assertEquals("Extraction failed", result.get("extractionError"));
     }
 }

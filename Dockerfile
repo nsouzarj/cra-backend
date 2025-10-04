@@ -22,11 +22,6 @@ RUN mvn clean package -DskipTests
 # Runtime stage
 FROM openjdk:23-jdk-slim
 
-# Install freetype, which is required by JasperReports at runtime
-RUN apt-get update && \
-    apt-get install -y libfreetype6 && \
-    rm -rf /var/lib/apt/lists/*
-
 # Set working directory
 WORKDIR /app
 
