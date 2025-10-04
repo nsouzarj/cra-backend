@@ -22,6 +22,11 @@ RUN mvn clean package -DskipTests
 # Runtime stage
 FROM openjdk:23-jdk-slim
 
+# Install fontconfig and freetype, which are required by JasperReports at runtime
+RUN apt-get update && \
+    apt-get install -y libfreetype6 fontconfig && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set working directory
 WORKDIR /app
 
