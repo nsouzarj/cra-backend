@@ -373,4 +373,21 @@ class SoliArquivoServiceTest {
         when(soliArquivoRepository.findById(99L)).thenReturn(Optional.empty());
         assertFalse(soliArquivoService.podeDeletar(99L, "admin"));
     }
+
+    @Test
+    void getSolicitacaoPorArquivoId_ShouldReturnSolicitacao_WhenFound() {
+        when(soliArquivoRepository.findById(1L)).thenReturn(Optional.of(soliArquivoLocal));
+
+        Optional<Solicitacao> result = soliArquivoService.getSolicitacaoPorArquivoId(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(solicitacao.getId(), result.get().getId());
+    }
+
+    @Test
+    void getSolicitacaoPorArquivoId_ShouldReturnEmpty_WhenNotFound() {
+        when(soliArquivoRepository.findById(99L)).thenReturn(Optional.empty());
+        Optional<Solicitacao> result = soliArquivoService.getSolicitacaoPorArquivoId(99L);
+        assertFalse(result.isPresent());
+    }
 }
