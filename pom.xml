@@ -184,13 +184,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.20.0</version>
-        </dependency>
-        <!-- Add JasperReports font extension to resolve initialization errors -->
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports-fonts</artifactId>
-            <version>6.20.0</version>
+            <version>6.21.3</version>
         </dependency>
     </dependencies>
     <build>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solicitacao-report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<!-- Created with Jaspersoft Studio version 6.21.3 final using JasperReports Library version 6.21.3-4a5289ed9a3c9102f2961482325d3c41a7a335ce -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solicitacao-report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="com.jaspersoft.studio.data.defaultdataAdapter" value="One Empty Record"/>
-	<queryString>
-		<![CDATA[]]>
-	</queryString>
+	<queryString><![CDATA[]]></queryString>
 	<field name="id" class="java.lang.Long"/>
 	<field name="numero" class="java.lang.String"/>
 	<field name="dataSolicitacao" class="java.lang.String"/>
@@ -40,8 +39,6 @@
 	<field name="tipoSolicitacao" class="java.lang.String"/>
 	<field name="correspondente" class="java.lang.String"/>
 	<field name="usuario" class="java.lang.String"/>
-	
-	<!-- Fields for Correspondente -->
 	<field name="correspondenteId" class="java.lang.Long"/>
 	<field name="correspondenteNome" class="java.lang.String"/>
 	<field name="correspondenteResponsavel" class="java.lang.String"/>
@@ -57,8 +54,6 @@
 	<field name="correspondenteDataCadastro" class="java.lang.String"/>
 	<field name="correspondenteAtivo" class="java.lang.String"/>
 	<field name="correspondenteObservacao" class="java.lang.String"/>
-	
-	<!-- Fields for Correspondente Endereco -->
 	<field name="correspondenteEnderecoLogradouro" class="java.lang.String"/>
 	<field name="correspondenteEnderecoNumero" class="java.lang.String"/>
 	<field name="correspondenteEnderecoComplemento" class="java.lang.String"/>
@@ -66,8 +61,6 @@
 	<field name="correspondenteEnderecoCidade" class="java.lang.String"/>
 	<field name="correspondenteEnderecoUf" class="java.lang.String"/>
 	<field name="correspondenteEnderecoCep" class="java.lang.String"/>
-	
-	<!-- Fields for Processo -->
 	<field name="processoId" class="java.lang.Long"/>
 	<field name="processoNumero" class="java.lang.String"/>
 	<field name="processoNumeroPesq" class="java.lang.String"/>
@@ -86,36 +79,34 @@
 	<field name="processoQuantsoli" class="java.lang.Integer"/>
 	<field name="processoDataDistribuicao" class="java.lang.String"/>
 	<field name="processoObservacao" class="java.lang.String"/>
-	
 	<title>
 		<band height="70">
 			<rectangle>
-				<reportElement x="0" y="0" width="555" height="70" backcolor="#CCCCCC"/>
+				<reportElement x="0" y="0" width="555" height="70" backcolor="#B38181"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="30"/>
-				<textElement textAlignment="Center">
+				<reportElement x="0" y="0" width="555" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Relatório de Solicitação]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="40" width="555" height="20"/>
-				<textElement textAlignment="Center">
+				<reportElement x="160" y="40" width="110" height="20" forecolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Emitido em: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="40" width="555" height="20"/>
-				<textElement textAlignment="Center">
+				<reportElement x="250" y="40" width="159" height="20" forecolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
-	
 	<columnHeader>
 		<band height="20">
 			<staticText>
@@ -134,7 +125,6 @@
 			</staticText>
 		</band>
 	</columnHeader>
-	
 	<detail>
 		<band height="40">
 			<staticText>
@@ -154,7 +144,6 @@
 				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -173,7 +162,6 @@
 				<textFieldExpression><![CDATA[$F{dataConclusao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -192,7 +180,6 @@
 				<textFieldExpression><![CDATA[$F{dataPrazo}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -211,7 +198,6 @@
 				<textFieldExpression><![CDATA[$F{uf}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -230,51 +216,46 @@
 				<textFieldExpression><![CDATA[$F{requerido}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Observação:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{observacao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Instruções:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{instrucoes}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Complemento:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{complemento}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Justificativa:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{justificativa}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -293,7 +274,6 @@
 				<textFieldExpression><![CDATA[$F{numcontrole}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -320,7 +300,6 @@
 				<textFieldExpression><![CDATA[$F{horaudiencia}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -339,7 +318,6 @@
 				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -358,7 +336,6 @@
 				<textFieldExpression><![CDATA[$F{emailenvio}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -385,7 +362,6 @@
 				<textFieldExpression><![CDATA[$F{propostaacordo}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -404,7 +380,6 @@
 				<textFieldExpression><![CDATA[$F{lide}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -423,7 +398,6 @@
 				<textFieldExpression><![CDATA[$F{textoavaliacao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -442,7 +416,6 @@
 				<textFieldExpression><![CDATA[$F{processo}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -461,7 +434,6 @@
 				<textFieldExpression><![CDATA[$F{tipoSolicitacao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -480,22 +452,18 @@
 				<textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
 			</textField>
 		</band>
-		
-		<!-- Section Header: Correspondente -->
-		<band height="30">
+		<band height="51">
 			<rectangle>
 				<reportElement x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="0" y="5" width="555" height="20"/>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CORRESPONDENTE]]></text>
 			</staticText>
 		</band>
-		
-		<!-- Correspondente Details -->
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -514,7 +482,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteNome}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -533,7 +500,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteCpfcnpj}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -552,7 +518,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteTipo}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -571,7 +536,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteTelefoneSecundario}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -590,7 +554,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteTelefoneCelularSecundario}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -609,7 +572,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteEmailSecundario}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -628,32 +590,28 @@
 				<textFieldExpression><![CDATA[$F{correspondenteAtivo}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="60">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Observações:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="60"/>
 				<textFieldExpression><![CDATA[$F{correspondenteObservacao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
-		<!-- Correspondente Endereço -->
-		<band height="30">
+		<band height="51">
 			<rectangle>
 				<reportElement x="0" y="0" width="555" height="30" backcolor="#EEEEEE"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="0" y="5" width="555" height="20"/>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ENDEREÇO DO CORRESPONDENTE]]></text>
 			</staticText>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -672,7 +630,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteEnderecoNumero}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -691,7 +648,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteEnderecoBairro}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -710,7 +666,6 @@
 				<textFieldExpression><![CDATA[$F{correspondenteEnderecoUf}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -721,22 +676,18 @@
 				<textFieldExpression><![CDATA[$F{correspondenteEnderecoCep}]]></textFieldExpression>
 			</textField>
 		</band>
-		
-		<!-- Section Header: Processo -->
-		<band height="30">
+		<band height="42">
 			<rectangle>
 				<reportElement x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="0" y="5" width="555" height="20"/>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PROCESSO]]></text>
 			</staticText>
 		</band>
-		
-		<!-- Processo Details -->
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -755,7 +706,6 @@
 				<textFieldExpression><![CDATA[$F{processoNumero}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -774,7 +724,6 @@
 				<textFieldExpression><![CDATA[$F{processoParte}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -793,7 +742,6 @@
 				<textFieldExpression><![CDATA[$F{processoPosicao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -812,18 +760,16 @@
 				<textFieldExpression><![CDATA[$F{processoCartorio}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="80">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Assunto:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="80"/>
 				<textFieldExpression><![CDATA[$F{processoAssunto}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -842,7 +788,6 @@
 				<textFieldExpression><![CDATA[$F{processoNumeroIntegracao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -861,7 +806,6 @@
 				<textFieldExpression><![CDATA[$F{processoOrgao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -880,7 +824,6 @@
 				<textFieldExpression><![CDATA[$F{processoProcEletronico}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="40">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
@@ -899,13 +842,12 @@
 				<textFieldExpression><![CDATA[$F{processoDataDistribuicao}]]></textFieldExpression>
 			</textField>
 		</band>
-		
 		<band height="80">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="20"/>
 				<text><![CDATA[Observações:]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="150" y="0" width="405" height="80"/>
 				<textFieldExpression><![CDATA[$F{processoObservacao}]]></textFieldExpression>
 			</textField>

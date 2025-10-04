@@ -240,4 +240,10 @@ public class SoliArquivoService {
         // Default: cannot delete
         return false;
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Solicitacao> getSolicitacaoPorArquivoId(long arquivoId) {
+        return soliArquivoRepository.findById(arquivoId)
+                .map(SoliArquivo::getSolicitacao);
+    }
 }
