@@ -1,6 +1,5 @@
 package br.adv.cra.service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;

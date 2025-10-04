@@ -4,7 +4,7 @@ import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Endereco;
 import br.adv.cra.entity.Processo;
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.*; // This line is already correct
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
@@ -13,6 +13,8 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JacksonException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
