@@ -51,4 +51,4 @@ RUN addgroup --system spring && \
 USER spring:spring
 
 # Run the application with Linux-compatible file upload directory
-ENTRYPOINT ["java", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.io.tmpdir=/app/uploads", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
