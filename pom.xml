@@ -184,11 +184,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-<<<<<<< HEAD
-            <version>6.21.3</version>
-=======
             <version>7.0.1</version>
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
         </dependency>
         <dependency>
         <groupId>net.sf.jasperreports</groupId>
