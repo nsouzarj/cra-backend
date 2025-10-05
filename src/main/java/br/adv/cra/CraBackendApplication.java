@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableCaching
 public class CraBackendApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(CraBackendApplication.class, args);
 	}
