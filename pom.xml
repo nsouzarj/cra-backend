@@ -92,19 +92,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-       
-  
-        <!-- Updated ByteBuddy for better Java 23 support -->
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <version>${bytebuddy.version}</version> <!-- Let Spring Boot manage this if possible, but keeping for Java 23 -->
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-            <version>${bytebuddy.version}</version> <!-- Let Spring Boot manage this if possible, but keeping for Java 23 -->
-        </dependency>
         <!-- Updated Mockito for better Java 23 compatibility -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -180,16 +167,16 @@
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.3</version>
         </dependency>
-         <!-- JasperReports 7.0.1, como discutimos -->
+        <!-- JasperReports 7.0.1 -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>7.0.1</version>
         </dependency>
         <dependency>
-        <groupId>net.sf.jasperreports</groupId>
-           <artifactId>jasperreports-pdf</artifactId>
-           <version>7.0.1</version>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-pdf</artifactId>
+            <version>7.0.1</version>
         </dependency>
         <!-- Opcional: Para fontes (se precisar de suporte a PDF com fontes especiais) -->
         <dependency>
@@ -198,6 +185,7 @@
             <version>7.0.1</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -219,6 +207,7 @@
                 <configuration>
                     <source>23</source>
                     <target>23</target>
+                    <release>23</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -281,18 +270,8 @@
         </pluginRepository>
     </pluginRepositories>
 
-
     <dependencyManagement>
-    
-
         <dependencies>
-        
-
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.2</version>
-            </dependency>
             <!-- Resolve Google API client transitive dependency conflicts -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -320,8 +299,11 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>1.9.4</version>
             </dependency>
-
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
         </dependencies>
-
     </dependencyManagement>
 </project>

@@ -77,6 +77,10 @@ public class ReportService {
         }
 
         try (InputStream jrxmlStream = jrxmlResource.getInputStream()) {
+            // CORREÇÃO: Define o diretório temp para evitar erros de permissão (usa /tmp, que é gravável)
+            System.setProperty("net.sf.jasperreports.compiler.temp.dir", "/tmp");
+            log.debug("Diretório temp configurado para: /tmp");
+
             net.sf.jasperreports.engine.design.JasperDesign jasperDesign = JRXmlLoader.load(jrxmlStream);
             JasperReport compiled = JasperCompileManager.compileReport(jasperDesign);
             log.debug("JRXML compilado com sucesso");
