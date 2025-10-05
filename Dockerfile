@@ -19,11 +19,8 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
-
-# Install fontconfig and freetype, which are required by JasperReports at runtime
-RUN apt-get update && \
-    apt-get install -y libfreetype6 fontconfig && \
-    rm -rf /var/lib/apt/lists/*
+# Runtime stage
+FROM openjdk:23-jdk-slim
 
 # Set working directory
 WORKDIR /app
@@ -44,9 +41,9 @@ EXPOSE 8081
 # Create a non-root user
 RUN addgroup --system spring && \
     adduser --system spring --ingroup spring && \
-    chown -R spring:spring /app
+    chown -R spring:spring /app/uploads
 
 USER spring:spring
 
 # Run the application with Linux-compatible file upload directory
-ENTRYPOINT ["java", "-Djava.io.tmpdir=/app/uploads", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
