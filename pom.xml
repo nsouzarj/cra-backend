@@ -180,12 +180,23 @@
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.3</version>
         </dependency>
-        <!-- JasperReports for Reporting Service -->
+         <!-- JasperReports 7.0.1, como discutimos -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.20.0</version>
+            <version>7.0.1</version>
         </dependency>
+        <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+           <artifactId>jasperreports-pdf</artifactId>
+           <version>7.0.1</version>
+        </dependency>
+        <!-- Opcional: Para fontes (se precisar de suporte a PDF com fontes especiais) -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+        <version>7.0.1</version>
+</dependency>
     </dependencies>
     <build>
         <plugins>
@@ -255,6 +266,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jaspersoft-repo</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-repo</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jaspersoft-repo</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-repo</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 
     <dependencyManagement>
