@@ -1,0 +1,651 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="solicitacao-report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ca995fe-dd3d-4b76-960c-5545196ba458">
+	<property name="com.jaspersoft.studio.data.defaultdataAdapter" value="One Empty Record"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="id" class="java.lang.Long"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="dataSolicitacao" class="java.lang.String"/>
+	<field name="dataConclusao" class="java.lang.String"/>
+	<field name="dataAgendamento" class="java.lang.String"/>
+	<field name="dataPrazo" class="java.lang.String"/>
+	<field name="vara" class="java.lang.String"/>
+	<field name="uf" class="java.lang.String"/>
+	<field name="requerente" class="java.lang.String"/>
+	<field name="requerido" class="java.lang.String"/>
+	<field name="observacao" class="java.lang.String"/>
+	<field name="instrucoes" class="java.lang.String"/>
+	<field name="complemento" class="java.lang.String"/>
+	<field name="justificativa" class="java.lang.String"/>
+	<field name="tratposaudiencia" class="java.lang.String"/>
+	<field name="numcontrole" class="java.lang.String"/>
+	<field name="tempreposto" class="java.lang.String"/>
+	<field name="convolada" class="java.lang.String"/>
+	<field name="horaudiencia" class="java.lang.String"/>
+	<field name="statusexterno" class="java.lang.String"/>
+	<field name="valor" class="java.lang.Float"/>
+	<field name="valordaalcada" class="java.lang.Float"/>
+	<field name="emailenvio" class="java.lang.String"/>
+	<field name="pago" class="java.lang.String"/>
+	<field name="grupo" class="java.lang.String"/>
+	<field name="propostaacordo" class="java.lang.String"/>
+	<field name="audinterna" class="java.lang.String"/>
+	<field name="lide" class="java.lang.String"/>
+	<field name="avaliacaonota" class="java.lang.String"/>
+	<field name="textoavaliacao" class="java.lang.String"/>
+	<field name="comarca" class="java.lang.String"/>
+	<field name="processo" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="tipoSolicitacao" class="java.lang.String"/>
+	<field name="correspondente" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="correspondenteId" class="java.lang.Long"/>
+	<field name="correspondenteNome" class="java.lang.String"/>
+	<field name="correspondenteResponsavel" class="java.lang.String"/>
+	<field name="correspondenteCpfcnpj" class="java.lang.String"/>
+	<field name="correspondenteOab" class="java.lang.String"/>
+	<field name="correspondenteTipo" class="java.lang.String"/>
+	<field name="correspondenteTelefonePrimario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneSecundario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneCelularPrimario" class="java.lang.String"/>
+	<field name="correspondenteTelefoneCelularSecundario" class="java.lang.String"/>
+	<field name="correspondenteEmailPrimario" class="java.lang.String"/>
+	<field name="correspondenteEmailSecundario" class="java.lang.String"/>
+	<field name="correspondenteDataCadastro" class="java.lang.String"/>
+	<field name="correspondenteAtivo" class="java.lang.String"/>
+	<field name="correspondenteObservacao" class="java.lang.String"/>
+	<field name="correspondenteEnderecoLogradouro" class="java.lang.String"/>
+	<field name="correspondenteEnderecoNumero" class="java.lang.String"/>
+	<field name="correspondenteEnderecoComplemento" class="java.lang.String"/>
+	<field name="correspondenteEnderecoBairro" class="java.lang.String"/>
+	<field name="correspondenteEnderecoCidade" class="java.lang.String"/>
+	<field name="correspondenteEnderecoUf" class="java.lang.String"/>
+	<field name="correspondenteEnderecoCep" class="java.lang.String"/>
+	<field name="processoId" class="java.lang.Long"/>
+	<field name="processoNumero" class="java.lang.String"/>
+	<field name="processoNumeroPesq" class="java.lang.String"/>
+	<field name="processoParte" class="java.lang.String"/>
+	<field name="processoAdverso" class="java.lang.String"/>
+	<field name="processoPosicao" class="java.lang.String"/>
+	<field name="processoStatus" class="java.lang.String"/>
+	<field name="processoCartorio" class="java.lang.String"/>
+	<field name="processoAssunto" class="java.lang.String"/>
+	<field name="processoLocalizacao" class="java.lang.String"/>
+	<field name="processoNumeroIntegracao" class="java.lang.String"/>
+	<field name="processoComarca" class="java.lang.String"/>
+	<field name="processoOrgao" class="java.lang.String"/>
+	<field name="processoNumOrgao" class="java.lang.String"/>
+	<field name="processoProcEletronico" class="java.lang.String"/>
+	<field name="processoQuantsoli" class="java.lang.Integer"/>
+	<field name="processoDataDistribuicao" class="java.lang.String"/>
+	<field name="processoObservacao" class="java.lang.String"/>
+	<title height="53">
+	    <element kind="rectangle" uuid="7da9a143-5489-437b-8666-394e1450cc65" x="0" y="0" width="555" height="50" backcolor="#A7C0CF" radius="7"/>
+		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="1" y="11" width="190" height="24" fontSize="16.0" bold="true" hTextAlign="Left">
+			<text><![CDATA[Dados da Solicitação]]></text>
+		</element>
+		<element kind="staticText" uuid="fde868d7-cffb-4fea-9776-cbd21f7dd46a" x="405" y="15" width="70" height="20" fontSize="12.0" hTextAlign="Center">
+			<text><![CDATA[Emitido em: ]]></text>
+		</element>
+		<element kind="textField" uuid="65ec9ba3-bf57-4350-bc80-e00b31beae93" x="475" y="15" width="80" height="20" fontName="SansSerif" fontSize="12.0" hTextAlign="Left">
+			<expression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></expression>
+		</element>
+	</title>
+	<columnHeader height="14"/>
+	<detail>
+		<band height="40">
+			<element kind="staticText" uuid="e093edb5-89bb-4ec2-92c2-98efcb5ec338" x="0" y="0" width="150" height="20">
+				<text><![CDATA[ID:]]></text>
+			</element>
+			<element kind="textField" uuid="1ef269f1-e64e-4078-8f53-c8aefa40d3af" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{id}]]></expression>
+			</element>
+			<element kind="staticText" uuid="3dae31fa-27b9-47b3-bca7-e45216992723" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Número:]]></text>
+			</element>
+			<element kind="textField" uuid="59c5ea2b-1a2f-4a03-a96a-f8fd4697297a" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{numero}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="d3bbff3c-0548-40b2-8ff7-448899cb16e7" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Data Solicitação:]]></text>
+			</element>
+			<element kind="textField" uuid="cf92a088-1040-4308-91ee-35b6e9017197" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{dataSolicitacao}]]></expression>
+			</element>
+			<element kind="staticText" uuid="91f78b57-6303-4eeb-bc93-79d25282fb46" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Data Conclusão:]]></text>
+			</element>
+			<element kind="textField" uuid="8114f473-51fd-42ea-bf6d-8e20485ed812" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{dataConclusao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="fa3a9d45-27b6-4312-8f4d-4eb5d1d77a69" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Data Agendamento:]]></text>
+			</element>
+			<element kind="textField" uuid="83f68c09-ec37-403d-8c83-583c922d2191" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{dataAgendamento}]]></expression>
+			</element>
+			<element kind="staticText" uuid="700a23e5-087f-4a0a-bbc0-c881282f0f95" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Data Prazo:]]></text>
+			</element>
+			<element kind="textField" uuid="3ad86c7b-6153-4460-827a-98143ffebde7" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{dataPrazo}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="73fd9473-c24b-4448-8cc9-e4aed276be6a" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Vara:]]></text>
+			</element>
+			<element kind="textField" uuid="e74e21ca-4e8d-4e95-937b-151fdedbbc01" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{vara}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b26fcec5-e68d-47b5-8165-0927476765a2" x="0" y="20" width="150" height="20">
+				<text><![CDATA[UF:]]></text>
+			</element>
+			<element kind="textField" uuid="a402fb31-a31f-4f99-8d31-1eaf08293599" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{uf}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="c10755da-cbee-4b39-9ec1-f68bb8e48601" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Requerente:]]></text>
+			</element>
+			<element kind="textField" uuid="7b395b6b-b4e4-4ba5-ae86-5b0a103072a3" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{requerente}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b89af0cd-b722-492a-b829-2a1db21841ba" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Requerido:]]></text>
+			</element>
+			<element kind="textField" uuid="28f90e69-8c6a-4b21-953f-24305419edd7" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{requerido}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="5bd9fe13-4418-4109-93da-960359c1d05d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Observação:]]></text>
+			</element>
+			<element kind="textField" uuid="d6b20c5a-1c1c-41ce-ad49-6a02e71e9655" x="150" y="0" width="405" height="60">
+				<expression><![CDATA[$F{observacao}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="591be8c4-7d7b-43da-9af1-33a78ab0548d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Instruções:]]></text>
+			</element>
+			<element kind="textField" uuid="98ff5fb8-243d-4b6a-91fa-58de6155f86d" x="150" y="0" width="405" height="60">
+				<expression><![CDATA[$F{instrucoes}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="7c14ef70-d742-4d94-965b-d93b6ef1baa0" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Complemento:]]></text>
+			</element>
+			<element kind="textField" uuid="309900d6-3deb-4df6-8372-ada5742530a9" x="150" y="0" width="405" height="60">
+				<expression><![CDATA[$F{complemento}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="6f97c28f-016e-45ea-89c6-6de6cd05eb0d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Justificativa:]]></text>
+			</element>
+			<element kind="textField" uuid="3726967d-7656-460a-ae64-1e6be5306190" x="150" y="0" width="405" height="60">
+				<expression><![CDATA[$F{justificativa}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="e9010083-4eaf-4000-a446-df976443644e" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Tratamento Pós Audiência:]]></text>
+			</element>
+			<element kind="textField" uuid="058a5cca-a14a-402e-ba83-eed0632302ad" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{tratposaudiencia}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b8373ebf-8562-4fa0-9ec6-b78b715d88c4" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Número Controle:]]></text>
+			</element>
+			<element kind="textField" uuid="f437234d-2a74-4e42-b77a-3737e413431c" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{numcontrole}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="f73d5ba3-996a-48c7-9b07-cb20294997e0" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Tem Reputação:]]></text>
+			</element>
+			<element kind="textField" uuid="ee84bc0a-e304-43a6-ad3e-b299a843338f" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{tempreposto}]]></expression>
+			</element>
+			<element kind="staticText" uuid="4dee7529-a6b1-4e90-82e7-4f5aeb6b301c" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Convolada:]]></text>
+			</element>
+			<element kind="textField" uuid="78d540ff-15be-494f-9e73-8fd7b96f0c4b" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{convolada}]]></expression>
+			</element>
+			<element kind="staticText" uuid="fddcd9af-b6cb-435c-b9fb-1e605f64cd61" x="0" y="40" width="150" height="20">
+				<text><![CDATA[Hora Audiência:]]></text>
+			</element>
+			<element kind="textField" uuid="987971ab-57f7-42be-8b76-6eecca353c75" x="150" y="40" width="405" height="20">
+				<expression><![CDATA[$F{horaudiencia}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="d5fec1bd-3958-4554-bdcd-e2210c431cf4" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Status Externo:]]></text>
+			</element>
+			<element kind="textField" uuid="a82dff7b-95a6-48ab-a2de-a98ca30b37ac" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{statusexterno}]]></expression>
+			</element>
+			<element kind="staticText" uuid="cac693b6-43b9-4b55-b216-9dc637841dd5" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Valor:]]></text>
+			</element>
+			<element kind="textField" uuid="0611a982-f0e7-4761-8a0e-fc2a43eaf025" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{valor}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="51ee7438-d43e-4525-8ab9-2640c485d55a" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Valor da Alçada:]]></text>
+			</element>
+			<element kind="textField" uuid="ac77d49f-a29b-41eb-b3c0-e8d77b9634ae" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{valordaalcada}]]></expression>
+			</element>
+			<element kind="staticText" uuid="34c40d93-9e35-4177-ba25-755b18ab2aa5" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Email Envio:]]></text>
+			</element>
+			<element kind="textField" uuid="590a82eb-d2d1-46d5-bf4c-93b9417e97d8" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{emailenvio}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="a4c56038-1724-489a-b7ce-98539c10dab1" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Pago:]]></text>
+			</element>
+			<element kind="textField" uuid="b47bce16-bf88-420d-9849-e87b92beb884" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{pago}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ad9c5adb-f87a-4c23-a39d-7b2c9a87bb70" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Grupo:]]></text>
+			</element>
+			<element kind="textField" uuid="3e9e53b2-5032-4673-93e6-21b54bce33fe" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{grupo}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b9e89e90-dba6-4232-9ead-4d6a2b006ec5" x="0" y="40" width="150" height="20">
+				<text><![CDATA[Proposta Acordo:]]></text>
+			</element>
+			<element kind="textField" uuid="db956b71-b28c-4e3d-a733-c532e851fc51" x="150" y="40" width="405" height="20">
+				<expression><![CDATA[$F{propostaacordo}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="284b9b85-e7e1-4ad3-ad44-0aa9cf90ba6d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Audiência Interna:]]></text>
+			</element>
+			<element kind="textField" uuid="b74bc07b-93be-4e69-856e-6f1460cc33e6" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{audinterna}]]></expression>
+			</element>
+			<element kind="staticText" uuid="53939ac1-1d7a-4ba7-bf19-8992168b0a6b" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Lide:]]></text>
+			</element>
+			<element kind="textField" uuid="876348af-7b57-46fc-bb06-b69929c28089" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{lide}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="15b7b922-f600-4777-9577-73ab80a5803e" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Avaliação Nota:]]></text>
+			</element>
+			<element kind="textField" uuid="db96bfda-d749-423b-91a0-62082138427c" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{avaliacaonota}]]></expression>
+			</element>
+			<element kind="staticText" uuid="c8e572cf-084c-4fea-9a24-9f08913e3ab8" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Texto Avaliação:]]></text>
+			</element>
+			<element kind="textField" uuid="8c5df695-b91d-4483-a4fe-8dfe0fede850" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{textoavaliacao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="ad35a8be-eac6-4c51-af4d-96cd98b63c2d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Comarca:]]></text>
+			</element>
+			<element kind="textField" uuid="564b08b5-425a-47a4-a020-c5235834cbd7" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{comarca}]]></expression>
+			</element>
+			<element kind="staticText" uuid="650ce51e-b9d9-45b1-8fa6-3a787110e9d2" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Processo:]]></text>
+			</element>
+			<element kind="textField" uuid="43163925-5fe0-4629-acaf-91cd0a1b667c" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processo}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="81f318ad-e8fe-443e-9b29-bde3fd1407bc" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Status:]]></text>
+			</element>
+			<element kind="textField" uuid="40942248-3953-4335-8c4b-c58e69c37414" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{status}]]></expression>
+			</element>
+			<element kind="staticText" uuid="78d38b30-649d-4454-b6c9-cb6ab53e33ed" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Tipo Solicitação:]]></text>
+			</element>
+			<element kind="textField" uuid="5a229c69-aead-4e14-830f-c1d7e02c788e" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{tipoSolicitacao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="107b116b-727e-460d-99ef-42459a92b0d6" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Correspondente:]]></text>
+			</element>
+			<element kind="textField" uuid="c0cff822-37cc-4a72-a7c3-4f5041eb2363" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondente}]]></expression>
+			</element>
+			<element kind="staticText" uuid="80f49330-be19-4293-aa51-8876f1f7a7d0" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Usuário:]]></text>
+			</element>
+			<element kind="textField" uuid="4b1a47ee-5f32-49b9-b973-5378b1d3fe7e" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{usuario}]]></expression>
+			</element>
+		</band>
+		<band height="30">
+			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="1" y="5" width="219" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Correspondente]]></text>
+			</element>
+		</band>
+		<band height="50">
+			<element kind="staticText" uuid="5c7f2ddc-71a1-4e16-9796-2455d2ae2aaa" x="0" y="10" width="150" height="20">
+				<text><![CDATA[ID:]]></text>
+			</element>
+			<element kind="textField" uuid="b7ee68b5-8c56-4eab-b77f-143af51757c5" x="150" y="10" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteId}]]></expression>
+			</element>
+			<element kind="staticText" uuid="55c3c85f-d9ae-4e9b-ba16-7658a605123c" x="0" y="30" width="150" height="20">
+				<text><![CDATA[Nome:]]></text>
+			</element>
+			<element kind="textField" uuid="3417bbca-af68-45e3-b02d-4f961f23c583" x="150" y="30" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteNome}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="583798f3-5666-4e01-8da7-f26910a09ee4" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Responsável:]]></text>
+			</element>
+			<element kind="textField" uuid="a39a4f48-ee53-43f9-b28a-27f6ccabdd68" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteResponsavel}]]></expression>
+			</element>
+			<element kind="staticText" uuid="266702a3-74bd-4cd8-9dfa-f132b30a71fb" x="0" y="20" width="150" height="20">
+				<text><![CDATA[CPF/CNPJ:]]></text>
+			</element>
+			<element kind="textField" uuid="4855c251-aff0-4a83-a8c4-2fdecdbb896e" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteCpfcnpj}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="988f291e-61dd-49cb-8d24-d5ffd3fa9446" x="0" y="0" width="150" height="20">
+				<text><![CDATA[OAB:]]></text>
+			</element>
+			<element kind="textField" uuid="d99659ab-0683-4c9e-b7e7-608050fa066e" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteOab}]]></expression>
+			</element>
+			<element kind="staticText" uuid="9584764d-79d7-4571-a09d-39609e56490f" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Tipo:]]></text>
+			</element>
+			<element kind="textField" uuid="a99d7ae2-bca3-4177-983d-75b677c389cd" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteTipo}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="18c34665-95b5-49cf-bca1-90aeb44cdc0a" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Telefone Primário:]]></text>
+			</element>
+			<element kind="textField" uuid="3bd24aaf-6121-4565-ae30-f49599bf1255" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteTelefonePrimario}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e58f366b-7569-438c-b688-dc5544ad66af" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Telefone Secundário:]]></text>
+			</element>
+			<element kind="textField" uuid="05f5baaf-33ac-4b9d-811c-f75b269e0e1a" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteTelefoneSecundario}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="f2b65543-8fcd-4cc0-8a49-9e13de676e8a" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Telefone Celular 1:]]></text>
+			</element>
+			<element kind="textField" uuid="e9287657-4f1a-4caa-8d9d-3e363642d979" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteTelefoneCelularPrimario}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d0e7b62c-a446-4173-8588-2e46c7a39f24" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Telefone Celular 2:]]></text>
+			</element>
+			<element kind="textField" uuid="85ddf9e1-5ede-4a15-92c9-81be56dc6290" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteTelefoneCelularSecundario}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="6218bb56-2e90-49cc-a15a-9528776441f0" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Email Primário:]]></text>
+			</element>
+			<element kind="textField" uuid="30ad881f-0535-435e-9418-7d43a793cccd" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEmailPrimario}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ab25919d-775d-4357-a892-9bc084457bc9" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Email Secundário:]]></text>
+			</element>
+			<element kind="textField" uuid="2a49a2af-a3d9-4aa2-9c6d-35da84180b61" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEmailSecundario}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="0c54118f-4b8b-480c-80d5-a4af5dd34dcb" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Data Cadastro:]]></text>
+			</element>
+			<element kind="textField" uuid="7b882c15-270d-426f-a9ff-d04a93a8916c" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteDataCadastro}]]></expression>
+			</element>
+			<element kind="staticText" uuid="6f03ce5f-d658-4c45-9669-7725e24eb9f9" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Ativo:]]></text>
+			</element>
+			<element kind="textField" uuid="186f2f1b-948b-40ba-8077-ee24cb15e44c" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteAtivo}]]></expression>
+			</element>
+		</band>
+		<band height="60">
+			<element kind="staticText" uuid="429dba04-0b85-433c-a177-ea4ad6143a58" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Observações:]]></text>
+			</element>
+			<element kind="textField" uuid="09a1c8b8-e819-4a7c-8941-3095d12da5a6" x="150" y="0" width="405" height="60">
+				<expression><![CDATA[$F{correspondenteObservacao}]]></expression>
+			</element>
+		</band>
+		<band height="30">
+			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="0" width="220" height="20" fontSize="12.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Endereço do Correspondente]]></text>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="d28f3943-e1b7-43b0-9ec6-e73002643352" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Logradouro:]]></text>
+			</element>
+			<element kind="textField" uuid="7a6ae406-6274-40b3-a125-884bd5fc7efd" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoLogradouro}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e1a9be82-45a4-4b6e-ae85-f41d8b792620" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Número:]]></text>
+			</element>
+			<element kind="textField" uuid="32211005-6df2-46ce-855a-52b92958d33f" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoNumero}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="b5427d87-0c4a-4cab-b418-b939bacfe63d" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Complemento:]]></text>
+			</element>
+			<element kind="textField" uuid="a07e2c3a-eda3-492d-b9c0-55b0124d5a50" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoComplemento}]]></expression>
+			</element>
+			<element kind="staticText" uuid="7786490f-baae-446f-8884-e529f1b3dfed" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Bairro:]]></text>
+			</element>
+			<element kind="textField" uuid="500e51d4-b96c-4939-b7ec-7c065d7296df" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoBairro}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="fd069947-8b3c-44c1-a04a-4ae08a16ec08" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Cidade:]]></text>
+			</element>
+			<element kind="textField" uuid="e071ac08-a316-48b0-baa1-ed1907f37e9e" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoCidade}]]></expression>
+			</element>
+			<element kind="staticText" uuid="3aefb2f5-6f91-4d22-a7e5-189244d59f2e" x="0" y="20" width="150" height="20">
+				<text><![CDATA[UF:]]></text>
+			</element>
+			<element kind="textField" uuid="289385cc-af39-478f-a452-a4154c57b537" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoUf}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="0c89256a-02c9-472d-89e5-cf0b13772ff4" x="0" y="0" width="150" height="20">
+				<text><![CDATA[CEP:]]></text>
+			</element>
+			<element kind="textField" uuid="2a2c9ce2-86fa-45e2-a397-3df64f633322" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{correspondenteEnderecoCep}]]></expression>
+			</element>
+		</band>
+		<band height="30">
+			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="1" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Processo]]></text>
+			</element>
+		</band>
+		<band height="48">
+			<element kind="staticText" uuid="51fcdc1e-5e62-4720-96ae-435550cc8f01" x="0" y="8" width="150" height="20">
+				<text><![CDATA[ID:]]></text>
+			</element>
+			<element kind="textField" uuid="797152f3-67d0-411f-a0da-29ce56fe35a8" x="150" y="8" width="405" height="20">
+				<expression><![CDATA[$F{processoId}]]></expression>
+			</element>
+			<element kind="staticText" uuid="9d5e8a55-9809-4a29-9072-0206a9552b5d" x="0" y="28" width="150" height="20">
+				<text><![CDATA[Número:]]></text>
+			</element>
+			<element kind="textField" uuid="007a1d59-7924-4684-b1f9-f41848f61d4e" x="150" y="28" width="405" height="20">
+				<expression><![CDATA[$F{processoNumero}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="fb3068be-c3d3-4755-9152-9b085dc87e88" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Número Pesquisa:]]></text>
+			</element>
+			<element kind="textField" uuid="264fc6b8-9bdc-47f4-8d89-50f460b3e47d" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoNumeroPesq}]]></expression>
+			</element>
+			<element kind="staticText" uuid="2504ef52-ae62-4c82-b75b-be1e773cfead" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Parte:]]></text>
+			</element>
+			<element kind="textField" uuid="84236439-8f2f-4a6f-be49-660d41f29a1e" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoParte}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="c5e0c40b-3229-425e-b5fd-5877bab13674" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Adverso:]]></text>
+			</element>
+			<element kind="textField" uuid="fa868b2d-f585-4c5f-aa14-582f73083632" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoAdverso}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b7ba4c7e-53dd-433a-85ab-d5c59b0a471c" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Posição:]]></text>
+			</element>
+			<element kind="textField" uuid="011f5afe-7476-4d0f-ad2c-2b469186fa0b" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoPosicao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="2df70000-859f-4ca1-a8a6-abd3897835df" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Status:]]></text>
+			</element>
+			<element kind="textField" uuid="70f8de83-0768-4c99-a806-3ec13d332cb2" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoStatus}]]></expression>
+			</element>
+			<element kind="staticText" uuid="20dbb52a-66fe-4693-82d9-f95e167759bd" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Cartório:]]></text>
+			</element>
+			<element kind="textField" uuid="dd6289ea-1d58-4801-b67e-0aa27b038ff1" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoCartorio}]]></expression>
+			</element>
+		</band>
+		<band height="80">
+			<element kind="staticText" uuid="ad361b8e-3f92-46f4-95b6-2749beefddb5" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Assunto:]]></text>
+			</element>
+			<element kind="textField" uuid="52c9b13f-fa54-43fd-b802-9e647a81b868" x="150" y="0" width="405" height="80">
+				<expression><![CDATA[$F{processoAssunto}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="243248d6-ac5d-4059-bd6f-ffaac2346f16" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Localização:]]></text>
+			</element>
+			<element kind="textField" uuid="4daf8375-c9a4-4eef-a0e8-578917cf8b0b" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoLocalizacao}]]></expression>
+			</element>
+			<element kind="staticText" uuid="b3f897ce-32cb-4847-ac0f-5592bc276c51" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Número Integração:]]></text>
+			</element>
+			<element kind="textField" uuid="32704602-ca54-43ff-a258-2dc551ce9662" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoNumeroIntegracao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="3e915543-a7aa-4d76-bdbe-0d2712c16e02" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Comarca:]]></text>
+			</element>
+			<element kind="textField" uuid="56569517-1c0e-4a12-8a96-54833d24ec7c" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoComarca}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e04eba25-92ca-4b05-95fa-4c32a8a7130c" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Órgão:]]></text>
+			</element>
+			<element kind="textField" uuid="9fd34043-4b80-4870-9b3e-f1ca86bd075d" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoOrgao}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="c7e656a8-855e-4ead-91b4-fd4acca38824" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Número Órgão:]]></text>
+			</element>
+			<element kind="textField" uuid="c7215e89-40fa-4f53-a5bb-fc6527a5c0e8" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoNumOrgao}]]></expression>
+			</element>
+			<element kind="staticText" uuid="802841f7-86da-4567-bcbf-baabc181071c" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Processo Eletrônico:]]></text>
+			</element>
+			<element kind="textField" uuid="0be0d9a6-f65b-492b-bcc8-f917132d0f8a" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoProcEletronico}]]></expression>
+			</element>
+		</band>
+		<band height="40">
+			<element kind="staticText" uuid="dd7af438-2f5b-42b1-aa52-ab5c1d14a06e" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Quantidade Solicitações:]]></text>
+			</element>
+			<element kind="textField" uuid="b2f157f0-67ac-46d1-9ed1-1d83e673dc72" x="150" y="0" width="405" height="20">
+				<expression><![CDATA[$F{processoQuantsoli}]]></expression>
+			</element>
+			<element kind="staticText" uuid="a9fcca15-3019-4f47-9179-371a9915938a" x="0" y="20" width="150" height="20">
+				<text><![CDATA[Data Distribuição:]]></text>
+			</element>
+			<element kind="textField" uuid="a1d03f26-def9-427e-b9ba-8eb8fbad8239" x="150" y="20" width="405" height="20">
+				<expression><![CDATA[$F{processoDataDistribuicao}]]></expression>
+			</element>
+		</band>
+		<band height="80">
+			<element kind="staticText" uuid="a2f22a60-4e8f-43f0-96a0-fb1116ef65dc" x="0" y="0" width="150" height="20">
+				<text><![CDATA[Observações:]]></text>
+			</element>
+			<element kind="textField" uuid="378690c9-0e26-471f-a8ec-1bbbe4c1326d" x="150" y="0" width="405" height="80">
+				<expression><![CDATA[$F{processoObservacao}]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>
