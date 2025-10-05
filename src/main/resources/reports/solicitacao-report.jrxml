@@ -79,6 +79,7 @@
 	<field name="processoDataDistribuicao" class="java.lang.String"/>
 	<field name="processoObservacao" class="java.lang.String"/>
 	<title height="53">
+	 
 		<element kind="rectangle" uuid="7da9a143-5489-437b-8666-394e1450cc65" x="0" y="0" width="555" height="50" backcolor="#A7C0CF" radius="7"/>
 		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="1" y="11" width="190" height="24" fontSize="16.0" bold="true" hTextAlign="Left">
 			<text><![CDATA[Dados da Solicitação]]></text>
