@@ -88,6 +88,7 @@
 	<field name="processoObservacao" class="java.lang.String"/>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<title>
 		<band height="70">
 			<rectangle>
@@ -139,10 +140,15 @@
 		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="0" y="0" width="555" height="30" fontSize="16.0" bold="true" hTextAlign="Center">
 			<text><![CDATA[Relatório de Solicitação]]></text>
 =======
+=======
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 	<title height="53">
 		<element kind="rectangle" uuid="7da9a143-5489-437b-8666-394e1450cc65" x="0" y="0" width="555" height="50" backcolor="#A7C0CF" radius="7"/>
 		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="1" y="11" width="190" height="24" fontSize="16.0" bold="true" hTextAlign="Left">
 			<text><![CDATA[Dados da Solicitação]]></text>
+<<<<<<< HEAD
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
+=======
 >>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 		</element>
 		<element kind="staticText" uuid="fde868d7-cffb-4fea-9776-cbd21f7dd46a" x="405" y="15" width="70" height="20" fontSize="12.0" hTextAlign="Center">
@@ -153,6 +159,7 @@
 		</element>
 	</title>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<columnHeader height="20">
 		<element kind="staticText" uuid="8df28348-aa6c-4644-8ffe-a3fa450b6bf0" x="0" y="0" width="150" height="20" bold="true">
 			<text><![CDATA[Campo]]></text>
@@ -162,6 +169,9 @@
 		</element>
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 	</columnHeader>
+=======
+	<columnHeader height="14"/>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 =======
 	<columnHeader height="14"/>
 >>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
@@ -465,10 +475,16 @@
 =======
 		<band height="30">
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="0" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[CORRESPONDENTE]]></text>
+=======
+			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="1" y="5" width="219" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Correspondente]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 =======
 			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
 			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="1" y="5" width="219" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
@@ -601,10 +617,15 @@
 		</band>
 		<band height="30">
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="3336ec28-8f94-4e8e-bace-390916f16825" x="0" y="0" width="555" height="30" backcolor="#EEEEEE"/>
 			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="5" width="555" height="20" fontSize="12.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[ENDEREÇO DO CORRESPONDENTE]]></text>
+=======
+			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="0" width="220" height="20" fontSize="12.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Endereço do Correspondente]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 =======
 			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="0" width="220" height="20" fontSize="12.0" bold="true" hTextAlign="Left">
 				<text><![CDATA[Endereço do Correspondente]]></text>
@@ -674,10 +695,16 @@
 =======
 		<band height="30">
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="0" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[PROCESSO]]></text>
+=======
+			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="1" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Processo]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 =======
 			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
 			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="1" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
