@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 public class CraBackendApplication {
 	public static void main(String[] args) {
+		System.setProperty("java.io.tmpdir", "/tmp");
 		SpringApplication.run(CraBackendApplication.class, args);
 	}
 }
