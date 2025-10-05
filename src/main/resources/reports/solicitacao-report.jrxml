@@ -89,7 +89,6 @@
 		<element kind="textField" uuid="65ec9ba3-bf57-4350-bc80-e00b31beae93" x="475" y="15" width="80" height="20" fontName="SansSerif" fontSize="12.0" hTextAlign="Left">
 			<expression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></expression>
 		</element>
-		
 	</title>
 	<columnHeader height="14"/>
 	<detail>
