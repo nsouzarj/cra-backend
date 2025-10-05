@@ -9,14 +9,11 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-<<<<<<< HEAD
-=======
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
-<<<<<<< HEAD
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-=======
 import java.util.*;
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 import java.util.function.Function;
 
 @Service
@@ -66,21 +55,6 @@ public class ReportService {
         ClassPathResource jasperResource = new ClassPathResource(reportPath + ".jasper");
 
         if (jasperResource.exists()) {
-<<<<<<< HEAD
-            try (InputStream reportStream = jasperResource.getInputStream()) {
-                return (JasperReport) JRLoader.loadObject(reportStream);
-            }
-        }
-
-        ClassPathResource jrxmlResource = new ClassPathResource(reportPath + ".jrxml");
-        if (!jrxmlResource.exists()) {
-            throw new JRException("Report template not found: " + reportName);
-        }
-
-        try (InputStream jrxmlStream = jrxmlResource.getInputStream()) {
-            JasperDesign jasperDesign = JRXmlLoader.load(jrxmlStream);
-            return JasperCompileManager.compileReport(jasperDesign);
-=======
             log.debug("Carregando .jasper pré-compilado: {}", reportPath + ".jasper");
             try (InputStream reportStream = jasperResource.getInputStream()) {
                 Object loaded = JRLoader.loadObject(reportStream);
@@ -113,7 +87,6 @@ public class ReportService {
         } catch (Exception e) {
             log.error("Erro inesperado ao compilar JRXML: {}", reportPath + ".jrxml", e);
             throw new JRException("Falha na compilação do JRXML para " + reportName, e);
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
         }
     }
 
@@ -127,14 +100,6 @@ public class ReportService {
      * @return Byte array containing the generated report
      * @throws JRException If there's an error during report generation
      */
-<<<<<<< HEAD
-    public byte[] generateReport(String reportName, Map<String, Object> parameters, Collection<?> data, String outputType) throws JRException {
-        try {
-            JasperReport jasperReport = loadReport(reportName);
-            JRDataSource dataSource = new JRBeanCollectionDataSource(data);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-=======
     public byte[] generateReport(String reportName, Map<String, Object> parameters, Collection<?> data, String outputType)
             throws JRException {
         
@@ -152,43 +117,25 @@ public class ReportService {
             jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
             log.debug("Relatório preenchido com sucesso: {} páginas", jasperPrint.getPages().size());
             
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            JRExporter exporter;
+            
 
             switch (outputType.toUpperCase()) {
                 case "PDF":
-<<<<<<< HEAD
-                    exporter = new JRPdfExporter();
-=======
                     JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
                     log.debug("Exportação PDF concluída: {} bytes", outputStream.size());
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
                     break;
 
                 case "XLS":
-<<<<<<< HEAD
-                    // To use XLS, you would need the 'jasperreports-poi' dependency
-                    // exporter = new JRXlsExporter();
-                    throw new JRException("XLS export not implemented or dependency missing.");
-=======
                 case "XLSX":
                     exportReportToXlsxStream(jasperPrint, outputStream);
                     log.debug("Exportação XLSX concluída: {} bytes", outputStream.size());
                     break;
 
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
                 default:
                     throw new IllegalArgumentException("Formato de saída não suportado: " + outputType);
             }
 
-<<<<<<< HEAD
-            exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, outputStream);
-            exporter.exportReport();
-
-=======
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
             return outputStream.toByteArray();
         } catch (JRException e) {
             log.error("Erro JRException ao gerar relatório '{}': {}", reportName, e.getMessage(), e);
@@ -202,8 +149,6 @@ public class ReportService {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Exports a JasperPrint object to an XLSX stream.
      *
      * @param jasperPrint The JasperPrint object to export.
@@ -222,7 +167,6 @@ public class ReportService {
     }
 
     /**
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
      * Generates a PDF report for a specific solicitacao.
      * 
      * @param solicitacao The solicitacao entity to generate the report for
@@ -243,15 +187,6 @@ public class ReportService {
         // Helper function to safely get values and provide a default
         Function<Object, Object> safeGet = (value) -> value != null ? value : "";
 
-<<<<<<< HEAD
-        // Solicitacao details
-        data.put("id", safeGet.apply(solicitacao.getId()));
-        data.put("numero", safeGet.apply(solicitacao.getNumero()));
-        data.put("dataSolicitacao", solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao().format(formatter) : "");
-        data.put("dataConclusao", solicitacao.getDataconclusao() != null ? solicitacao.getDataconclusao().format(formatter) : "");
-        data.put("dataAgendamento", solicitacao.getDataagendamento() != null ? solicitacao.getDataagendamento().format(formatter) : "");
-        data.put("dataPrazo", solicitacao.getDataprazo() != null ? solicitacao.getDataprazo().format(formatter) : "");
-=======
         // Solicitacao details (usando Optional para consistência e evitar nulls)
         data.put("id", safeGet.apply(solicitacao.getId()));
         data.put("numero", safeGet.apply(solicitacao.getNumero()));
@@ -263,7 +198,6 @@ public class ReportService {
                 .map(d -> d.format(formatter)).orElse("N/A"));
         data.put("dataPrazo", Optional.ofNullable(solicitacao.getDataprazo())
                 .map(d -> d.format(formatter)).orElse("N/A"));
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
         data.put("vara", safeGet.apply(solicitacao.getVara()));
         data.put("uf", safeGet.apply(solicitacao.getUf()));
         data.put("requerente", safeGet.apply(solicitacao.getRequerente()));
@@ -312,12 +246,8 @@ public class ReportService {
             data.put("correspondenteTelefoneCelularSecundario", safeGet.apply(correspondente.getTelefonecelularsecundario()));
             data.put("correspondenteEmailPrimario", safeGet.apply(correspondente.getEmailprimario()));
             data.put("correspondenteEmailSecundario", safeGet.apply(correspondente.getEmailsecundario()));
-<<<<<<< HEAD
-            data.put("correspondenteDataCadastro", correspondente.getDatacadastro() != null ? correspondente.getDatacadastro().format(formatter) : "");
-=======
             data.put("correspondenteDataCadastro", Optional.ofNullable(correspondente.getDatacadastro())
                     .map(d -> d.format(formatter)).orElse("N/A"));
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
             data.put("correspondenteAtivo", correspondente.isAtivo() ? "Sim" : "Não");
             data.put("correspondenteObservacao", safeGet.apply(correspondente.getObservacao()));
 
@@ -351,13 +281,6 @@ public class ReportService {
             data.put("processoOrgao", Optional.ofNullable(processo.getOrgao()).map(o -> safeGet.apply(o.getDescricao())).orElse(""));
             data.put("processoNumOrgao", Optional.ofNullable(processo.getNumorgao()).map(Object::toString).orElse(""));
             data.put("processoProcEletronico", safeGet.apply(processo.getProceletronico()));
-<<<<<<< HEAD
-            data.put("processoQuantsoli", processo.getQuantsoli() != null ? processo.getQuantsoli() : 0);
-            data.put("processoDataDistribuicao", Optional.ofNullable(processo.getDatadistribuicao()).map(Object::toString).orElse(""));
-            data.put("processoObservacao", safeGet.apply(processo.getObservacao()));
-        }
-
-=======
             data.put("processoQuantsoli", Optional.ofNullable(processo.getQuantsoli()).orElse(0));
             data.put("processoDataDistribuicao", Optional.ofNullable(processo.getDatadistribuicao())
                     .map(Object::toString).orElse("N/A"));
@@ -367,18 +290,12 @@ public class ReportService {
         // Log data summary for debugging
         log.debug("Dados preparados para solicitação {}: {} chaves no Map", solicitacao.getId(), data.size());
 
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
         // Generate the report using a specific template for solicitacao
         try {
             return generatePdfReport("solicitacao-report", parameters, Collections.singletonList(data));
         } catch (Exception e) {
-<<<<<<< HEAD
-            e.printStackTrace();
-            throw new JRException("Error generating solicitacao report: " + e.getMessage(), e);
-=======
             log.error("Erro ao gerar relatório de solicitação ID {}: {}", solicitacao.getId(), e.getMessage(), e);
             throw new JRException("Erro ao gerar relatório de solicitação: " + e.getMessage(), e);
->>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
         }
     }
 }
