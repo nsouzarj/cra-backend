@@ -87,6 +87,7 @@
 	<field name="processoDataDistribuicao" class="java.lang.String"/>
 	<field name="processoObservacao" class="java.lang.String"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<title>
 		<band height="70">
 			<rectangle>
@@ -137,14 +138,21 @@
 		<element kind="rectangle" uuid="7da9a143-5489-437b-8666-394e1450cc65" x="0" y="0" width="555" height="70" backcolor="#A7C0CF"/>
 		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="0" y="0" width="555" height="30" fontSize="16.0" bold="true" hTextAlign="Center">
 			<text><![CDATA[Relatório de Solicitação]]></text>
+=======
+	<title height="53">
+		<element kind="rectangle" uuid="7da9a143-5489-437b-8666-394e1450cc65" x="0" y="0" width="555" height="50" backcolor="#A7C0CF" radius="7"/>
+		<element kind="staticText" uuid="b3bce1e5-352d-46fa-a8b0-a8f48895a232" x="1" y="11" width="190" height="24" fontSize="16.0" bold="true" hTextAlign="Left">
+			<text><![CDATA[Dados da Solicitação]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 		</element>
-		<element kind="staticText" uuid="fde868d7-cffb-4fea-9776-cbd21f7dd46a" x="10" y="40" width="90" height="20" fontSize="12.0" hTextAlign="Center">
+		<element kind="staticText" uuid="fde868d7-cffb-4fea-9776-cbd21f7dd46a" x="405" y="15" width="70" height="20" fontSize="12.0" hTextAlign="Center">
 			<text><![CDATA[Emitido em: ]]></text>
 		</element>
-		<element kind="textField" uuid="65ec9ba3-bf57-4350-bc80-e00b31beae93" x="100" y="40" width="170" height="20" fontSize="12.0" hTextAlign="Left">
+		<element kind="textField" uuid="65ec9ba3-bf57-4350-bc80-e00b31beae93" x="475" y="15" width="80" height="20" fontName="SansSerif" fontSize="12.0" hTextAlign="Left">
 			<expression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></expression>
 		</element>
 	</title>
+<<<<<<< HEAD
 	<columnHeader height="20">
 		<element kind="staticText" uuid="8df28348-aa6c-4644-8ffe-a3fa450b6bf0" x="0" y="0" width="150" height="20" bold="true">
 			<text><![CDATA[Campo]]></text>
@@ -154,6 +162,9 @@
 		</element>
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 	</columnHeader>
+=======
+	<columnHeader height="14"/>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 	<detail>
 		<band height="40">
 			<element kind="staticText" uuid="e093edb5-89bb-4ec2-92c2-98efcb5ec338" x="0" y="0" width="150" height="20">
@@ -453,23 +464,29 @@
 				</textElement>
 =======
 		<band height="30">
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="0" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[CORRESPONDENTE]]></text>
+=======
+			<element kind="rectangle" uuid="34389590-70e4-417c-a2ff-d26faccc820c" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="8b83ef9d-dbe1-4c8c-bb20-d6b1bd688ec8" x="1" y="5" width="219" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Correspondente]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 			</element>
 		</band>
-		<band height="40">
-			<element kind="staticText" uuid="5c7f2ddc-71a1-4e16-9796-2455d2ae2aaa" x="0" y="0" width="150" height="20">
+		<band height="50">
+			<element kind="staticText" uuid="5c7f2ddc-71a1-4e16-9796-2455d2ae2aaa" x="0" y="10" width="150" height="20">
 				<text><![CDATA[ID:]]></text>
 			</element>
-			<element kind="textField" uuid="b7ee68b5-8c56-4eab-b77f-143af51757c5" x="150" y="0" width="405" height="20">
+			<element kind="textField" uuid="b7ee68b5-8c56-4eab-b77f-143af51757c5" x="150" y="10" width="405" height="20">
 				<expression><![CDATA[$F{correspondenteId}]]></expression>
 			</element>
-			<element kind="staticText" uuid="55c3c85f-d9ae-4e9b-ba16-7658a605123c" x="0" y="20" width="150" height="20">
+			<element kind="staticText" uuid="55c3c85f-d9ae-4e9b-ba16-7658a605123c" x="0" y="30" width="150" height="20">
 				<text><![CDATA[Nome:]]></text>
 			</element>
-			<element kind="textField" uuid="3417bbca-af68-45e3-b02d-4f961f23c583" x="150" y="20" width="405" height="20">
+			<element kind="textField" uuid="3417bbca-af68-45e3-b02d-4f961f23c583" x="150" y="30" width="405" height="20">
 				<expression><![CDATA[$F{correspondenteNome}]]></expression>
 			</element>
 		</band>
@@ -583,10 +600,15 @@
 			</element>
 		</band>
 		<band height="30">
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="3336ec28-8f94-4e8e-bace-390916f16825" x="0" y="0" width="555" height="30" backcolor="#EEEEEE"/>
 			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="5" width="555" height="20" fontSize="12.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[ENDEREÇO DO CORRESPONDENTE]]></text>
+=======
+			<element kind="staticText" uuid="d6c90571-cf22-476f-8fbc-5b9d885a2479" x="0" y="0" width="220" height="20" fontSize="12.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Endereço do Correspondente]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 			</element>
 		</band>
 		<band height="40">
@@ -651,23 +673,29 @@
 				</textElement>
 =======
 		<band height="30">
+<<<<<<< HEAD
 			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC"/>
 			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="0" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Center">
 >>>>>>> d8cccaabe82ea6c86e42751f0c64a049a5909500
 				<text><![CDATA[PROCESSO]]></text>
+=======
+			<element kind="rectangle" uuid="9c7729c7-f299-457e-89c7-3f766cf912be" x="0" y="0" width="555" height="30" backcolor="#CCCCCC" radius="7"/>
+			<element kind="staticText" uuid="cc1666e7-52db-4c15-8db3-45c09542eb7e" x="1" y="5" width="555" height="20" fontSize="14.0" bold="true" hTextAlign="Left">
+				<text><![CDATA[Dados do Processo]]></text>
+>>>>>>> 0ad8ba969910f91ed005c41a85bf243896b01158
 			</element>
 		</band>
-		<band height="40">
-			<element kind="staticText" uuid="51fcdc1e-5e62-4720-96ae-435550cc8f01" x="0" y="0" width="150" height="20">
+		<band height="48">
+			<element kind="staticText" uuid="51fcdc1e-5e62-4720-96ae-435550cc8f01" x="0" y="8" width="150" height="20">
 				<text><![CDATA[ID:]]></text>
 			</element>
-			<element kind="textField" uuid="797152f3-67d0-411f-a0da-29ce56fe35a8" x="150" y="0" width="405" height="20">
+			<element kind="textField" uuid="797152f3-67d0-411f-a0da-29ce56fe35a8" x="150" y="8" width="405" height="20">
 				<expression><![CDATA[$F{processoId}]]></expression>
 			</element>
-			<element kind="staticText" uuid="9d5e8a55-9809-4a29-9072-0206a9552b5d" x="0" y="20" width="150" height="20">
+			<element kind="staticText" uuid="9d5e8a55-9809-4a29-9072-0206a9552b5d" x="0" y="28" width="150" height="20">
 				<text><![CDATA[Número:]]></text>
 			</element>
-			<element kind="textField" uuid="007a1d59-7924-4684-b1f9-f41848f61d4e" x="150" y="20" width="405" height="20">
+			<element kind="textField" uuid="007a1d59-7924-4684-b1f9-f41848f61d4e" x="150" y="28" width="405" height="20">
 				<expression><![CDATA[$F{processoNumero}]]></expression>
 			</element>
 		</band>
