@@ -46,7 +46,7 @@ EXPOSE 8081
 # Create a non-root user
 RUN addgroup --system spring && \
     adduser --system spring --ingroup spring && \
-    chown -R spring:spring /app/uploads
+    chown -R spring:spring /app
 
 USER spring:spring
 
