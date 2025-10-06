@@ -81,6 +81,11 @@ public class ReportService {
             System.setProperty("net.sf.jasperreports.compiler.temp.dir", "/tmp");
             log.debug("Diretório temp configurado para: /tmp");
 
+            // CORREÇÃO NOVA: Define o classpath para o compilador interno (resolve erros de import/symbol)
+            String classpath = System.getProperty("java.class.path");
+            System.setProperty("net.sf.jasperreports.compiler.class.path", classpath);
+            log.debug("Classpath configurado para compilador Jasper: {}", classpath);
+
             net.sf.jasperreports.engine.design.JasperDesign jasperDesign = JRXmlLoader.load(jrxmlStream);
             JasperReport compiled = JasperCompileManager.compileReport(jasperDesign);
             log.debug("JRXML compilado com sucesso");
