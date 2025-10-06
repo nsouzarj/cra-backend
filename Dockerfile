@@ -22,6 +22,11 @@ RUN mvn clean package -DskipTests
 # Runtime stage
 FROM openjdk:23-jdk-slim
 
+# CORREÇÃO: Instala libs de fontes nativas (resolve UnsatisfiedLinkError para libfreetype.so.6)
+RUN apt-get update && \
+    apt-get install -y libfreetype6 libfontconfig1 && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set working directory
 WORKDIR /app
 
