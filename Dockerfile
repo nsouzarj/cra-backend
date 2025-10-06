@@ -35,6 +35,9 @@ VOLUME ["/app/uploads"]
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/cra-backend-0.0.1-SNAPSHOT.jar app.jar
 
+# CORREÇÃO: Muda a propriedade de /app para o usuário spring (evita Permission denied)
+RUN chown -R spring:spring /app
+
 # Expose port
 EXPOSE 8081
 
@@ -45,5 +48,5 @@ RUN addgroup --system spring && \
 
 USER spring:spring
 
-# Run the application with Linux-compatible file upload directory
-ENTRYPOINT ["java", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
+# Run the application with Linux-compatible file upload directory + temp dir para Jasper
+ENTRYPOINT ["java", "-Dnet.sf.jasperreports.compiler.temp.dir=/tmp", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
