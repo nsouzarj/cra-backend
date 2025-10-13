@@ -17,12 +17,15 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application
-#RUN mvn clean package -DskipTests
+RUN mvn clean package
+
+# Debug: List files in target directory
+RUN ls -la /app/target/
 
 # Runtime stage
-FROM openjdk:23-jdk-slim
+FROM openjdk:23-jre-slim
 
-# CORREÇÃO: Instala libs de fontes nativas (resolve UnsatisfiedLinkError para libfreetype.so.6)
+# Install native font libraries (resolves UnsatisfiedLinkError for libfreetype.so.6)
 RUN apt-get update && \
     apt-get install -y libfreetype6 libfontconfig1 && \
     rm -rf /var/lib/apt/lists/*
@@ -30,7 +33,7 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Create upload directory (sem chown ainda, pois usuário não existe)
+# Create upload directory
 RUN mkdir -p /app/uploads && \
     chmod 755 /app/uploads
 
@@ -40,11 +43,11 @@ VOLUME ["/app/uploads"]
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/cra-backend-0.0.1-SNAPSHOT.jar app.jar
 
-# CORREÇÃO: Cria o usuário/grupo ANTES do chown
+# Create non-root user and group
 RUN addgroup --system spring && \
     adduser --system spring --ingroup spring
 
-# CORREÇÃO: Agora chown /app (cobre app.jar e uploads) para spring:spring
+# Change ownership of /app
 RUN chown -R spring:spring /app
 
 # Expose port
@@ -52,5 +55,5 @@ EXPOSE 8081
 
 USER spring:spring
 
-# Run the application with Linux-compatible file upload directory + temp dir para Jasper
+# Run the application
 ENTRYPOINT ["java", "-Dnet.sf.jasperreports.compiler.temp.dir=/tmp", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
