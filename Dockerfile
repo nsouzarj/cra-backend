@@ -22,9 +22,6 @@ RUN mvn clean package
 # Debug: List files in target directory
 RUN ls -la /app/target/
 
-# Runtime stage
-FROM openjdk:23-jre-slim
-
 # Install native font libraries (resolves UnsatisfiedLinkError for libfreetype.so.6)
 RUN apt-get update && \
     apt-get install -y libfreetype6 libfontconfig1 && \
