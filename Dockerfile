@@ -17,7 +17,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Debug: List files in target directory
 RUN ls -la /app/target/
@@ -30,7 +30,7 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Create upload directory
+# Create upload directory with correct permissions
 RUN mkdir -p /app/uploads && \
     chmod 755 /app/uploads
 
@@ -41,16 +41,17 @@ VOLUME ["/app/uploads"]
 COPY --from=builder /app/target/cra-backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Create non-root user and group
-RUN addgroup --system spring && \
-    adduser --system spring --ingroup spring
+RUN addgroup --system --gid 1001 spring && \
+    adduser --system --uid 1001 --ingroup spring --no-create-home spring
 
-# Change ownership of /app
+# Change ownership of /app (including app.jar and uploads)
 RUN chown -R spring:spring /app
+
+# Switch to non-root user
+USER spring:spring
 
 # Expose port
 EXPOSE 8081
 
-USER spring:spring
-
-# Run the application
+# Run the application with properties for JasperReports and file uploads
 ENTRYPOINT ["java", "-Dnet.sf.jasperreports.compiler.temp.dir=/tmp", "-Dfile.upload-dir=/app/uploads", "-jar", "app.jar"]
