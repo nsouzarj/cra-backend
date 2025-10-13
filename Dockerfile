@@ -17,7 +17,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application
-RUN mvn clean package -DskipTests
+#RUN mvn clean package -DskipTests
 
 # Runtime stage
 FROM openjdk:23-jdk-slim
