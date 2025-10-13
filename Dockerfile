@@ -20,7 +20,7 @@ COPY src ./src
 RUN mvn clean test
 
 # Build package
-RUN package
+RUN mvn package
 
 # Debug: List files in target directory
 RUN ls -la /app/target/
