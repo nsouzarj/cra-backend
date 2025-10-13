@@ -1,6 +1,17 @@
 # Multi-stage build: Build stage
 FROM openjdk:23-jdk-slim AS builder
 
+
+# Create non-root user and group
+RUN addgroup --system --gid 1001 spring && \
+    adduser --system --uid 1001 --ingroup spring --no-create-home spring
+
+# Change ownership of /app (including app.jar and uploads)
+RUN chown -R spring:spring /app
+
+# Switch to non-root user
+USER spring:spring
+
 # Install Maven
 RUN apt-get update && \
     apt-get install -y maven && \
@@ -40,15 +51,7 @@ VOLUME ["/app/uploads"]
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Create non-root user and group
-RUN addgroup --system --gid 1001 spring && \
-    adduser --system --uid 1001 --ingroup spring --no-create-home spring
 
-# Change ownership of /app (including app.jar and uploads)
-RUN chown -R spring:spring /app
-
-# Switch to non-root user
-USER spring:spring
 
 # Expose port
 EXPOSE 8081
