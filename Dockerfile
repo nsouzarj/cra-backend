@@ -38,7 +38,7 @@ RUN mkdir -p /app/uploads && \
 VOLUME ["/app/uploads"]
 
 # Copy the JAR file from the builder stage
-COPY --from=builder /app/target/cra-backend-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 # Create non-root user and group
 RUN addgroup --system --gid 1001 spring && \
