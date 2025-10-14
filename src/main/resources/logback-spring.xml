@@ -17,7 +17,7 @@
                 <readMarkers>true</readMarkers>
             </label>
             <message>
-                <pattern>{"level":"%level","class":"%logger{36}","thread":"%thread","message":"%message","timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}"}</pattern>
+                <pattern>{"time":"%d{yyyy-MM-dd HH:mm:ss.SSS}",level":"%level","class":"%logger{36}","thread":"%thread","message":"%message","timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}"}</pattern>
             </message>
         </format>
     </appender>
