@@ -8,7 +8,14 @@ import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Processo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.StatusSolicitacao;
+import br.adv.cra.entity.TipoSolicitacao;
 import br.adv.cra.entity.Usuario;
+import br.adv.cra.repository.ComarcaRepository;
+import br.adv.cra.repository.CorrespondenteRepository;
+import br.adv.cra.repository.ProcessoRepository;
+import br.adv.cra.repository.StatusSolicitacaoRepository;
+import br.adv.cra.repository.TipoSolicitacaoRepository;
+import br.adv.cra.repository.UsuarioRepository;
 import br.adv.cra.service.SolicitacaoService;
 import br.adv.cra.service.StatusSolicitacaoService;
 import br.adv.cra.service.UsuarioService;
@@ -46,17 +53,24 @@ public class SolicitacaoController {
     
     private final SolicitacaoService solicitacaoService;
     private final StatusSolicitacaoService statusSolicitacaoService;
-    private final UsuarioService usuarioService; // Added to fetch usuario by ID
+    private final UsuarioService usuarioService;
+    private final ProcessoRepository processoRepository;
+    private final ComarcaRepository comarcaRepository;
+    private final StatusSolicitacaoRepository statusSolicitacaoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final TipoSolicitacaoRepository tipoSolicitacaoRepository;
+    private final CorrespondenteRepository correspondenteRepository;
     
     /**
      * Creates a new request.
      * 
-     * @param solicitacao The request information to create
+     * @param solicitacaoDTO The request information to create
      * @return The created request with HTTP 201 status, or error response
      */
     @PostMapping
-    public ResponseEntity<Solicitacao> criar(@Valid @RequestBody Solicitacao solicitacao) {
+    public ResponseEntity<Solicitacao> criar(@Valid @RequestBody SolicitacaoDTO solicitacaoDTO) {
         try {
+            Solicitacao solicitacao = convertToEntity(solicitacaoDTO);
             Solicitacao novaSolicitacao = solicitacaoService.salvar(solicitacao);
             return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
         } catch (Exception e) {
@@ -68,11 +82,11 @@ public class SolicitacaoController {
      * Updates an existing request.
      * 
      * @param id The ID of the request to update
-     * @param solicitacao The updated request information
+     * @param solicitacaoDTO The updated request information
      * @return The updated request, or error response
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Solicitacao> atualizar(@PathVariable Long id, @Valid @RequestBody Solicitacao solicitacao) {
+    public ResponseEntity<Solicitacao> atualizar(@PathVariable Long id, @Valid @RequestBody SolicitacaoDTO solicitacaoDTO) {
         try {
             // Check if the solicitacao exists
             if (!solicitacaoService.buscarPorId(id).isPresent()) {
@@ -80,7 +94,9 @@ public class SolicitacaoController {
             }
             
             // Set the ID to ensure we're updating the correct entity
-            solicitacao.setId(id);
+            solicitacaoDTO.setIdsolicitacao(id);
+            
+            Solicitacao solicitacao = convertToEntity(solicitacaoDTO);
             
             // Ensure the datasolicitacao is not null to prevent issues
             Solicitacao solicitacaoAtualizada = solicitacaoService.atualizar(solicitacao);
@@ -88,6 +104,61 @@ public class SolicitacaoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    private Solicitacao convertToEntity(SolicitacaoDTO dto) {
+        Solicitacao solicitacao = new Solicitacao();
+        solicitacao.setIdsolicitacao(dto.getIdsolicitacao());
+        solicitacao.setDatasolicitacao(dto.getDatasolicitacao());
+        solicitacao.setDataconclusao(dto.getDataconclusao());
+        solicitacao.setDataagendamento(dto.getDataagendamento());
+        solicitacao.setDataprazo(dto.getDataprazo());
+        solicitacao.setNumero(dto.getNumero());
+        solicitacao.setVara(dto.getVara());
+        solicitacao.setUf(dto.getUf());
+        solicitacao.setRequerente(dto.getRequerente());
+        solicitacao.setRequerido(dto.getRequerido());
+        solicitacao.setObservacao(dto.getObservacao());
+        solicitacao.setInstrucoes(dto.getInstrucoes());
+        solicitacao.setComplemento(dto.getComplemento());
+        solicitacao.setJustificativa(dto.getJustificativa());
+        solicitacao.setTratposaudiencia(dto.getTratposaudiencia());
+        solicitacao.setNumcontrole(dto.getNumcontrole());
+        solicitacao.setTempreposto(dto.isTempreposto());
+        solicitacao.setConvolada(dto.isConvolada());
+        solicitacao.setHoraudiencia(dto.getHoraudiencia());
+        solicitacao.setStatusexterno(dto.getStatusexterno());
+        solicitacao.setValor(dto.getValor());
+        solicitacao.setValordaalcada(dto.getValordaalcada());
+        solicitacao.setEmailenvio(dto.getEmailenvio());
+        solicitacao.setPago(dto.getPago());
+        solicitacao.setGrupo(dto.getGrupo());
+        solicitacao.setPropostaacordo(dto.isPropostaacordo());
+        solicitacao.setAudinterna(dto.isAudinterna());
+        solicitacao.setLide(dto.getLide());
+        solicitacao.setAvaliacaonota(dto.getAvaliacaonota());
+        solicitacao.setTextoavaliacao(dto.getTextoavaliacao());
+
+        if (dto.getProcessoId() != null) {
+            processoRepository.findById(dto.getProcessoId()).ifPresent(solicitacao::setProcesso);
+        }
+        if (dto.getComarcaId() != null) {
+            comarcaRepository.findById(dto.getComarcaId()).ifPresent(solicitacao::setComarca);
+        }
+        if (dto.getStatusSolicitacaoId() != null) {
+            statusSolicitacaoRepository.findById(dto.getStatusSolicitacaoId()).ifPresent(solicitacao::setStatusSolicitacao);
+        }
+        if (dto.getUsuarioId() != null) {
+            usuarioRepository.findById(dto.getUsuarioId()).ifPresent(solicitacao::setUsuario);
+        }
+        if (dto.getTipoSolicitacaoId() != null) {
+            tipoSolicitacaoRepository.findById(dto.getTipoSolicitacaoId()).ifPresent(solicitacao::setTipoSolicitacao);
+        }
+        if (dto.getCorrespondenteId() != null) {
+            correspondenteRepository.findById(dto.getCorrespondenteId()).ifPresent(solicitacao::setCorrespondente);
+        }
+
+        return solicitacao;
     }
     
     @PutMapping("/{id}/status/{statusId}")
