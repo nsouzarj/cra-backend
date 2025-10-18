@@ -8,14 +8,7 @@ import br.adv.cra.entity.Correspondente;
 import br.adv.cra.entity.Processo;
 import br.adv.cra.entity.Solicitacao;
 import br.adv.cra.entity.StatusSolicitacao;
-import br.adv.cra.entity.TipoSolicitacao;
 import br.adv.cra.entity.Usuario;
-import br.adv.cra.repository.ComarcaRepository;
-import br.adv.cra.repository.CorrespondenteRepository;
-import br.adv.cra.repository.ProcessoRepository;
-import br.adv.cra.repository.StatusSolicitacaoRepository;
-import br.adv.cra.repository.TipoSolicitacaoRepository;
-import br.adv.cra.repository.UsuarioRepository;
 import br.adv.cra.service.SolicitacaoService;
 import br.adv.cra.service.StatusSolicitacaoService;
 import br.adv.cra.service.UsuarioService;
@@ -37,15 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Controller for managing requests.
- * 
- * This controller provides full CRUD operations for requests and specialized
- * endpoints for request management. Requests represent tasks or actions that
- * need to be processed in the system.
- * 
- * Base URL: /api/solicitacoes
- */
 @RestController
 @RequestMapping("/api/solicitacoes")
 @RequiredArgsConstructor
@@ -53,24 +37,11 @@ public class SolicitacaoController {
     
     private final SolicitacaoService solicitacaoService;
     private final StatusSolicitacaoService statusSolicitacaoService;
-    private final UsuarioService usuarioService;
-    private final ProcessoRepository processoRepository;
-    private final ComarcaRepository comarcaRepository;
-    private final StatusSolicitacaoRepository statusSolicitacaoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final TipoSolicitacaoRepository tipoSolicitacaoRepository;
-    private final CorrespondenteRepository correspondenteRepository;
+    private final UsuarioService usuarioService; // Added to fetch usuario by ID
     
-    /**
-     * Creates a new request.
-     * 
-     * @param solicitacaoDTO The request information to create
-     * @return The created request with HTTP 201 status, or error response
-     */
     @PostMapping
-    public ResponseEntity<Solicitacao> criar(@Valid @RequestBody SolicitacaoDTO solicitacaoDTO) {
+    public ResponseEntity<Solicitacao> criar(@Valid @RequestBody Solicitacao solicitacao) {
         try {
-            Solicitacao solicitacao = convertToEntity(solicitacaoDTO);
             Solicitacao novaSolicitacao = solicitacaoService.salvar(solicitacao);
             return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
         } catch (Exception e) {
@@ -78,15 +49,8 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Updates an existing request.
-     * 
-     * @param id The ID of the request to update
-     * @param solicitacaoDTO The updated request information
-     * @return The updated request, or error response
-     */
     @PutMapping("/{id}")
-    public ResponseEntity<Solicitacao> atualizar(@PathVariable Long id, @Valid @RequestBody SolicitacaoDTO solicitacaoDTO) {
+    public ResponseEntity<Solicitacao> atualizar(@PathVariable Long id, @Valid @RequestBody Solicitacao solicitacao) {
         try {
             // Check if the solicitacao exists
             if (!solicitacaoService.buscarPorId(id).isPresent()) {
@@ -94,9 +58,7 @@ public class SolicitacaoController {
             }
             
             // Set the ID to ensure we're updating the correct entity
-            solicitacaoDTO.setIdsolicitacao(id);
-            
-            Solicitacao solicitacao = convertToEntity(solicitacaoDTO);
+            solicitacao.setId(id);
             
             // Ensure the datasolicitacao is not null to prevent issues
             Solicitacao solicitacaoAtualizada = solicitacaoService.atualizar(solicitacao);
@@ -104,61 +66,6 @@ public class SolicitacaoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private Solicitacao convertToEntity(SolicitacaoDTO dto) {
-        Solicitacao solicitacao = new Solicitacao();
-        solicitacao.setIdsolicitacao(dto.getIdsolicitacao());
-        solicitacao.setDatasolicitacao(dto.getDatasolicitacao());
-        solicitacao.setDataconclusao(dto.getDataconclusao());
-        solicitacao.setDataagendamento(dto.getDataagendamento());
-        solicitacao.setDataprazo(dto.getDataprazo());
-        solicitacao.setNumero(dto.getNumero());
-        solicitacao.setVara(dto.getVara());
-        solicitacao.setUf(dto.getUf());
-        solicitacao.setRequerente(dto.getRequerente());
-        solicitacao.setRequerido(dto.getRequerido());
-        solicitacao.setObservacao(dto.getObservacao());
-        solicitacao.setInstrucoes(dto.getInstrucoes());
-        solicitacao.setComplemento(dto.getComplemento());
-        solicitacao.setJustificativa(dto.getJustificativa());
-        solicitacao.setTratposaudiencia(dto.getTratposaudiencia());
-        solicitacao.setNumcontrole(dto.getNumcontrole());
-        solicitacao.setTempreposto(dto.isTempreposto());
-        solicitacao.setConvolada(dto.isConvolada());
-        solicitacao.setHoraudiencia(dto.getHoraudiencia());
-        solicitacao.setStatusexterno(dto.getStatusexterno());
-        solicitacao.setValor(dto.getValor());
-        solicitacao.setValordaalcada(dto.getValordaalcada());
-        solicitacao.setEmailenvio(dto.getEmailenvio());
-        solicitacao.setPago(dto.getPago());
-        solicitacao.setGrupo(dto.getGrupo());
-        solicitacao.setPropostaacordo(dto.isPropostaacordo());
-        solicitacao.setAudinterna(dto.isAudinterna());
-        solicitacao.setLide(dto.getLide());
-        solicitacao.setAvaliacaonota(dto.getAvaliacaonota());
-        solicitacao.setTextoavaliacao(dto.getTextoavaliacao());
-
-        if (dto.getProcessoId() != null) {
-            processoRepository.findById(dto.getProcessoId()).ifPresent(solicitacao::setProcesso);
-        }
-        if (dto.getComarcaId() != null) {
-            comarcaRepository.findById(dto.getComarcaId()).ifPresent(solicitacao::setComarca);
-        }
-        if (dto.getStatusSolicitacaoId() != null) {
-            statusSolicitacaoRepository.findById(dto.getStatusSolicitacaoId()).ifPresent(solicitacao::setStatusSolicitacao);
-        }
-        if (dto.getUsuarioId() != null) {
-            usuarioRepository.findById(dto.getUsuarioId()).ifPresent(solicitacao::setUsuario);
-        }
-        if (dto.getTipoSolicitacaoId() != null) {
-            tipoSolicitacaoRepository.findById(dto.getTipoSolicitacaoId()).ifPresent(solicitacao::setTipoSolicitacao);
-        }
-        if (dto.getCorrespondenteId() != null) {
-            correspondenteRepository.findById(dto.getCorrespondenteId()).ifPresent(solicitacao::setCorrespondente);
-        }
-
-        return solicitacao;
     }
     
     @PutMapping("/{id}/status/{statusId}")
@@ -241,11 +148,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists all requests with pagination.
-     * 
-     * @return Page of requests
-     */
     @GetMapping
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarTodas(
             @RequestParam(defaultValue = "0") int page,
@@ -264,11 +166,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists all requests DTO with pagination.
-     * 
-     * @return Page of requests DTO
-     */
     @GetMapping("/list/dto")
     public ResponseEntity<PaginatedResponseDTO<SolicitacaoDTO>> listarTodasDTO(
             @RequestParam(defaultValue = "0") int page,
@@ -287,11 +184,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists pending requests with pagination.
-     * 
-     * @return Page of pending requests
-     */
     @GetMapping("/pendentes")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarPendentes(
             @RequestParam(defaultValue = "0") int page,
@@ -310,11 +202,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists completed requests with pagination.
-     * 
-     * @return Page of completed requests
-     */
     @GetMapping("/concluidas")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarConcluidas(
             @RequestParam(defaultValue = "0") int page,
@@ -333,11 +220,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists overdue requests with pagination.
-     * 
-     * @return Page of overdue requests
-     */
     @GetMapping("/atrasadas")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarAtrasadas(
             @RequestParam(defaultValue = "0") int page,
@@ -356,11 +238,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists paid requests with pagination.
-     * 
-     * @return Page of paid requests
-     */
     @GetMapping("/pagas")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarPagas(
             @RequestParam(defaultValue = "0") int page,
@@ -379,11 +256,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Lists unpaid requests with pagination.
-     * 
-     * @return Page of unpaid requests
-     */
     @GetMapping("/nao-pagas")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> listarNaoPagas(
             @RequestParam(defaultValue = "0") int page,
@@ -402,12 +274,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by user ID, where the user is associated with the correspondente of the requests.
-     * 
-     * @param usuarioId The user ID to search for
-     * @return Page of requests for the specified user's correspondente
-     */
     @GetMapping("/usuario/{usuarioId}/correspondente")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorUsuarioCorrespondente(
             @PathVariable Long usuarioId,
@@ -444,12 +310,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by user with pagination.
-     * 
-     * @param usuarioId The user ID to search for
-     * @return Page of requests for the specified user
-     */
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorUsuario(
             @PathVariable Long usuarioId,
@@ -473,12 +333,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by correspondente with pagination.
-     * 
-     * @param correspondenteId The correspondente ID to search for
-     * @return Page of requests for the specified correspondente
-     */
     @GetMapping("/correspondente/{correspondenteId}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorCorrespondente(
             @PathVariable Long correspondenteId,
@@ -502,13 +356,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Searches requests by date range with pagination.
-     * 
-     * @param inicio The start date/time
-     * @param fim The end date/time
-     * @return Page of requests within the specified date range
-     */
     @GetMapping("/buscar/periodo")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
@@ -529,12 +376,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Searches requests by text (partial match) with pagination.
-     * 
-     * @param texto The text to search for
-     * @return Page of matching requests
-     */
     @GetMapping("/buscar/texto")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorTexto(
             @RequestParam String texto,
@@ -554,13 +395,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by court (comarca) and correspondente with pagination.
-     * 
-     * @param comarcaId The court ID to search for
-     * @param correspondenteId The correspondente ID to search for
-     * @return Page of requests in the specified court and correspondente
-     */
     @GetMapping("/buscar/comarca/{comarcaId}/correspondente/{correspondenteId}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarcaECorrespondente(
             @PathVariable Long comarcaId,
@@ -591,12 +425,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by court (comarca) with pagination.
-     * 
-     * @param comarcaId The court ID to search for
-     * @return Page of requests in the specified court
-     */
     @GetMapping("/buscar/comarca/{comarcaId}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarca(
             @PathVariable Long comarcaId,
@@ -622,14 +450,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by court (comarca) and correspondente with pagination using query parameters.
-     * This endpoint is designed to match the frontend request format.
-     * 
-     * @param comarcaId The court ID to search for
-     * @param correspondenteId The correspondente ID to search for
-     * @return Page of requests in the specified court and correspondente
-     */
     @GetMapping("/buscar/comarca")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorComarcaECorrespondenteQuery(
             @RequestParam Long comarcaId,
@@ -660,12 +480,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Advanced search endpoint for requests with multiple combined filters.
-     * 
-     * @param filtro The filter criteria
-     * @return Page of requests matching the filter criteria
-     */
     @PostMapping("/buscar/avancado")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarAvancado(@RequestBody SolicitacaoFiltroDTO filtro) {
         try {
@@ -684,12 +498,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by group with pagination.
-     * 
-     * @param grupo The group ID to search for
-     * @return Page of requests in the specified group
-     */
     @GetMapping("/buscar/grupo/{grupo}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorGrupo(
             @PathVariable Integer grupo,
@@ -709,12 +517,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Finds requests by external status with pagination.
-     * 
-     * @param status The external status to search for
-     * @return Page of requests with the specified external status
-     */
     @GetMapping("/buscar/status/{status}")
     public ResponseEntity<PaginatedResponseDTO<Solicitacao>> buscarPorStatus(
             @PathVariable String status,
@@ -734,13 +536,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Marks a request as completed.
-     * 
-     * @param id The ID of the request to complete
-     * @param observacao Optional observation note
-     * @return The completed request, or error response
-     */
     @PutMapping("/{id}/concluir")
     public ResponseEntity<Solicitacao> concluir(@PathVariable Long id, @RequestBody(required = false) String observacao) {
         try {
@@ -753,12 +548,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Marks a request as paid.
-     * 
-     * @param id The ID of the request to mark as paid
-     * @return The updated request, or error response
-     */
     @PutMapping("/{id}/marcar-pago")
     public ResponseEntity<Solicitacao> marcarComoPago(@PathVariable Long id) {
         try {
@@ -771,12 +560,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Marks a request as unpaid.
-     * 
-     * @param id The ID of the request to mark as unpaid
-     * @return The updated request, or error response
-     */
     @PutMapping("/{id}/marcar-nao-pago")
     public ResponseEntity<Solicitacao> marcarComoNaoPago(@PathVariable Long id) {
         try {
@@ -789,11 +572,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Counts pending requests.
-     * 
-     * @return The count of pending requests
-     */
     @GetMapping("/estatisticas/pendentes")
     public ResponseEntity<Long> contarPendentes() {
         try {
@@ -804,12 +582,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Retrieves a request by ID.
-     * 
-     * @param id The ID of the request to retrieve
-     * @return The request if found, or 404 if not found
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Solicitacao> buscarPorId(@PathVariable Long id) {
         try {
@@ -821,12 +593,6 @@ public class SolicitacaoController {
         }
     }
     
-    /**
-     * Deletes a request.
-     * 
-     * @param id The ID of the request to delete
-     * @return 204 No Content if successful, 404 if not found, or error response
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         try {
