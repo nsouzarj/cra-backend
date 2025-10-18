@@ -53,3 +53,13 @@ MERGE INTO processo (idprocesso, numeroprocesso, numeroprocessopesq, parte, adve
 -- Some basic solicitacao data (without idcomarca since it will be loaded separately)
 MERGE INTO solicitacao (idsolicitacao, referenciasolicitacao, datasolictacao, dataprazo, observacao, instrucoes, complemento, justificativa, tratposaudiencia, numcontrole, tempreposto, convolada, horaudiencia, statusexterno, processo_id, idusuario, valor, valordaalcada, emailenvio, pago, grupo, propostaacordo, audinterna, lide, avaliacaonota, textoavaliacao, idstatus) VALUES (1, 1001, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '30' DAY, 'Solicitação de protesto', 'Protocolar no cartório', 'Documento anexo', 'Débito em atraso', 'Enviar após audiência', 'CTRL-001', false, true, '10:00', 'CONFIRMAR', 1, 2, 500.00, 1000.00, 'contato@cliente.com.br', 'false', 1, false, true, 'S', 5, 'Atendimento excelente', 1);
 MERGE INTO solicitacao (idsolicitacao, referenciasolicitacao, datasolictacao, dataprazo, observacao, instrucoes, complemento, justificativa, tratposaudiencia, numcontrole, tempreposto, convolada, horaudiencia, statusexterno, processo_id, idusuario, valor, valordaalcada, emailenvio, pago, grupo, propostaacordo, audinterna, lide, avaliacaonota, textoavaliacao, idstatus) VALUES (2, 1002, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '15' DAY, 'Solicitação de cobrança', 'Enviar notificação extrajudicial', 'Contrato anexo', 'Inadimplemento contratual', 'Tratar após reunião', 'CTRL-002', true, false, '14:30', 'REJEITAR', 2, 3, 1200.50, 2000.00, 'financeiro@cliente.com.br', 'true', 2, true, false, 'N', 4, 'Bom serviço', 2);
+
+
+INSERT INTO usuario (idusuario, login, senha, nomecompleto, emailprincipal, tipo, dataentrada, ativo) 
+VALUES (999, 'admin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'Administrador', 'admin@seudominio.com', 1, NOW(), 1);
+
+-- 2. Associa o perfil de administrador (ROLE_ADMIN) ao usuário recém-criado
+-- O Spring Security geralmente adiciona o prefixo "ROLE_" automaticamente, então o perfil deve ser "ADMIN".
+-- Se isso não funcionar, você pode tentar 'ROLE_ADMIN'.
+INSERT INTO perfilusuario (idusuario, perfil) 
+VALUES (1, 'ADMIN');

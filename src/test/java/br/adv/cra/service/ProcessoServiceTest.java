@@ -300,7 +300,7 @@ class ProcessoServiceTest {
     void buscarPorNumeroProcessoPesquisa_ShouldReturnList() {
         when(processoRepository.findByNumeroprocessopesqContaining(anyString(), any(Sort.class)))
                 .thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorNumeroProcessoPesquisa("111");
+        List<Processo> result = processoService.buscarPorNumeroProcessoPesquisa("111", Sort.by("id"));
         assertEquals(1, result.size());
     }
 
@@ -327,7 +327,7 @@ class ProcessoServiceTest {
     void buscarPorParte_ShouldReturnList() {
         when(processoRepository.findByParteContaining(anyString(), any(Sort.class)))
                 .thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorParte("Parte A");
+        List<Processo> result = processoService.buscarPorParte("Parte A", Sort.by("id"));
         assertEquals(1, result.size());
     }
 
@@ -354,7 +354,7 @@ class ProcessoServiceTest {
     void buscarPorAdverso_ShouldReturnList() {
         when(processoRepository.findByAdversoContaining(anyString(), any(Sort.class)))
                 .thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorAdverso("Adverso B");
+        List<Processo> result = processoService.buscarPorAdverso("Adverso B", Sort.by("id"));
         assertEquals(1, result.size());
     }
 
@@ -380,7 +380,7 @@ class ProcessoServiceTest {
     @Test
     void buscarPorStatus_ShouldReturnList() {
         when(processoRepository.findByStatus(anyString(), any(Sort.class))).thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorStatus("Ativo");
+        List<Processo> result = processoService.buscarPorStatus("Ativo", Sort.by("id"));
         assertEquals(1, result.size());
     }
 
@@ -406,7 +406,7 @@ class ProcessoServiceTest {
     void buscarPorAssunto_ShouldReturnList() {
         when(processoRepository.findByAssuntoContaining(anyString(), any(Sort.class)))
                 .thenReturn(Collections.emptyList());
-        List<Processo> result = processoService.buscarPorAssunto("Assunto Teste");
+        List<Processo> result = processoService.buscarPorAssunto("Assunto Teste", Sort.by("id"));
         assertTrue(result.isEmpty());
     }
 
@@ -431,7 +431,7 @@ class ProcessoServiceTest {
     void buscarPorProcessoEletronico_ShouldReturnList() {
         when(processoRepository.findByProceletronico(anyString(), any(Sort.class)))
                 .thenReturn(Collections.emptyList());
-        List<Processo> result = processoService.buscarPorProcessoEletronico("E-123");
+        List<Processo> result = processoService.buscarPorProcessoEletronico("E-123", Sort.by("id"));
         assertTrue(result.isEmpty());
     }
 
@@ -455,7 +455,7 @@ class ProcessoServiceTest {
     @Test
     void buscarPorComarca_ShouldReturnList() {
         when(processoRepository.findByComarca(any(Comarca.class), any(Sort.class))).thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorComarca(comarca);
+        List<Processo> result = processoService.buscarPorComarca(comarca, Sort.by("id"));
         assertEquals(1, result.size());
     }
 
@@ -480,7 +480,7 @@ class ProcessoServiceTest {
     @Test
     void buscarPorOrgao_ShouldReturnList() {
         when(processoRepository.findByOrgao(any(Orgao.class), any(Sort.class))).thenReturn(List.of(processo1));
-        List<Processo> result = processoService.buscarPorOrgao(orgao);
+        List<Processo> result = processoService.buscarPorOrgao(orgao, Sort.by("id"));
         assertEquals(1, result.size());
     }
 

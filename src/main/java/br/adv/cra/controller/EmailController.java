@@ -49,7 +49,7 @@ public class EmailController {
             String[] bccArray = request.getBcc() != null ? 
                 request.getBcc().toArray(new String[0]) : null;
 
-            emailService.sendMessageWithCCAndBCC(request.getTo(), ccArray, bccArray, request.getSubject(), request.getText());
+            emailService.sendMessageWithCCAndBCC(request.getTo(), request.getSubject(), request.getText(), ccArray, bccArray);
             
             return ResponseEntity.ok("Email sent successfully");
         } catch (Exception e) {
