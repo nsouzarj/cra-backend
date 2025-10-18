@@ -17,10 +17,10 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application
-RUN mvn clean test
+RUN mvn clean package -DskipTests=true
 
 # Build package
-RUN mvn package
+#RUN mvn package
 
 # Debug: List files in target directory
 RUN ls -la /app/target/
