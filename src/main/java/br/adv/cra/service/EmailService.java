@@ -37,10 +37,10 @@ public class EmailService {
      * @param text    Email body content
      */
     @Async
-    public void sendSimpleMessage(String to, String subject, String text) {
+    public void sendSimpleMessage(String from, String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail);
+            message.setFrom(from);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
@@ -61,10 +61,10 @@ public class EmailService {
      * @param text    Email body content
      */
     @Async
-    public void sendMessageWithCCAndBCC(String to, String subject, String text, String[] cc, String... bcc) {
+    public void sendMessageWithCCAndBCC(String from, String to, String subject, String text, String[] cc, String... bcc) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail);
+            message.setFrom(from);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);

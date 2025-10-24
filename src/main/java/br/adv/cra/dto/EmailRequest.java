@@ -5,6 +5,7 @@ import java.util.List;
 
 @Data
 public class EmailRequest {
+    private String from;
     private String to;
     private List<String> cc;
     private List<String> bcc;
