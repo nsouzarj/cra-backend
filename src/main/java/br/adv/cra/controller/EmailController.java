@@ -23,11 +23,14 @@ public class EmailController {
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequest request) {
         try {
+            if (request.getFrom() == null || request.getFrom().isEmpty()) {
+                return ResponseEntity.badRequest().body("From address is required");
+            }
             if (request.isHtml()) {
                 // HTML email sending would be implemented in the service
                 return ResponseEntity.badRequest().body("HTML emails not yet implemented in this endpoint");
             } else {
-                emailService.sendSimpleMessage(request.getTo(), request.getSubject(), request.getText());
+                emailService.sendSimpleMessage(request.getFrom(), request.getTo(), request.getSubject(), request.getText());
             }
             return ResponseEntity.ok("Email sent successfully");
         } catch (Exception e) {
@@ -44,12 +47,15 @@ public class EmailController {
     @PostMapping("/send-advanced")
     public ResponseEntity<String> sendAdvancedEmail(@RequestBody EmailRequest request) {
         try {
+            if (request.getFrom() == null || request.getFrom().isEmpty()) {
+                return ResponseEntity.badRequest().body("From address is required");
+            }
             String[] ccArray = request.getCc() != null ? 
                 request.getCc().toArray(new String[0]) : null;
             String[] bccArray = request.getBcc() != null ? 
                 request.getBcc().toArray(new String[0]) : null;
 
-            emailService.sendMessageWithCCAndBCC(request.getTo(), request.getSubject(), request.getText(), ccArray, bccArray);
+            emailService.sendMessageWithCCAndBCC(request.getFrom(), request.getTo(), request.getSubject(), request.getText(), ccArray, bccArray);
             
             return ResponseEntity.ok("Email sent successfully");
         } catch (Exception e) {
