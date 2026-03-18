@@ -52,6 +52,212 @@ The system follows a **layered architecture** pattern:
 - Security components intercept requests for authentication and authorization.
 - DTOs are used to transfer data between components without exposing entities.
 
+### Architecture Diagrams
+
+#### Class Diagram
+The following diagram represents the core entities of the system and their relationships:
+
+```mermaid
+classDiagram
+    class Solicitacao {
+        +Long idsolicitacao
+        +LocalDateTime datasolicitacao
+        +LocalDateTime dataprazo
+        +String numero
+        +String requerente
+        +String requerido
+        +String observacao
+        +String status
+    }
+
+    class Comarca {
+        +Long idcomarca
+        +String nome
+        +boolean ativo
+    }
+
+    class Correspondente {
+        +Long idcorrespondente
+        +String nome
+        +String email
+        +String telefone
+        +String oab
+    }
+
+    class Processo {
+        +Long idprocesso
+        +String numeroprocesso
+        +String parte
+        +String adverso
+    }
+
+    class Usuario {
+        +Long idusuario
+        +String nome
+        +String email
+        +String login
+    }
+
+    class TipoSolicitacao {
+        +Long idtiposolicitacao
+        +String descricao
+    }
+
+    class StatusSolicitacao {
+        +Long idstatus
+        +String status
+    }
+    
+    class Uf {
+        +Long iduf
+        +String sigla
+        +String nome
+    }
+    
+    class SoliArquivo {
+        +Long id
+        +String nome
+        +String caminho
+    }
+
+    Solicitacao --> Comarca : pertence a
+    Solicitacao --> Processo : referente a
+    Solicitacao --> Correspondente : executado por
+    Solicitacao --> Usuario : criado por
+    Solicitacao --> TipoSolicitacao : é do tipo
+    Solicitacao --> StatusSolicitacao : possui status
+    Solicitacao "1" -- "*" SoliArquivo : possui anexos
+    
+    Comarca --> Uf : localizada em
+    Processo --> Comarca : tramita em
+    Usuario --> Correspondente : associado a (opcional)
+```
+
+#### Deployment Diagram
+This diagram illustrates the system's deployment architecture, highlighting Docker containers and external integrations:
+
+```mermaid
+graph TD
+    User([Usuário / Navegador])
+    
+    subgraph Docker Host
+        subgraph Frontend Container
+            Front[cra-frontend]
+        end
+        
+        subgraph Backend Container
+            API[cra-backend<br/>Spring Boot]
+        end
+        
+        subgraph Database Container
+            DB[(PostgreSQL<br/>dbcra)]
+        end
+        
+        subgraph Volumes
+            Vol[uploads_volume]
+        end
+    end
+    
+    subgraph External Services
+        GDrive[Google Drive API]
+    end
+    
+    User -->|"HTTP/HTTPS"| Front
+    Front -->|"REST API (JSON)"| API
+    API -->|"JDBC (Port 5432)"| DB
+    API -->|"Read/Write Files"| Vol
+    API -->|"OAuth2 / REST"| GDrive
+```
+
+#### Sequence Diagrams
+
+##### 1. Solicitation Creation Flow
+This diagram details the interaction between the layers when creating a new `Solicitacao`:
+
+```mermaid
+sequenceDiagram
+    participant Client as Cliente
+    participant Ctrl as SolicitacaoController
+    participant Svc as SolicitacaoService
+    participant Repo as SolicitacaoRepository
+    participant DB as Banco de Dados
+
+    Client->>Ctrl: POST /api/solicitacoes
+    Ctrl->>Svc: salvar()
+    Svc->>Svc: Define Data = Agora
+    Svc->>Repo: save()
+    Repo->>DB: INSERT
+    DB-->>Repo: ID Gerado
+    Repo-->>Svc: Solicitacao Salva
+    Svc-->>Ctrl: Solicitacao Salva
+    Ctrl-->>Client: 201 Created
+```
+
+##### 2. Solicitation Completion Flow
+Flow to mark a `Solicitacao` as completed:
+
+```mermaid
+sequenceDiagram
+    participant Client as Cliente
+    participant Ctrl as SolicitacaoController
+    participant Svc as SolicitacaoService
+    participant Repo as SolicitacaoRepository
+    participant DB as Banco de Dados
+
+    Client->>Ctrl: PUT /api/solicitacoes/{id}/concluir
+    Ctrl->>Svc: concluir()
+    Svc->>Repo: findById()
+    Repo-->>Svc: Optional<Solicitacao>
+    
+    alt Solicitacao Encontrada
+        Svc->>Svc: Define Data Conclusao = Agora
+        Svc->>Repo: save()
+        Repo->>DB: UPDATE
+        DB-->>Repo: Success
+        Repo-->>Svc: Atualizada
+        Svc-->>Ctrl: Atualizada
+        Ctrl-->>Client: 200 OK
+    else Solicitacao Não Encontrada
+        Svc-->>Ctrl: throw RuntimeException
+        Ctrl-->>Client: 404 Not Found
+    end
+```
+
+##### 3. Correspondent Inactivation Flow
+Flow to inactive a `Correspondente`:
+
+```mermaid
+sequenceDiagram
+    participant Client as Cliente Admin
+    participant Ctrl as CorrespondenteController
+    participant Svc as CorrespondenteService
+    participant Repo as CorrespondenteRepository
+    participant DB as Banco de Dados
+
+    Client->>Ctrl: PUT /api/correspondentes/{id}/inativar
+    Ctrl->>Svc: inativar(id)
+    Svc->>Repo: findById(id)
+    Repo-->>Svc: Optional<Correspondente>
+    
+    alt Correspondente Encontrado
+        alt Já está inativo
+            Svc-->>Ctrl: throw Exception (Já inativo)
+            Ctrl-->>Client: 400 Bad Request
+        else Não está inativo
+            Svc->>Svc: Set Ativo = false
+            Svc->>Repo: save()
+            Repo->>DB: UPDATE
+            DB-->>Repo: Success
+            Repo-->>Svc: Void
+            Svc-->>Ctrl: Void
+            Ctrl-->>Client: 200 OK
+        end
+    else Correspondente Não Encontrado
+        Svc-->>Ctrl: throw Exception (Não encontrado)
+        Ctrl-->>Client: 404 Not Found
+    end
+```
+
 ## 3. System Technical Information
 
 ### Technology Stack and Frameworks
