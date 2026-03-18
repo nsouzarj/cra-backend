@@ -253,12 +253,15 @@ public class CorrespondenteController {
      * @return 200 OK if successful, 404 if not found, or error response
      */
     @PutMapping("/{id}/inativar")
-    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+    public ResponseEntity<?> inativar(@PathVariable Long id) {
         try {
             correspondenteService.inativar(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            if (e.getMessage().equals("Correspondente não encontrado")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -271,12 +274,15 @@ public class CorrespondenteController {
      * @return 200 OK if successful, 404 if not found, or error response
      */
     @PutMapping("/{id}/ativar")
-    public ResponseEntity<Void> ativar(@PathVariable Long id) {
+    public ResponseEntity<?> ativar(@PathVariable Long id) {
         try {
             correspondenteService.ativar(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+             if (e.getMessage().equals("Correspondente não encontrado")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

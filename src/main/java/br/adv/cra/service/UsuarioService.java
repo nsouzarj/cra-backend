@@ -79,6 +79,11 @@ public class UsuarioService {
     public void inativar(Long id) {
         Usuario usuario = buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        if (!usuario.isAtivo()) {
+            throw new RuntimeException("Usuário já está inativo.");
+        }
+        
         usuario.setAtivo(false);
         usuarioRepository.save(usuario);
     }
@@ -86,6 +91,11 @@ public class UsuarioService {
     public void ativar(Long id) {
         Usuario usuario = buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        if (usuario.isAtivo()) {
+            throw new RuntimeException("Usuário já está ativo.");
+        }
+        
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
     }

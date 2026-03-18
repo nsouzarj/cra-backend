@@ -12,7 +12,6 @@ import jakarta.persistence.criteria.Path;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 public class SolicitacaoSpecification {
     

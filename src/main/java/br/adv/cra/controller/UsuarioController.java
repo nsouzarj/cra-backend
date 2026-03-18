@@ -224,6 +224,11 @@ public class UsuarioController {
         try {
             usuarioService.inativar(id);
             return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+             if (e.getMessage().equals("Usuário não encontrado")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao inativar usuário: " + e.getMessage());
         }
@@ -241,6 +246,11 @@ public class UsuarioController {
         try {
             usuarioService.ativar(id);
             return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+             if (e.getMessage().equals("Usuário não encontrado")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao ativar usuário: " + e.getMessage());
         }

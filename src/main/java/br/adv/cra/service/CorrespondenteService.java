@@ -77,6 +77,11 @@ public class CorrespondenteService {
     public void inativar(Long id) {
         Correspondente correspondente = buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Correspondente não encontrado"));
+        
+        if (!correspondente.isAtivo()) {
+            throw new RuntimeException("Correspondente já está inativo.");
+        }
+        
         correspondente.setAtivo(false);
         correspondenteRepository.save(correspondente);
     }
@@ -84,6 +89,11 @@ public class CorrespondenteService {
     public void ativar(Long id) {
         Correspondente correspondente = buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Correspondente não encontrado"));
+        
+        if (correspondente.isAtivo()) {
+            throw new RuntimeException("Correspondente já está ativo.");
+        }
+        
         correspondente.setAtivo(true);
         correspondenteRepository.save(correspondente);
     }
