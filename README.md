@@ -1,61 +1,61 @@
-# CRA Backend - Spring Boot API
+# CRA Backend - API Spring Boot
 
-## 1. Project Overview
+## 1. Visão Geral do Projeto
 
-### Project Background and Value
-The CRA Backend is a Spring Boot-based backend system for the Correspondente Responsável por Atos (CRA) application. It provides a RESTful API for managing legal processes, users, and related data, with support for authentication via JWT tokens.
+### Contexto e Valor do Projeto
+O CRA Backend é um sistema baseado em Spring Boot para a aplicação Correspondente Responsável por Atos (CRA). Ele fornece uma API RESTful para gerenciamento de processos jurídicos, usuários e dados relacionados, com suporte para autenticação via tokens JWT.
 
-### Core User Problems Solved
-- Centralized management of legal processes and solicitations.
-- Secure user authentication and role-based access control.
-- Support for file attachments in solicitation management.
-- Integration with multiple databases (PostgreSQL, MySQL, H2).
+### Problemas Centrais Resolvidos
+- Gerenciamento centralizado de processos jurídicos e solicitações.
+- Autenticação de usuário segura e controle de acesso baseado em funções (RBAC).
+- Suporte para anexos de arquivos no gerenciamento de solicitações.
+- Integração com múltiplos bancos de dados (PostgreSQL, MySQL, H2).
 
-### System Features
-- RESTful API endpoints for managing users, processes, solicitations, and legal entities.
-- JWT-based authentication and authorization with refresh tokens.
-- File attachment management for solicitations.
-- Support for multiple database backends.
-- Comprehensive API documentation via Swagger/OpenAPI.
-- Configurable for development, testing, and production environments.
-- Google Drive OAuth integration for cloud-based file storage.
+### Recursos do Sistema
+- Endpoints de API RESTful para gerenciar usuários, processos, solicitações e entidades jurídicas.
+- Autenticação e autorização baseadas em JWT com tokens de atualização (refresh tokens).
+- Gerenciamento de anexos de arquivos para solicitações.
+- Suporte para múltiplos backends de banco de dados.
+- Documentação abrangente da API via Swagger/OpenAPI.
+- Configurável para ambientes de desenvolvimento, teste e produção.
+- Integração com Google Drive OAuth para armazenamento de arquivos na nuvem.
 
-## 2. System Architecture Pattern
+## 2. Padrão de Arquitetura do Sistema
 
-### Overall Architecture
-The system follows a **layered architecture** pattern:
-- **Controller Layer**: Handles HTTP requests and responses.
-- **Service Layer**: Contains business logic.
-- **Repository Layer**: Manages data persistence.
-- **Entity Layer**: Represents database entities.
-- **Security Layer**: Manages authentication and authorization using JWT.
+### Arquitetura Geral
+O sistema segue um padrão de **arquitetura em camadas**:
+- **Camada de Controller**: Manipula requisições e respostas HTTP.
+- **Camada de Service**: Contém a lógica de negócio.
+- **Camada de Repository**: Gerencia a persistência de dados.
+- **Camada de Entity**: Representa as entidades do banco de dados.
+- **Camada de Security**: Gerencia autenticação e autorização usando JWT.
 
-### Key Technical Decisions
-- **Spring Boot 3.2.5** for rapid development and embedded server capabilities.
-- **JWT Authentication** for secure user access.
-- **Multi-database support** (PostgreSQL for production, MySQL as alternative, H2 for development).
-- **Swagger/OpenAPI 3.0** for interactive API documentation.
-- **Docker-based deployment** for containerization and portability.
-- **Google Drive OAuth 2.0** for cloud-based file storage.
+### Decisões Técnicas Principais
+- **Spring Boot 3.2.5** para desenvolvimento rápido e capacidades de servidor embutido.
+- **Autenticação JWT** para acesso seguro de usuários.
+- **Suporte a múltiplos bancos de dados** (PostgreSQL para produção, MySQL como alternativa, H2 para desenvolvimento).
+- **Swagger/OpenAPI 3.0** para documentação interativa da API.
+- **Implantação baseada em Docker** para conteinerização e portabilidade.
+- **Google Drive OAuth 2.0** para armazenamento de arquivos em nuvem.
 
-### Architectural and Design Patterns Used
-- **MVC (Model-View-Controller)**: For handling HTTP requests and responses.
-- **Repository Pattern**: For data access abstraction.
-- **DTO (Data Transfer Object)**: For transferring data between layers.
-- **Singleton Pattern**: Used in Spring-managed beans.
-- **Strategy Pattern**: For dynamic configuration of database and authentication strategies.
+### Padrões de Arquitetura e Design Utilizados
+- **MVC (Model-View-Controller)**: Para manipular requisições e respostas HTTP.
+- **Padrão Repository**: Para abstração de acesso a dados.
+- **DTO (Data Transfer Object)**: Para transferência de dados entre camadas.
+- **Padrão Singleton**: Utilizado em beans gerenciados pelo Spring.
+- **Padrão Strategy**: Para configuração dinâmica de estratégias de banco de dados e autenticação.
 
-### Component Interaction
-- Controllers receive HTTP requests and delegate to services.
-- Services interact with repositories to fetch or persist data.
-- Entities represent database records.
-- Security components intercept requests for authentication and authorization.
-- DTOs are used to transfer data between components without exposing entities.
+### Interação entre Componentes
+- Controllers recebem requisições HTTP e delegam para os serviços.
+- Serviços interagem com repositórios para buscar ou persistir dados.
+- Entidades representam registros do banco de dados.
+- Componentes de segurança interceptam requisições para autenticação e autorização.
+- DTOs são usados para transferir dados entre componentes sem expor entidades.
 
-### Architecture Diagrams
+### Diagramas de Arquitetura
 
-#### Class Diagram
-The following diagram represents the core entities of the system and their relationships:
+#### Diagrama de Classes
+O diagrama a seguir representa as entidades principais do sistema e seus relacionamentos:
 
 ```mermaid
 classDiagram
@@ -133,8 +133,8 @@ classDiagram
     Usuario --> Correspondente : associado a (opcional)
 ```
 
-#### Deployment Diagram
-This diagram illustrates the system's deployment architecture, highlighting Docker containers and external integrations:
+#### Diagrama de Implantação (Deployment)
+Este diagrama ilustra a arquitetura de implantação do sistema, destacando os containers Docker e integrações externas:
 
 ```mermaid
 graph TD
@@ -169,10 +169,10 @@ graph TD
     API -->|"OAuth2 / REST"| GDrive
 ```
 
-#### Sequence Diagrams
+#### Diagramas de Sequência
 
-##### 1. Solicitation Creation Flow
-This diagram details the interaction between the layers when creating a new `Solicitacao`:
+##### 1. Fluxo de Criação de Solicitação
+Este diagrama detalha a interação entre as camadas ao criar uma nova `Solicitacao`:
 
 ```mermaid
 sequenceDiagram
@@ -193,8 +193,8 @@ sequenceDiagram
     Ctrl-->>Client: 201 Created
 ```
 
-##### 2. Solicitation Completion Flow
-Flow to mark a `Solicitacao` as completed:
+##### 2. Fluxo de Conclusão de Solicitação
+Fluxo para marcar uma `Solicitacao` como concluída:
 
 ```mermaid
 sequenceDiagram
@@ -223,8 +223,8 @@ sequenceDiagram
     end
 ```
 
-##### 3. Correspondent Inactivation Flow
-Flow to inactive a `Correspondente`:
+##### 3. Fluxo de Inativação de Correspondente
+Fluxo para inativar um `Correspondente`:
 
 ```mermaid
 sequenceDiagram
@@ -258,9 +258,9 @@ sequenceDiagram
     end
 ```
 
-## 3. System Technical Information
+## 3. Informações Técnicas do Sistema
 
-### Technology Stack and Frameworks
+### Stack Tecnológica e Frameworks
 - **Java 17+**
 - **Spring Boot 3.2.5**
   - Spring Web
